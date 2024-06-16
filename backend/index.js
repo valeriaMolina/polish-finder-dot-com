@@ -1,7 +1,13 @@
+/**
+ * @author Valeria Molina Recinos
+ */
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const config = require('./src/config/config');
+const logger = require('./src/config/logger');
 
 // include routers
 const searchRouter = require('./src/routers/searchRouter');
@@ -15,5 +21,5 @@ app.get('/', (req, res) => {
 
 app.use(searchRouter);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = config.port || 5000;
+app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));

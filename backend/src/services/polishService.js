@@ -15,6 +15,12 @@ async function insertNewPolish(attributes) {
     return newPolish;
 }
 
+async function findPolishById(id) {
+    const polish = await polishModel.findOne({ where: { polish_id: id } });
+    return polish;
+}
+
 module.exports = {
     insertNewPolish,
+    findPolishById,
 };

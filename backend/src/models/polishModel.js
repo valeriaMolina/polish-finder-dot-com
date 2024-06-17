@@ -6,8 +6,6 @@ const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/database');
 
 const brand = require('./brandModel');
-const color = require('./colorModel');
-const formula = require('./formulaModel');
 const type = require('./typeModel');
 
 const polishes = db.define(
@@ -32,6 +30,10 @@ const polishes = db.define(
         description: {
             type: Sequelize.TEXT,
             allowNull: false,
+        },
+        dupes: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            allowNull: true,
         },
     },
     {

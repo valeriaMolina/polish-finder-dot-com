@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "express-promise-router": "^4.1.1"
-  }
-}

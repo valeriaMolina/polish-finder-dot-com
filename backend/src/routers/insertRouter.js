@@ -4,60 +4,44 @@
 
 const logger = require('../config/logger');
 const router = require('express').Router();
-const brands = require('../models/brandModel');
+const brandService = require('../services/brandService');
 
 // define the route to insert a new polish
 router.post('/api/uploadPolish', async (req, res) => {
     const {
-        brand_id,
-        type_id,
-        primary_color_id,
-        effect_colors,
-        formula_ids,
+        brandName,
+        type,
+        primaryColor,
+        effectColors,
+        formulas,
         name,
         description,
     } = req.body;
 
     // Check if required fields are provided
     if (
-        !brand_id ||
-        !type_id ||
-        !primary_color_id ||
-        !effect_colors ||
-        !formula_ids ||
+        !brandName ||
+        !type ||
+        !primaryColor ||
+        !effectColors ||
+        !formulas ||
         !name ||
         !description
     ) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // // first check if the brand exists
-    // const brandRows = await query('SELECT * FROM brands where brand_id = $1', [
-    //     brand_id,
-    // ]);
-    // if (brandRows.rowCount === 0) {
-    //     // brand does not exist yet, return error message
-    //     // idea: redirect user to add the new brand
-    //     return res.status(400).json({ error: 'Brand does not exist' });
-    // }
+    // check for the brand name
+    const brand = await brandService.findBrandNameInTable(name);
+    if (!brand) {
+        // if the brand is not found, we return an error
+        return res
+            .status(400)
+            .json({ error: `Brand ${name} is not in database` });
+    }
 
-    // const rows = await query(
-    //     `INSERT INTO polishes (brand_id, type_id, primary_color_id, effect_colors, formula_ids, name, description)
-    //    VALUES ($1, $2, $3, $4, $5, $6, $7)
-    //    RETURNING *`,
-    //     [
-    //         brand_id,
-    //         type_id,
-    //         primary_color_id,
-    //         effect_colors,
-    //         formula_ids,
-    //         name,
-    //         description,
-    //     ]
-    // );
-
-    // res.status(201).json({ polish: rows[0] });
-    res.send('OK');
+    // insert into polish database
+    res.send(201).json({ polish: 'Inserted successfully' });
 });
 
 // Define the route to insert a new brand
@@ -71,8 +55,8 @@ router.post('/api/brand', async (req, res) => {
     }
 
     // Check if brand is already in the database
-    const project = await brands.findOne({ where: { name: name } });
-    if (project) {
+    const brandQuery = await brandService.findBrandNameInTable(name);
+    if (brandQuery) {
         logger.error(`Brand ${name} already exists`);
         return res
             .status(400)
@@ -80,7 +64,7 @@ router.post('/api/brand', async (req, res) => {
     }
 
     // otherwise insert new brand into db
-    const newBrand = await brands.create({ name: name });
+    const newBrand = await brandService.insertNewBrand(name);
     logger.info(
         `Added new brand ${name} with auto-generated ID: ${newBrand.brand_id}`
     );

@@ -43,9 +43,19 @@ async function approveUserSubmission(userSubmissionId) {
     return userSubmission;
 }
 
+async function rejectUserSubmission(userSubmissionId) {
+    const userSubmission = await userSubmissionModel.findOne({
+        where: { submission_id: userSubmissionId },
+    });
+    userSubmission.status = 'rejected';
+    await userSubmission.save();
+    return userSubmission;
+}
+
 module.exports = {
     insertNewUserSubmission,
     findUserSubmission,
     findUserSubmissionById,
     approveUserSubmission,
+    rejectUserSubmission,
 };

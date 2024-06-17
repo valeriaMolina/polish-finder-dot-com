@@ -16,6 +16,13 @@ async function findUserSubmission(userId, polishId, similarToPolishId) {
     return userSubmissionQuery;
 }
 
+async function findUserSubmissionById(userSubmissionId) {
+    const userSubmissionQuery = await userSubmissionModel.findOne({
+        where: { submission_id: userSubmissionId },
+    });
+    return userSubmissionQuery;
+}
+
 /**
  * Inserts a new user submission into the database
  * @param {Object} attributes
@@ -27,7 +34,18 @@ async function insertNewUserSubmission(attributes) {
     return newUserSubmission;
 }
 
+async function approveUserSubmission(userSubmissionId) {
+    const userSubmission = await userSubmissionModel.findOne({
+        where: { submission_id: userSubmissionId },
+    });
+    userSubmission.status = 'approved';
+    await userSubmission.save();
+    return userSubmission;
+}
+
 module.exports = {
     insertNewUserSubmission,
     findUserSubmission,
+    findUserSubmissionById,
+    approveUserSubmission,
 };

@@ -8,6 +8,9 @@ const brandService = require('../services/brandService');
 const polishService = require('../services/polishService');
 const userSubmissionService = require('../services/userSubmissionService');
 const userService = require('../services/userService');
+const typeService = require('../services/typeService');
+const colorService = require('../services/colorService');
+const formulaService = require('../services/formulaService');
 
 // define the route to insert a new polish
 router.post('/api/uploadPolish', async (req, res) => {
@@ -44,13 +47,33 @@ router.post('/api/uploadPolish', async (req, res) => {
             .json({ error: `Brand ${name} is not in database` });
     }
 
-    // insert into polish database withbthe following attributes
+    // check for the type
+    const typeQuery = await typeService.findTypeByName(type);
+    const typeId = typeQuery.type_id;
+
+    // check for color id's
+    const primaryColorQuery = await colorService.findColorByName(primaryColor);
+    const primaryColorId = primaryColorQuery.color_id;
+    let effectColorIds = await Promise.all(
+        effectColors.map(async (color) =>
+            colorService.findColorByName(color).then((color) => color.color_id)
+        )
+    );
+    let formulaIds = await Promise.all(
+        formulas.map(async (formula) =>
+            formulaService
+                .findFormulaByName(formula)
+                .then((formula) => formula.formula_id)
+        )
+    );
+
+    // insert into polish database with the following attributes
     const attributes = {
         brand_id: brand.brand_id,
-        type_id: type,
-        primary_color: primaryColor,
-        effect_colors: effectColors,
-        formula_ids: formulas,
+        type_id: typeId,
+        primary_color: primaryColorId,
+        effect_colors: effectColorIds,
+        formula_ids: formulaIds,
         name: name,
         description: description,
     };

@@ -131,3 +131,5 @@ dist
 
 # codeql files
 codeql/*
+# ignore launch.json from .vscode
+.vscode/launch.json

@@ -5,6 +5,7 @@
 const logger = require('../config/logger');
 const router = require('express').Router();
 const brandService = require('../services/brandService');
+const polishService = require('../services/polishService');
 
 // define the route to insert a new polish
 router.post('/api/uploadPolish', async (req, res) => {
@@ -32,7 +33,7 @@ router.post('/api/uploadPolish', async (req, res) => {
     }
 
     // check for the brand name
-    const brand = await brandService.findBrandNameInTable(name);
+    const brand = await brandService.findBrandNameInTable(brandName);
     if (!brand) {
         // if the brand is not found, we return an error
         return res
@@ -40,8 +41,24 @@ router.post('/api/uploadPolish', async (req, res) => {
             .json({ error: `Brand ${name} is not in database` });
     }
 
-    // insert into polish database
-    res.send(201).json({ polish: 'Inserted successfully' });
+    // insert into polish database withbthe following attributes
+    const attributes = {
+        brand_id: brand.brand_id,
+        type_id: type,
+        primary_color: primaryColor,
+        effect_colors: effectColors,
+        formula_ids: formulas,
+        name: name,
+        description: description,
+    };
+
+    // INSERT new polish into database
+    logger.info(`Adding new polish ${name}`);
+    const newPolish = await polishService.insertNewPolish(attributes);
+    logger.info(
+        `Added new polish ${name} with auto-generated ID: ${newPolish.polish_id}`
+    );
+    res.status(201).json({ newPolish });
 });
 
 // Define the route to insert a new brand

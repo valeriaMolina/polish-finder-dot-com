@@ -19,5 +19,4 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-const PORT = config.port || 5000;
-app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+module.exports = app;

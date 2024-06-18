@@ -24,7 +24,9 @@ const users = db.define(
             allowNull: false,
             unique: true,
             validate: {
-                isEmail: true,
+                isEmail: {
+                    msg: 'Invalid email address',
+                },
             },
         },
         password_hash: {

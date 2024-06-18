@@ -2,12 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend config for polish dupe finder",
-  "main": "index.js",
+  "main": "server.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Valeria Molina Recinos",
   "license": "ISC",
@@ -28,6 +28,8 @@
     "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.5.0",
-    "prettier": "3.3.2"
+    "jest": "^29.7.0",
+    "prettier": "3.3.2",
+    "supertest": "^7.0.0"
   }
 }

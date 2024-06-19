@@ -1,126 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\brandService.test.js">
+    <testCase name="brandService should find brand by name" duration="12"/>
+    <testCase name="brandService should return null if brand is not found" duration="2"/>
+    <testCase name="brandService should insert a new brand" duration="1"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\userSubmissionModel.test.js">
+    <testCase name="UserSubmission Model should have correct model name" duration="8"/>
+    <testCase name="UserSubmission Model should have correct fields" duration="2"/>
+    <testCase name="UserSubmission Model should have correct validation" duration="4"/>
+    <testCase name="UserSubmission Model should have correct default value for status" duration="0"/>
+  </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\polishModel.test.js">
     <testCase name="Polish Model should have correct model name" duration="9"/>
     <testCase name="Polish Model should have correct fields" duration="3"/>
     <testCase name="Polish Model should have correct validation" duration="2"/>
-    <testCase name="Polish Model should have associations" duration="1"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\utils\authValidator.test.js">
-    <testCase name="authValidator should return 400 if no identifier is provided" duration="69"/>
-    <testCase name="authValidator should return 400 if no password is provided" duration="10"/>
-    <testCase name="authValidator should return 200 if valid auth data is provided" duration="8"/>
-    <testCase name="validateSignUp should return 400 if no username is provided" duration="9"/>
-    <testCase name="validateSignUp should return 400 if no password is provided" duration="8"/>
-    <testCase name="validateSignUp should return 400 if no email is provided" duration="7"/>
-    <testCase name="validateSignUp should return 400 if email is not valid" duration="8"/>
-    <testCase name="validateSignUp should return 200 if valid signup data is provided" duration="9"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\userSubmissionModel.test.js">
-    <testCase name="UserSubmission Model should have correct model name" duration="11"/>
-    <testCase name="UserSubmission Model should have correct fields" duration="2"/>
-    <testCase name="UserSubmission Model should have correct validation" duration="3"/>
-    <testCase name="UserSubmission Model should have correct default value for status" duration="0"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\typeService.test.js">
-    <testCase name="typeService should find type by name" duration="10"/>
-    <testCase name="typeService should return null if type is not found" duration="2"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\brandService.test.js">
-    <testCase name="brandService should find brand by name" duration="26"/>
-    <testCase name="brandService should return null if brand is not found" duration="7"/>
-    <testCase name="brandService should insert a new brand" duration="2"/>
+    <testCase name="Polish Model should have associations" duration="0"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\colorService.test.js">
-    <testCase name="colorService should find color by name" duration="21"/>
+    <testCase name="colorService should find color by name" duration="10"/>
     <testCase name="colorService should return null if color is not found" duration="2"/>
   </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\userModel.test.js">
-    <testCase name="User Model should have correct model name" duration="24"/>
-    <testCase name="User Model should have correct fields" duration="4"/>
-    <testCase name="User Model should have correct validation" duration="18"/>
-    <testCase name="User Model should validate email format" duration="4"/>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\utils\authValidator.test.js">
+    <testCase name="authValidator should return 400 if no identifier is provided" duration="87"/>
+    <testCase name="authValidator should return 400 if no password is provided" duration="10"/>
+    <testCase name="authValidator should return 200 if valid auth data is provided" duration="12"/>
+    <testCase name="validateSignUp should return 400 if no username is provided" duration="9"/>
+    <testCase name="validateSignUp should return 400 if no password is provided" duration="12"/>
+    <testCase name="validateSignUp should return 400 if no email is provided" duration="12"/>
+    <testCase name="validateSignUp should return 400 if email is not valid" duration="7"/>
+    <testCase name="validateSignUp should return 200 if valid signup data is provided" duration="12"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\userSubmissionService.test.js">
-    <testCase name="userSubmissionService should insert a new user submission" duration="45"/>
-    <testCase name="userSubmissionService should approve a user submission" duration="3"/>
-    <testCase name="userSubmissionService should reject a user submission" duration="3"/>
+    <testCase name="userSubmissionService should insert a new user submission" duration="13"/>
+    <testCase name="userSubmissionService should approve a user submission" duration="2"/>
+    <testCase name="userSubmissionService should reject a user submission" duration="2"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\typeService.test.js">
+    <testCase name="typeService should find type by name" duration="12"/>
+    <testCase name="typeService should return null if type is not found" duration="1"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\formulaModel.test.js">
+    <testCase name="Formula Model should have correct model name" duration="16"/>
+    <testCase name="Formula Model should have correct fields" duration="3"/>
+    <testCase name="Formula Model should have correct validation" duration="2"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\userModel.test.js">
+    <testCase name="User Model should have correct model name" duration="10"/>
+    <testCase name="User Model should have correct fields" duration="2"/>
+    <testCase name="User Model should have correct validation" duration="15"/>
+    <testCase name="User Model should validate email format" duration="3"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\polishService.test.js">
     <testCase name="polishService should find polish by id" duration="13"/>
-    <testCase name="polishService should return null if polish is not found" duration="2"/>
+    <testCase name="polishService should return null if polish is not found" duration="1"/>
     <testCase name="polishService should add dupe polish id" duration="2"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\searchRouter.test.js">
-    <testCase name="GET /api/search/ should return 404 if no dupes found" duration="56"/>
-    <testCase name="GET /api/search/ should return 200 and the dupes if dupes are found" duration="8"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\index.test.js">
-    <testCase name="mountRoutes should mount all routers" duration="2"/>
-    <testCase name="mountRoutes should handle requests" duration="20"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\typeModel.test.js">
     <testCase name="Type Model should have correct model name" duration="1"/>
-    <testCase name="Type Model should have correct fields" duration="0"/>
-    <testCase name="Type Model should have correct validation" duration="0"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\brandModel.test.js">
-    <testCase name="Brand Model should have correct model name" duration="1"/>
-    <testCase name="Brand Model should have correct fields" duration="0"/>
-    <testCase name="Brand Model should have correct validation" duration="2"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\formulaModel.test.js">
-    <testCase name="Formula Model should have correct model name" duration="1"/>
-    <testCase name="Formula Model should have correct fields" duration="14"/>
-    <testCase name="Formula Model should have correct validation" duration="2"/>
+    <testCase name="Type Model should have correct fields" duration="1"/>
+    <testCase name="Type Model should have correct validation" duration="1"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\formulaService.test.js">
-    <testCase name="formulaService should find formula by name" duration="2"/>
+    <testCase name="formulaService should find formula by name" duration="3"/>
     <testCase name="formulaService should return null if formula is not found" duration="1"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\searchRouter.test.js">
+    <testCase name="GET /api/search/ should return 404 if no dupes found" duration="50"/>
+    <testCase name="GET /api/search/ should return 200 and the dupes if dupes are found" duration="9"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\colorModel.test.js">
     <testCase name="Color Model should have correct model name" duration="1"/>
-    <testCase name="Color Model should have correct fields" duration="3"/>
-    <testCase name="Color Model should have correct validation" duration="1"/>
+    <testCase name="Color Model should have correct fields" duration="2"/>
+    <testCase name="Color Model should have correct validation" duration="2"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\submissionReviewRouter.test.js">
+    <testCase name="PUT /api/approveSubmission should return 400 if submission not found" duration="42"/>
+    <testCase name="PUT /api/approveSubmission should return 200 if submission is approved" duration="7"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\services\userService.test.js">
-    <testCase name="userService should return user id if user exists" duration="26"/>
+    <testCase name="userService should return user id if user exists" duration="12"/>
     <testCase name="userService should return null if user does not exist" duration="1"/>
     <testCase name="userService should return user if user exists" duration="1"/>
     <testCase name="userService should throw error if user does not exist" duration="1"/>
-    <testCase name="userService should return user if email is in database" duration="2"/>
-    <testCase name="userService should throw error if email is not in database" duration="1"/>
+    <testCase name="userService should return user if email is in database" duration="1"/>
+    <testCase name="userService should throw error if email is not in database" duration="2"/>
     <testCase name="userService should return user if identifier is valid" duration="1"/>
-    <testCase name="userService should throw error if identifier is invalid" duration="2"/>
-    <testCase name="userService Should create and return a valid user" duration="77"/>
-    <testCase name="userService Should save the refresh token" duration="3"/>
-    <testCase name="userService Should throw an error if the refresh token is invalid" duration="16"/>
+    <testCase name="userService should throw error if identifier is invalid" duration="1"/>
+    <testCase name="userService Should create and return a valid user" duration="80"/>
+    <testCase name="userService Should save the refresh token" duration="2"/>
+    <testCase name="userService Should throw an error if the refresh token is invalid" duration="13"/>
     <testCase name="userService Should get the user by refresh token" duration="1"/>
     <testCase name="userService Should throw an error if the refresh token is invalid" duration="1"/>
-    <testCase name="userService Should remove refresh token" duration="1"/>
+    <testCase name="userService Should remove refresh token" duration="2"/>
     <testCase name="userService Should throw an error if the refresh token is invalid" duration="1"/>
   </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\submissionReviewRouter.test.js">
-    <testCase name="PUT /api/approveSubmission should return 400 if submission not found" duration="38"/>
-    <testCase name="PUT /api/approveSubmission should return 200 if submission is approved" duration="10"/>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\index.test.js">
+    <testCase name="mountRoutes should mount all routers" duration="2"/>
+    <testCase name="mountRoutes should handle requests" duration="38"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\app.test.js">
-    <testCase name="GET / responds with &quot;API is running...&quot;" duration="25"/>
+    <testCase name="GET / responds with &quot;API is running...&quot;" duration="26"/>
+  </file>
+  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\models\brandModel.test.js">
+    <testCase name="Brand Model should have correct model name" duration="0"/>
+    <testCase name="Brand Model should have correct fields" duration="2"/>
+    <testCase name="Brand Model should have correct validation" duration="1"/>
   </file>
   <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\insertRouter.test.js">
-    <testCase name="POST /api/uploadPolish should return 400 if required fields are missing" duration="36"/>
-    <testCase name="POST /api/brand should return 400 if name is missing" duration="4"/>
-    <testCase name="POST /api/brand should return 400 if brand already exists" duration="5"/>
+    <testCase name="POST /api/uploadPolish should return 400 if required fields are missing" duration="32"/>
+    <testCase name="POST /api/brand should return 400 if name is missing" duration="5"/>
+    <testCase name="POST /api/brand should return 400 if brand already exists" duration="3"/>
     <testCase name="POST /api/linkDupe should return 400 if user is not found" duration="5"/>
-  </file>
-  <file path="C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\authRouter.test.js">
-    <testCase name="Auth Router POST /auth" duration="46">
-      <failure message="Error: expect(received).toBe(expected) // Object.is equality"><![CDATA[Error: expect(received).toBe(expected) // Object.is equality
-
-Expected: 200
-Received: 400
-    at Object.toBe (C:\Users\Valeria Molina\Documents\GitHub\polish-dupe-finder\backend\tests\routers\authRouter.test.js:48:28)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)]]></failure>
-    </testCase>
   </file>
 </testExecutions>

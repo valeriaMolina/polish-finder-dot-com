@@ -12,7 +12,7 @@ describe('userService', () => {
         sinon.stub(userModel, 'findOne').returns(Promise.resolve(mockUser));
 
         const userId = await userService.getUserId('mockUser');
-        expect(userId).toEqual('123');
+        expect(userId.user_id).toEqual('123');
     });
 
     it('should return null if user does not exist', async () => {

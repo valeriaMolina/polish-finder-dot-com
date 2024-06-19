@@ -9,12 +9,13 @@ jest.mock(
     '../../src/routers/submissionReviewsRouter',
     () => (req, res, next) => next()
 );
+jest.mock('../../src/routers/authRouter', () => (req, res, next) => next());
 
 describe('mountRoutes', () => {
     it('should mount all routers', () => {
         const app = { use: jest.fn() };
         mountRoutes(app);
-        expect(app.use).toHaveBeenCalledTimes(3);
+        expect(app.use).toHaveBeenCalledTimes(4);
     });
 
     it('should handle requests', async () => {

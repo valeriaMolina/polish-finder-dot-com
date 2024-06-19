@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {
     validateAuth,
-    validateSignup: validateSignUp,
+    validateSignUp,
     validateRefresh,
 } = require('../utils/authValidator');
 const logger = require('../config/logger');

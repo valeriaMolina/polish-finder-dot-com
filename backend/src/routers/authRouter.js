@@ -196,7 +196,7 @@ router.post('/logout', validateRefresh, async (req, res) => {
     // remove refresh token from database
     await userService.removeRefreshToken(user.user_id);
 
-    res.json({ msg: 'Logout successful' });
+    res.json({ message: 'Successfully logged out' });
 });
 
 module.exports = router;

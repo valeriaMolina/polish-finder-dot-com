@@ -63,13 +63,11 @@ describe('validateSignUp', () => {
         expect(res.statusCode).toEqual(400);
     });
     it('should return 200 if valid signup data is provided', async () => {
-        const res = await request(app)
-            .post('/signup')
-            .send({
-                username: 'username',
-                password: 'password',
-                email: 'email',
-            });
+        const res = await request(app).post('/signup').send({
+            username: 'username',
+            password: 'password',
+            email: 'email@mail.com',
+        });
         expect(res.statusCode).toEqual(200);
     });
 });

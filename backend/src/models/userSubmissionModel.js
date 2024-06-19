@@ -2,7 +2,7 @@
  * @author Valeria Molina Recinos
  */
 
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
 const db = require('../config/database');
 
 const user = require('./userModel');

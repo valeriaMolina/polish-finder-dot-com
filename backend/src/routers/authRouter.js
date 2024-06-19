@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {
     validateAuth,
-    validateSignup,
+    validateSignup: validateSignUp,
     validateRefresh,
 } = require('../utils/authValidator');
 const logger = require('../config/logger');
@@ -105,7 +105,7 @@ router.post('/auth', validateAuth, async (req, res) => {
  *   "email": "new_user@example.com"
  * }
  */
-router.post('/signup', validateSignup, async (req, res) => {
+router.post('/signup', validateSignUp, async (req, res) => {
     logger.info(`Received request to create new user`);
     const { username, password, email } = req.body;
 

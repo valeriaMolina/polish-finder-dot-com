@@ -16,7 +16,7 @@ exports.validateAuth = [
     },
 ];
 
-exports.validateSignup = [
+exports.validateSignUp = [
     check('username', 'Username is required').not().isEmpty(),
     check('password', 'Password is required').not().isEmpty(),
     check('email', 'Email is required').isEmail(),

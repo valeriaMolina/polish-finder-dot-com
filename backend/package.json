@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "dontenvx run -- node server.js",
-    "test": "jest --coverage --setupFiles /config/config",
+    "test": "jest --coverage --setupFiles /config/config.js",
     "lint": "eslint ."
   },
   "jest": {

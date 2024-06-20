@@ -42,7 +42,7 @@ jobs:
         npm install
         npm run build --if-present
     - name: Test with Jest
-      working-directory: ./backend
+      working-directory: backend
       run: npm test
   sonarcloud:
     name: SonarCloud

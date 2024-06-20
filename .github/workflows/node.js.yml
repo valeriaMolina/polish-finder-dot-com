@@ -50,6 +50,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install dependencies
+        working-directory: backend
         run: npm install
       - name: Test and coverage
         run: npm run test

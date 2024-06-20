@@ -24,10 +24,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - name: create env file
-      run: |
-        touch .env
-        echo POSTGRES_URI=${{ secrets.POSTGRES_URI }} >> .env
     - name: Cache Node.js modules
       uses: actions/cache@v4
       with:
@@ -42,8 +38,9 @@ jobs:
         npm install
         npm run build --if-present
     - name: Test with Jest
-      working-directory: backend
       run: npm test
+      env:
+        POSTGRES_URI: ${{ secrets.JWT_TOKEN}}
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest

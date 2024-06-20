@@ -7,18 +7,22 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "start": "dontenvx run -- node server.js",
+    "test": "jest --coverage --setupFiles config/config",
     "lint": "eslint ."
   },
   "jest": {
     "testResultsProcessor": "jest-sonar-reporter",
     "collectCoverage": true,
-    "coverageReporters": ["lcov"]
-  }, 
+    "coverageReporters": [
+      "lcov"
+    ]
+  },
   "type": "commonjs",
   "author": "Valeria Molina Recinos",
   "license": "ISC",
   "dependencies": {
+    "@dotenvx/dotenvx": "^0.45.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "dontenvx run -- node server.js",
+    "start": "dotenvx run -- node server.js",
     "test": "jest --coverage",
     "lint": "eslint ."
   },

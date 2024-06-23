@@ -48,18 +48,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 
       - name: Install dependencies
-        working-directory: backend
         run: npm install
       - name: Test and coverage
-        run: npm run test
-        working-directory: backend
-        env:
-          POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
+        run: npm test --coverage
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@develop
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
     

@@ -25,5 +25,9 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
         "editor.formatOnPaste": true
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "valeriamolina",
+        "projectKey": "valeriaMolina_polish-dupe-finder"
     }
 }

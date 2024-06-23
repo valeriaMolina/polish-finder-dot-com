@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest --coverage",
+    "test": "jest --coverage=true --outputFile=backend/jest-report.xml",
     "lint": "eslint ."
   },
   "jest": {

@@ -56,7 +56,7 @@ jobs:
         working-directory: backend
         run: npm test --coverage
         env:
-        POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
+          POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

@@ -54,7 +54,7 @@ jobs:
       - name: Test and coverage
         run: npm test --coverage
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@develop
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 

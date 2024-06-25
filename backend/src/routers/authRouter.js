@@ -57,15 +57,17 @@ router.post('/auth', validateAuth, async (req, res) => {
         // store refresh token in database
         await userService.saveRefreshToken(user.user_id, refreshToken);
 
-        jwt.sign(
+        const token = jwt.sign(
             payload,
             config.jwtSecret,
             { expiresIn: '24h' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, refreshToken });
+                return token;
             }
         );
+
+        res.json({ token, refreshToken });
     } catch (err) {
         logger.error(`Error authenticating user: ${err.message}`);
         res.status(500).send('Internal Server Error');
@@ -175,10 +177,16 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     }
 
     const payload = { user: { id: user.user_id } };
-    jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' }, (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-    });
+    const token = jwt.sign(
+        payload,
+        config.jwtSecret,
+        { expiresIn: '24h' },
+        (err, token) => {
+            if (err) throw err;
+            return token;
+        }
+    );
+    res.json({ token });
 });
 
 router.post('/logout', validateRefresh, async (req, res) => {

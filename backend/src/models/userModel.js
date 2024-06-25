@@ -33,6 +33,9 @@ const users = db.define(
             type: Sequelize.STRING(255),
             allowNull: false,
         },
+        refreshtoken: {
+            type: DataTypes.TEXT,
+        },
     },
     {
         timestamps: false,

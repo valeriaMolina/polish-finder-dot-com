@@ -34,6 +34,28 @@ describe('POST /api/uploadPolish', () => {
     });
 
     // Add more tests here for the case where all required fields are provided
+    it('Should return 200 if all required fields are provided', async () => {
+        const mockBody = {
+            brandName: 'Test Brand',
+            type: 'Test Type',
+            primaryColor: 'Test Color',
+            effectColors: ['Test Color'],
+            formulas: ['Test Formula'],
+            name: 'Test Brand',
+            description: 'Test Description',
+        };
+
+        brandService.findBrandNameInTable.mockResolvedValue(true); // Mock that brand exists
+        typeService.findTypeByName.mockResolvedValue(true); // Mock that type exists
+        colorService.findColorByName.mockResolvedValue(true); // Mock that color exists
+        formulaService.findFormulaByName.mockResolvedValue(true); // Mock that formula exists
+        polishService.insertNewPolish.mockResolvedValue(true); // Mock that polish is successfully inserted
+
+        const response = await request(app)
+            .post('/api/uploadPolish')
+            .send(mockBody);
+        expect(response.statusCode).toBe(201);
+    });
 });
 
 describe('POST /api/brand', () => {

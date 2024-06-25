@@ -6,8 +6,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const config = require('./src/config/config');
-const logger = require('./src/config/logger');
 const mountRoutes = require('./src/routers/index');
 
 app.use(cors());

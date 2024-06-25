@@ -47,4 +47,19 @@ describe('userSubmissionService', () => {
             await userSubmissionService.rejectUserSubmission('123');
         expect(rejectedSubmission.status).toEqual('rejected');
     });
+
+    it('should find a user submission by id', async () => {
+        const mockSubmission = {
+            submission_id: '123',
+            status: 'pending',
+            save: sinon.stub().resolves(),
+        };
+        sinon
+            .stub(userSubmissionModel, 'findOne')
+            .returns(Promise.resolve(mockSubmission));
+
+        const findSubmission =
+            await userSubmissionService.findUserSubmissionById('123');
+        expect(findSubmission).toEqual(mockSubmission);
+    });
 });

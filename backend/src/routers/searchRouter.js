@@ -6,9 +6,10 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../config/logger');
 const polishService = require('../services/polishService');
+const { validateSearch } = require('../utils/searchValidator');
 
 // Search route
-router.get('/api/search/', async (req, res) => {
+router.get('/api/search/', validateSearch, async (req, res) => {
     // given a polish_id, find the associated dupes to that polish_id
     logger.info(
         `Received request to search for dupes for polish ID: ${req.query.polishId}`

@@ -27,11 +27,6 @@ describe('POST /auth', () => {
         refreshToken: validRefreshToken,
         password_hash: 'hashedPassword',
     };
-    const mockPayload = {
-        user: {
-            id: validUserId,
-        },
-    };
 
     beforeEach(() => {
         userService.getUserId.mockResolvedValue(validUser);

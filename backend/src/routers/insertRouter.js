@@ -11,33 +11,24 @@ const userService = require('../services/userService');
 const typeService = require('../services/typeService');
 const colorService = require('../services/colorService');
 const formulaService = require('../services/formulaService');
+const {
+    validateInsertPolish,
+    validateInsertBrand,
+    validateLinkDupe,
+} = require('../utils/insertPolishValidator');
 
 // define the route to insert a new polish
-router.post('/api/uploadPolish', async (req, res) => {
+router.post('/api/uploadPolish', validateInsertPolish, async (req, res) => {
     logger.info('Received request to upload a new polish');
     const {
+        name,
         brandName,
         type,
         primaryColor,
         effectColors,
         formulas,
-        name,
         description,
     } = req.body;
-
-    // Check if required fields are provided
-    if (
-        !brandName ||
-        !type ||
-        !primaryColor ||
-        !effectColors ||
-        !formulas ||
-        !name ||
-        !description
-    ) {
-        return res.status(400).json({ error: 'Missing required fields' });
-    }
-
     // check for the brand name
     const brand = await brandService.findBrandNameInTable(brandName);
     if (!brand) {
@@ -88,14 +79,9 @@ router.post('/api/uploadPolish', async (req, res) => {
 });
 
 // Define the route to insert a new brand
-router.post('/api/brand', async (req, res) => {
+router.post('/api/brand', validateInsertBrand, async (req, res) => {
     logger.info(`Received request to add new brand`);
     const { name } = req.body;
-
-    // Check if the required field is provided
-    if (!name) {
-        return res.status(400).json({ error: 'Missing required field: name' });
-    }
 
     // Check if brand is already in the database
     const brandQuery = await brandService.findBrandNameInTable(name);
@@ -114,7 +100,7 @@ router.post('/api/brand', async (req, res) => {
     res.status(201).json({ brand: `${name}`, id: newBrand.brand_id });
 });
 
-router.post('/api/linkDupe', async (req, res) => {
+router.post('/api/linkDupe', validateLinkDupe, async (req, res) => {
     logger.info('Received request to upload new polish dupe');
     // insert submission into user_submissions table
     const { polishId, dupeId } = req.query;

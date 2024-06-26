@@ -5,7 +5,7 @@
 const rolesModel = require('../models/rbac/rolesModel');
 
 async function findRolesByName(name) {
-    const role = await rolesModel.findOne({ name: name });
+    const role = await rolesModel.findOne({ where: { name: name } });
     return role;
 }
 

@@ -1,12 +1,13 @@
 /**
  * @author  Valeria Molina Recinos
+ * for mods and admins to approve or reject user submissions
  */
 
-const userSubmissionModel = require('../models/userSubmissionModel');
+const dupeSubmissions = require('../models/dupeSubmissions');
 
-async function findUserSubmission(userId, polishId, similarToPolishId) {
+async function findDupeSubmission(userId, polishId, similarToPolishId) {
     // check if this submiossion already exists in the database
-    const userSubmissionQuery = await userSubmissionModel.findOne({
+    const userSubmissionQuery = await dupeSubmissions.findOne({
         where: {
             user_id: userId,
             polish_id: polishId,
@@ -17,7 +18,7 @@ async function findUserSubmission(userId, polishId, similarToPolishId) {
 }
 
 async function findUserSubmissionById(userSubmissionId) {
-    const userSubmissionQuery = await userSubmissionModel.findOne({
+    const userSubmissionQuery = await dupeSubmissions.findOne({
         where: { submission_id: userSubmissionId },
     });
     return userSubmissionQuery;
@@ -28,14 +29,14 @@ async function findUserSubmissionById(userSubmissionId) {
  * @param {Object} attributes
  * @returns Promise
  **/
-async function insertNewUserSubmission(attributes) {
+async function insertNewDupeSubmission(attributes) {
     // assuming it's not in db already
-    const newUserSubmission = await userSubmissionModel.create(attributes);
+    const newUserSubmission = await dupeSubmissions.create(attributes);
     return newUserSubmission;
 }
 
-async function approveUserSubmission(userSubmissionId) {
-    const userSubmission = await userSubmissionModel.findOne({
+async function approveDupeSubmission(userSubmissionId) {
+    const userSubmission = await dupeSubmissions.findOne({
         where: { submission_id: userSubmissionId },
     });
     userSubmission.status = 'approved';
@@ -43,8 +44,8 @@ async function approveUserSubmission(userSubmissionId) {
     return userSubmission;
 }
 
-async function rejectUserSubmission(userSubmissionId) {
-    const userSubmission = await userSubmissionModel.findOne({
+async function rejectDupeSubmission(userSubmissionId) {
+    const userSubmission = await dupeSubmissions.findOne({
         where: { submission_id: userSubmissionId },
     });
     userSubmission.status = 'rejected';
@@ -53,9 +54,9 @@ async function rejectUserSubmission(userSubmissionId) {
 }
 
 module.exports = {
-    insertNewUserSubmission,
-    findUserSubmission,
+    insertNewUserSubmission: insertNewDupeSubmission,
+    findUserSubmission: findDupeSubmission,
     findUserSubmissionById,
-    approveUserSubmission,
-    rejectUserSubmission,
+    approveUserSubmission: approveDupeSubmission,
+    rejectUserSubmission: rejectDupeSubmission,
 };

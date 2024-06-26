@@ -6,7 +6,6 @@ const logger = require('../config/logger');
 const router = require('express').Router();
 const brandService = require('../services/brandService');
 const polishService = require('../services/polishService');
-const userSubmissionService = require('../services/userSubmissionService');
 const userService = require('../services/userService');
 const typeService = require('../services/typeService');
 const colorService = require('../services/colorService');
@@ -14,10 +13,8 @@ const formulaService = require('../services/formulaService');
 const {
     validateInsertPolish,
     validateInsertBrand,
-    validateLinkDupe,
 } = require('../utils/insertPolishValidator');
 
-// define the route to insert a new polish
 router.post('/api/uploadPolish', validateInsertPolish, async (req, res) => {
     logger.info('Received request to upload a new polish');
     const {
@@ -98,40 +95,6 @@ router.post('/api/brand', validateInsertBrand, async (req, res) => {
         `Added new brand ${name} with auto-generated ID: ${newBrand.brand_id}`
     );
     res.status(201).json({ brand: `${name}`, id: newBrand.brand_id });
-});
-
-router.post('/api/linkDupe', validateLinkDupe, async (req, res) => {
-    logger.info('Received request to upload new polish dupe');
-    // insert submission into user_submissions table
-    const { polishId, dupeId } = req.query;
-    const { username } = req.body;
-    // get the user's id based on the username
-    const userId = await userService.getUserId(username);
-    if (!userId) {
-        return res.status(400).json({ error: 'User not found' });
-    }
-    // first check if this submission already exists
-    const findSubmission = await userSubmissionService.findUserSubmission(
-        userId,
-        polishId,
-        dupeId
-    );
-    if (findSubmission) {
-        logger.error(
-            `User ${username} has ALREADY submitted dupe ${dupeId} for polish ${polishId}`
-        );
-        return res.status(400).json({
-            error: 'Duplicate submission. Please wait for admin approval',
-        });
-    }
-    const submission = {
-        user_id: userId,
-        polish_id: polishId,
-        similar_to_polish_id: dupeId,
-    };
-    const newSubmission =
-        await userSubmissionService.insertNewUserSubmission(submission);
-    res.status(201).json({ submission: newSubmission });
 });
 
 module.exports = router;

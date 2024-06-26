@@ -8,8 +8,8 @@ const db = require('../config/database');
 const user = require('./rbac/userModel');
 const polish = require('./polishModel');
 
-const userSubmission = db.define(
-    'user_submissions',
+const dupeSubmissions = db.define(
+    'dupe_submissions',
     {
         submission_id: {
             type: Sequelize.INTEGER,
@@ -29,8 +29,8 @@ const userSubmission = db.define(
 );
 
 // create associations with foreign keys
-userSubmission.belongsTo(user, { foreignKey: 'user_id' });
-userSubmission.belongsTo(polish, { foreignKey: 'polish_id' });
-userSubmission.belongsTo(polish, { foreignKey: 'similar_to_polish_id' });
+dupeSubmissions.belongsTo(user, { foreignKey: 'user_id' });
+dupeSubmissions.belongsTo(polish, { foreignKey: 'polish_id' });
+dupeSubmissions.belongsTo(polish, { foreignKey: 'similar_to_polish_id' });
 
-module.exports = userSubmission;
+module.exports = dupeSubmissions;

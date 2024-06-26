@@ -10,6 +10,7 @@ const mountRoutes = require('./src/routers/index');
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 mountRoutes(app);
 

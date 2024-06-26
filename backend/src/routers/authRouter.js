@@ -14,6 +14,9 @@ const {
 const logger = require('../config/logger');
 const userService = require('../services/userService');
 const config = require('../config/config');
+const userRolesService = require('../services/userRolesService');
+const rolesService = require('../services/rolesService');
+const roles = require('../constants/roles');
 
 /**
  * This function authenticates a user.
@@ -121,6 +124,20 @@ router.post('/signup', validateSignUp, async (req, res) => {
 
         // create new user
         const user = await userService.createUser(username, email, password);
+
+        // get the USER role
+        const role = await rolesService.findRolesByName(roles.USER);
+
+        // assign USER role to new user
+        const userRole = await userRolesService.assignRoleToUser(
+            user.user_id,
+            role.role_id
+        );
+        if (!userRole) {
+            return res
+                .status(500)
+                .json({ msg: 'Error assigning role to user' });
+        }
         res.status(201).json({
             msg: 'User created',
             username: user.username,

@@ -1,5 +1,6 @@
 /**
  * @author Valeria Molina Recinos
+ * Endpoints restricted only to admins
  */
 
 const express = require('express');

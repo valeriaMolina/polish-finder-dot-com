@@ -5,7 +5,7 @@
 const { Sequelize } = require('sequelize');
 const db = require('../config/database');
 
-const user = require('./userModel');
+const user = require('./rbac/userModel');
 const polish = require('./polishModel');
 
 const userSubmission = db.define(

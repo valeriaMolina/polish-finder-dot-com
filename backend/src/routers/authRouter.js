@@ -56,18 +56,12 @@ router.post('/auth', validateAuth, async (req, res) => {
 
         // store refresh token in database
         await userService.saveRefreshToken(user.user_id, refreshToken);
+        const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
 
-        const token = jwt.sign(
-            payload,
-            config.jwtSecret,
-            { expiresIn: '24h' },
-            (err, token) => {
-                if (err) throw err;
-                return token;
-            }
-        );
-
-        res.json({ token, refreshToken });
+        res.json({
+            token: token,
+            refreshToken: refreshToken,
+        });
     } catch (err) {
         logger.error(`Error authenticating user: ${err.message}`);
         res.status(500).send('Internal Server Error');
@@ -177,15 +171,7 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     }
 
     const payload = { user: { id: user.user_id } };
-    const token = jwt.sign(
-        payload,
-        config.jwtSecret,
-        { expiresIn: '24h' },
-        (err, token) => {
-            if (err) throw err;
-            return token;
-        }
-    );
+    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
     res.json({ token });
 });
 

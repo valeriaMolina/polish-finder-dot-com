@@ -5,9 +5,15 @@
 
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
-const userModel = require('../models/userModel');
+const userModel = require('../models/rbac/userModel');
 const logger = require('../config/logger');
 const config = require('../config/config');
+
+async function getUserByUserId(userId) {
+    logger.info(`Getting user from user id ${userId}`);
+    const user = await userModel.findOne({ where: { user_id: userId } });
+    return user;
+}
 
 /**
  * Retrieves the user ID for a given username.
@@ -180,6 +186,7 @@ async function removeRefreshToken(userId) {
 }
 
 module.exports = {
+    getUserByUserId,
     getUserId,
     getUserByUsername,
     getUserByEmail,

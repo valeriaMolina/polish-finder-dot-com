@@ -11,16 +11,19 @@ const logger = require('../config/logger');
 
 // authenticate the bearer token
 const authenticateToken = (req, res, next) => {
+    logger.info(`Authenticating token`);
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (token === null) {
+    if (!token) {
         return res.status(401).json({ error: 'No token provided' });
     }
 
     // check that the token is valid
     jwt.verify(token, config.jwtSecret, (err, user) => {
         if (err) {
-            return res.status(403).json({ error: 'Forbidden' });
+            return res
+                .status(403)
+                .json({ error: 'Forbidden', msg: err.message });
         }
         req.body.user = user;
         next();
@@ -30,14 +33,16 @@ function authorize(permissionName) {
     return async (req, res, next) => {
         // find if the user has the required permission
         // for performing this action
-        const { username } = req.body;
+        const user = req.body.user;
+        const id = user.user.id;
+
         logger.info(
-            `Checking if user ${username} has permission ${permissionName}`
+            `Checking if user with id ${id} has permission ${permissionName}`
         );
 
         // find user in database
         try {
-            const user = await userService.getUserByUsername(username);
+            const user = await userService.getUserByUserId(id);
             if (user === null) {
                 return res.status(400).json({ msg: 'User not found' });
             }

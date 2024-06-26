@@ -9,6 +9,7 @@ const polishService = require('../services/polishService');
 const { validateSearch } = require('../utils/searchValidator');
 
 // Search route
+// Does not need to be authenticated
 router.get('/api/search/', validateSearch, async (req, res) => {
     // given a polish_id, find the associated dupes to that polish_id
     logger.info(

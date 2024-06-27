@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../../../../libraries/config/config');
 const userService = require('../../../users/service/user-service');
 const userRolesService = require('../../service/user-roles-service');
-const rolesPermissionsModel = require('../../db/roles-permissions');
+const rolesPermissionsService = require('../../service/roles-permissions-service');
 const logger = require('../../../../libraries/logger/logger');
 
 // authenticate the bearer token
@@ -61,7 +61,7 @@ function authorize(permissionName) {
                 const roleId = userRole.role_id;
                 // get the role's permissions
                 const roles =
-                    await rolesPermissionsModel.findRolesByRoleId(roleId);
+                    await rolesPermissionsService.findRolesByRoleId(roleId);
                 // check if the role has the required permission
                 roles.filter((role) => role.permission_name === permissionName);
                 if (roles.length > 0) {

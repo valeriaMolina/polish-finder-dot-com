@@ -27,7 +27,33 @@ async function insertNewBrand(name) {
     return newBrand;
 }
 
+/**
+ * Checks if a brand name exists in the database.
+ *
+ * @param {String} name - The name of the brand to check.
+ * @returns {Promise<boolean>} - A promise that resolves to true if the brand exists, false otherwise.
+ *
+ * @example
+ * // Example usage:
+ * isBrandInTable('Apple').then((exists) => {
+ *     if (exists) {
+ *         console.log('Brand exists in the database.');
+ *     } else {
+ *         console.log('Brand does not exist in the database.');
+ *     }
+ * });
+ */
+async function isBrandInTable(name) {
+    const brandQuery = await findBrandNameInTable(name);
+    if (brandQuery) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 module.exports = {
     findBrandNameInTable,
     insertNewBrand,
+    isBrandInTable,
 };

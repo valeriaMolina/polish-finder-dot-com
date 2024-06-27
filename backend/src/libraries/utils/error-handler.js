@@ -10,6 +10,14 @@ class BrandNotFoundError extends Error {
     }
 }
 
+class BrandAlreadyExistsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'BrandAlreadyExistsError';
+        this.statusCode = 400; // conflict
+    }
+}
+
 class PolishAlreadyExistsError extends Error {
     constructor(message) {
         super(message);
@@ -21,4 +29,5 @@ class PolishAlreadyExistsError extends Error {
 module.exports = {
     BrandNotFoundError,
     PolishAlreadyExistsError,
+    BrandAlreadyExistsError,
 };

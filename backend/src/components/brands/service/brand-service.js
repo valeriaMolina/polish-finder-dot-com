@@ -3,7 +3,11 @@
  * @author Valeria Molina Recinos
  */
 
+const logger = require('../../../libraries/logger/logger');
 const brands = require('../db/brands');
+const {
+    BrandAlreadyExistsError,
+} = require('../../../libraries/utils/error-handler');
 
 /**
  * Finds a brand name in table
@@ -52,8 +56,51 @@ async function isBrandInTable(name) {
     }
 }
 
+/**
+ * Inserts a new brand into the database.
+ *
+ * @param {Object} data - The data object containing the brand name.
+ * @param {String} data.name - The name of the brand to be inserted.
+ *
+ * @returns {Promise<Object>} - A promise that resolves to the newly inserted brand model.
+ *
+ * @throws {BrandAlreadyExists} - If the brand name already exists in the database.
+ *
+ * @example
+ * // Example usage:
+ * newBrandInsert({ name: 'Apple' })
+ * .then((newBrand) => {
+ *     console.log(`Added new brand ${newBrand.name} with auto-generated ID: ${newBrand.brand_id}`);
+ * })
+ * .catch((error) => {
+ *     if (error instanceof BrandAlreadyExists) {
+ *         console.error(error.message);
+ *     } else {
+ *         console.error('An unexpected error occurred:', error);
+ *     }
+ * });
+ */
+async function newBrandInsert(data) {
+    const { name } = data;
+    logger.info(`Received request to add new brand ${name}`);
+    // Check if brand is already in database
+    if (isBrandInTable(name) === true) {
+        logger.error(`Brand ${name} is already in the database`);
+        throw new BrandAlreadyExistsError(
+            `Brand ${name} is already in the database`
+        );
+    }
+    // otherwise insert new brand into db
+    const newBrand = await insertNewBrand(name);
+    logger.info(
+        `Added new brand ${name} with auto-generated ID: ${newBrand.brand_id}`
+    );
+    return newBrand;
+}
+
 module.exports = {
     findBrandNameInTable,
     insertNewBrand,
     isBrandInTable,
+    newBrandInsert,
 };

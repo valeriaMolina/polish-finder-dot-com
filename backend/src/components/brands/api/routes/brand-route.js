@@ -27,22 +27,18 @@ router.post(
     authorize(permissions.UPLOAD_BRAND),
     validateInsertBrand,
     async (req, res) => {
-        const { name } = req.body;
-        logger.info(`Received request to add new brand ${name}`);
-        // Check if brand is already in the database
-        if (brandService.isBrandInTable(name)) {
-            logger.error(`Brand ${name} is already in the database`);
-            return res
-                .status(400)
-                .json({ error: `${name} is already in the database` });
+        try {
+            logger.info(`Received request to insert new brand`);
+            const newBrand = await brandService.newBrandInsert(req.body);
+            res.status(201).json(newBrand);
+        } catch (err) {
+            if (err.statusCode) {
+                return res.status(err.statusCode).send({ error: err.message });
+            } else {
+                // error was not anticipated
+                return res.status(500).send({ error: err.message });
+            }
         }
-
-        // otherwise insert new brand into db
-        const newBrand = await brandService.insertNewBrand(name);
-        logger.info(
-            `Added new brand ${name} with auto-generated ID: ${newBrand.brand_id}`
-        );
-        res.status(201).json({ brand: `${name}`, id: newBrand.brand_id });
     }
 );
 

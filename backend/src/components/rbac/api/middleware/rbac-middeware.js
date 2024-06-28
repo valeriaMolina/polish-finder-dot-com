@@ -37,7 +37,7 @@ function authorize(permissionName) {
         const id = user.user.id;
 
         logger.info(
-            `Checking if user with id ${id} has permission ${permissionName}`
+            `Authorization: Checking if user with id ${id} has permission ${permissionName}`
         );
 
         // find user in database

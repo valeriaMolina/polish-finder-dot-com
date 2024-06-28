@@ -5,26 +5,42 @@
 const express = require('express');
 const router = express.Router();
 const logger = require('../../../../libraries/logger/logger');
-const polishService = require('../../../polish/service/polish-service');
-const { validateSearch } = require('../middleware/search-validator');
+const {
+    validateDupeSearch,
+    validateMatchSearch,
+} = require('../middleware/search-validator');
+const { searchService } = require('../../service/search-service');
 
-// Search route
+// Search for dupes
 // Does not need to be authenticated
-router.get('/api/search/', validateSearch, async (req, res) => {
-    // given a polish_id, find the associated dupes to that polish_id
-    logger.info(
-        `Received request to search for dupes for polish ID: ${req.query.polishId}`
-    );
-    const matches = [];
-    const dupes = await polishService
-        .findPolishById(req.query.polishId)
-        .then((polish) => polish.dupes);
-    if (!dupes) {
-        logger.error(`No dupes found for polish ID: ${req.query.polishId}`);
-        return res.status(404).json({ message: 'No dupes found' });
+router.get('/dupes', validateDupeSearch, async (req, res) => {
+    try {
+        logger.info(`Finding a match...`);
+        const results = await searchService.search(req.query);
+        res.json(results);
+    } catch (err) {
+        if (err.statusCode) {
+            res.json({ message: `No matches found.` });
+        } else {
+            logger.error(`Error not anticipated: ${err.message}`);
+            res.status(500).json({
+                message: `Error not anticipated: ${err.message}`,
+            });
+        }
     }
-    matches.push(...dupes);
-    res.status(200).json({ matches });
+});
+
+// search for a polish
+// Does not need to be authenticated
+router.get('/match', validateMatchSearch, async (req, res) => {
+    try {
+        logger.info(`Finding a match...`);
+        res.send('OK');
+    } catch (err) {
+        res.status(500).json({
+            message: `Error not anticipated: ${err.message}`,
+        });
+    }
 });
 
 module.exports = router;

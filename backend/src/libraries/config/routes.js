@@ -10,7 +10,7 @@ const auth = require('../../components/users/api/routes/auth-router');
 const mountRoutes = (app) => {
     app.use('/brands', brand);
     app.use('/polish', insert);
-    app.use(rbac);
+    app.use('/role', rbac);
     app.use(search);
     app.use(userSubmissions);
     // app.use(submissionReviews); uncomment once this router is fixed

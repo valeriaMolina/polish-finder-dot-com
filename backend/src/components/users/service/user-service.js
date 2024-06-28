@@ -23,7 +23,7 @@ const config = require('../../../libraries/config/config');
  * console.log(user); // Output: { user_id: 123, username: 'john_doe', email: 'johndoe@example.com' }
  */
 async function getUserByUserId(userId) {
-    logger.info(`Getting user from user id ${userId}`);
+    logger.info(`Finding a user with id: ${userId}`);
     const user = await userModel.findOne({ where: { user_id: userId } });
     return user;
 }

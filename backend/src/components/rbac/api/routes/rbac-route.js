@@ -7,16 +7,27 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../../../../libraries/logger/logger');
 const permissions = require('../../../../libraries/constants/permissions');
-const userService = require('../../../users/service/user-service');
 const roleService = require('../../service/roles-service');
-const userRolesService = require('../../service/user-roles-service');
 const {
     authenticateToken,
     authorize,
 } = require('../middleware/rbac-middeware');
 
+/**
+ * Endpoint to assign a role to a user.
+ * This endpoint is restricted to users with the MANAGE_ROLES permission.
+ *
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @param {Object} req.body - The request body containing the username and roleName
+ * @param {string} req.body.username - The username of the user
+ * @param {string} req.body.roleName - The name of the role to be assigned
+ *
+ * @returns {Promise} - A promise that resolves to the response object with status 201 and a JSON object containing the new user role
+ * @throws Will throw an error if the user does not have the MANAGE_ROLES permission or if there is an error while assigning the role
+ */
 router.post(
-    '/role-assign',
+    '/assign',
     authenticateToken,
     authorize(permissions.MANAGE_ROLES),
     async (req, res) => {
@@ -25,65 +36,49 @@ router.post(
             `Received request to assign role ${roleName} to user ${username}`
         );
         try {
-            // ensure user exists
-            const user = await userService.getUserByUsername(username);
-            if (!user) {
-                return res.status(400).json({ error: 'User not found' });
-            }
-            // ensure role exists
-            const role = await roleService.findRolesByName(roleName);
-            if (!role) {
-                return res.status(400).json({ error: 'Role not found' });
-            }
-
-            // assign role to user
-            const userRole = await userRolesService.assignRoleToUser(
-                user.user_id,
-                role.role_id
-            );
-            res.status(201).json(userRole);
+            const newUserRole = await roleService.assignRole(req.body);
+            res.status(201).json(newUserRole);
         } catch (err) {
-            res.status(500).json({
-                error: 'Internal Server Error',
-                msg: err.message,
-            });
+            if (err.statusCode) {
+                return res.status(err.statusCode).send({ error: err.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${err.message}`);
+                return res.status(500).send({ error: err.message });
+            }
         }
     }
 );
 
+/**
+ * Endpoint to revoke a role from a user.
+ * This endpoint is restricted to users with the MANAGE_ROLES permission.
+ *
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @param {Object} req.body - The request body containing the username and roleName
+ * @param {string} req.body.username - The username of the user
+ * @param {string} req.body.roleName - The name of the role to be revoked
+ *
+ * @returns {Promise} - A promise that resolves to the response object with status 200 and a JSON object containing a message
+ * @throws Will throw an error if the user does not have the MANAGE_ROLES permission or if there is an error while revoking the role
+ */
 router.post(
-    '/role-revoke',
+    '/revoke',
     authenticateToken,
     authorize(permissions.MANAGE_ROLES),
     async (req, res) => {
-        const { username, roleName } = req.body;
-        logger.info(
-            `Received request to revoke role ${roleName} from user ${username}`
-        );
         try {
-            // check that user exists
-            const user = await userService.getUserByUsername(username);
-            if (!user) {
-                return res.status(400).json({ error: 'User not found' });
-            }
-            // ensure role exists
-            const role = await roleService.findRolesByName(roleName);
-            if (!role) {
-                return res.status(400).json({ error: 'Role not found' });
-            }
-            // revoke role from user
-            await userRolesService.revokeRoleFromUser(
-                user.user_id,
-                role.role_id
-            );
-            res.status(200).json({
-                message: `Role ${roleName} revoked from user ${username}`,
-            });
+            await roleService.revokeRole(req.body);
+            res.status(200).json({ message: 'Role revoked' });
         } catch (err) {
-            res.status(500).json({
-                error: 'Internal Server Error',
-                msg: err.message,
-            });
+            if (err.statusCode) {
+                return res.status(err.statusCode).send({ error: err.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${err.message}`);
+                return res.status(500).send({ error: err.message });
+            }
         }
     }
 );

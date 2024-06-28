@@ -2,7 +2,12 @@
  * @author Valeria Molina Recinos
  */
 
+const logger = require('../../../libraries/logger/logger');
 const userRolesModel = require('../db/user-roles');
+const {
+    SequelizeValidationError,
+    UserAlreadyHasRoleError,
+} = require('../../../libraries/utils/error-handler');
 
 async function findUserRolesByUserId(userId) {
     // finds the user role based on the user id
@@ -13,12 +18,41 @@ async function findUserRolesByUserId(userId) {
 }
 
 async function assignRoleToUser(userId, roleId) {
-    // assuming user and role exists
-    const newRoleAssignment = await userRolesModel.create({
-        user_id: userId,
-        role_id: roleId,
-    });
-    return newRoleAssignment;
+    // This method will find a user role matching the userId and roleId.
+    // If it does not exist, it will create a new one with the provided userId and roleId.
+    try {
+        const [userRole, created] = await userRolesModel.findOrCreate({
+            where: { user_id: userId },
+            defaults: { user_id: userId, role_id: roleId },
+        });
+        // The `created` variable is a boolean indicating whether a new record was created.
+        if (created) {
+            logger.info(
+                `Created new user role for user ${userId} and role ${roleId}`
+            );
+        } else {
+            // modify the role assignment
+            userRole.role_id = roleId;
+            await userRole.save();
+            logger.info(
+                `Updated existing user role for user ${userId} and role ${roleId}`
+            );
+        }
+        return userRole;
+    } catch (err) {
+        if (err.name === 'SequelizeValidationError') {
+            // handle validation errors
+            const errors = err.errors.map((error) => error.message);
+            logger.error(`Validation error: ${errors.join(', ')}`);
+            throw new SequelizeValidationError(
+                `Validation error: ${errors.join(', ')}`
+            );
+        } else {
+            // other errors
+            logger.error(`Unexpected error: ${err.message}`);
+            throw err;
+        }
+    }
 }
 
 async function revokeRoleFromUser(userId, roleId) {

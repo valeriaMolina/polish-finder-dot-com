@@ -8,8 +8,6 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../../../../libraries/logger/logger');
 const permissions = require('../../../../libraries/constants/permissions');
-const dupeSubmissionService = require('../../service/dupe-submission-service');
-const polishSubmissionService = require('../../service/polish-submission-service');
 const {
     authenticateToken,
     authorize,
@@ -21,6 +19,11 @@ const {
     validateDupeSubmission,
     formatPolishSubmission,
 } = require('../middleware/submissions-validator');
+const {
+    submitDupe,
+    submitPolish,
+    submitBrand,
+} = require('../../service/submission-service');
 
 /**
  * Handles requests from users to add polish dupes to db.
@@ -34,72 +37,56 @@ const {
  * @returns {Object} - Returns a JSON object with the new submission or an error message
  */
 router.post(
-    '/api/linkDupe',
+    '/dupe',
     authenticateToken,
     authorize(permissions.UPLOAD_DUPE),
     validateDupeSubmission,
     async (req, res) => {
-        logger.info('Received request to upload new polish dupe');
-        // insert submission into polish_submissions table
-        const { polishId, dupeId } = req.query;
-        const user = req.body.user;
-        const id = user.user.id;
-        // first check if this submission already exists
-        const findSubmission = await dupeSubmissionService.findUserSubmission(
-            id,
-            polishId,
-            dupeId
-        );
-        if (findSubmission) {
-            logger.error(
-                `User ${username} has ALREADY submitted dupe ${dupeId} for polish ${polishId}`
-            );
-            return res.status(400).json({
-                error: 'Duplicate submission. Please wait for admin approval',
+        try {
+            const submit = await submitDupe(req.body);
+            res.status(201).json({
+                message: `Submission has been created`,
+                submissionDetails: submit,
             });
+        } catch (err) {
+            logger.error(`Error while submitting dupe: ${err.message}`);
+            if (err.statusCode) {
+                return res.status(err.statusCode).send({ error: err.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${err.message}`);
+                return res.status(500).send({ error: err.message });
+            }
         }
-        // check that both polishes are already in the database
-        // todo
-        const submission = {
-            user_id: userId,
-            polish_id: polishId,
-            similar_to_polish_id: dupeId,
-        };
-        const newSubmission =
-            await dupeSubmission.insertNewUserSubmission(submission);
-        res.status(201).json({ submission: newSubmission });
     }
 );
 
 /**
  * Handles requests from users to add polishes to db.
+ * TODO: rework this route
  */
 router.post(
-    '/api/requestNewPolish',
+    '/polish',
     authenticateToken,
     authorize(permissions.UPLOAD_POLISH),
     validatePolishSubmission,
     formatPolishSubmission,
     async (req, res) => {
-        logger.info(`Received request for adding new polish`);
-        // insert submission into polish_submissions table
-        const user = req.body.user;
-        const id = user.user.id;
-        const submission = req.body.submission;
-        submission.user_id = id;
-        // add polish to polish submission
         try {
-            const polishSubmission =
-                await polishSubmissionService.insertNewPolishSubmission(
-                    submission
-                );
-            res.status(201).json({ submission: polishSubmission });
+            logger.info(`Received a user submission for a new polish`);
+            const newPolishInserted = await submitPolish(req.body);
+            res.status(201).json(newPolishInserted);
         } catch (err) {
-            logger.error(err);
-            return res.status(500).json({
-                error: 'Internal Server Error',
-                msg: err.message,
-            });
+            logger.error(
+                `Error while making polish submission: ${err.message}`
+            );
+            if (err.statusCode) {
+                return res.status(err.statusCode).send({ error: err.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${err.message}`);
+                return res.status(500).send({ error: err.message });
+            }
         }
     }
 );
@@ -107,10 +94,27 @@ router.post(
 /**
  * Handles requests from users to add brands to db.
  */
-router.post('/api/requestNewBrand', authenticateToken, async (req, res) => {
-    logger.info(`Received request for new brand`);
-    // todo
-    res.send('ok');
-});
+router.post(
+    '/brand',
+    authenticateToken,
+    authorize(permissions.UPLOAD_BRAND),
+    validateBrandSubmission,
+    async (req, res) => {
+        try {
+            logger.info(`Received a user submission for a new brand`);
+            const newBrandRequested = await submitBrand(req.body);
+            res.status(201).json(newBrandRequested);
+        } catch (err) {
+            logger.error(`Error while making brand submission: ${err.message}`);
+            if (err.statusCode) {
+                return res.status(err.statusCode).send({ error: err.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${err.message}`);
+                return res.status(500).send({ error: err.message });
+            }
+        }
+    }
+);
 
 module.exports = router;

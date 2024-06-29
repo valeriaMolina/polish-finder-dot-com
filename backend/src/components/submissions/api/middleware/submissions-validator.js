@@ -8,6 +8,7 @@ const typeService = require('../../../polish/service/type-service');
 const colorService = require('../../../polish/service/color-service');
 const formulaService = require('../../../polish/service/formula-service');
 const polishService = require('../../../polish/service/polish-service');
+const status = require('../../../../libraries/constants/status');
 const logger = require('../../../../libraries/logger/logger');
 
 /**
@@ -34,7 +35,7 @@ exports.validatePolishSubmission = [
  * Middleware function to validate the brand submission data.
  */
 exports.validateBrandSubmission = [
-    check('brandName', 'Brand name is required').not().isEmpty(),
+    check('brandName', 'Brand name is required').not().isEmpty().isString(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -47,8 +48,8 @@ exports.validateBrandSubmission = [
  * Middleware function to validate the dupe submission data.
  */
 exports.validateDupeSubmission = [
-    query('polishId').isNumeric().not().isEmpty(),
-    query('dupeId').isNumeric().not().isEmpty(),
+    query('polishId', 'Polish ID is required').isNumeric().not().isEmpty(),
+    query('dupeId', 'DupeID is required').isNumeric().not().isEmpty(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -137,3 +138,23 @@ exports.formatPolishSubmission = async (req, res, next) => {
     req.body.submission = submission;
     next();
 };
+
+exports.validateUpdateQuery = [
+    query('id', 'Missing id').exists().isInt(),
+    query('status', 'Status is required')
+        .exists()
+        .isString()
+        .custom((value) =>
+            [status.PENDING, status.APPROVED, status.REJECTED].includes(value)
+        )
+        .withMessage(
+            `Status must be: ${status.PENDING}, ${status.APPROVED}, ${status.REJECTED}`
+        ),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];

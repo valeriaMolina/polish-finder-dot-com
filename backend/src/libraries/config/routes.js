@@ -11,9 +11,9 @@ const mountRoutes = (app) => {
     app.use('/brands', brand);
     app.use('/polish', insert);
     app.use('/role', rbac);
-    app.use(search);
-    app.use(userSubmissions);
-    // app.use(submissionReviews); uncomment once this router is fixed
+    app.use('/search', search);
+    app.use('/submit', userSubmissions);
+    app.use('/update', submissionReviews);
     app.use(auth);
 };
 

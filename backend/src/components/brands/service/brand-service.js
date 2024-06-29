@@ -49,11 +49,7 @@ async function insertNewBrand(name) {
  */
 async function isBrandInTable(name) {
     const brandQuery = await findBrandNameInTable(name);
-    if (brandQuery) {
-        return true;
-    } else {
-        return false;
-    }
+    return brandQuery;
 }
 
 /**
@@ -84,10 +80,11 @@ async function newBrandInsert(data) {
     const { name } = data;
     logger.info(`Received request to add new brand ${name}`);
     // Check if brand is already in database
-    if (isBrandInTable(name) === true) {
-        logger.error(`Brand ${name} is already in the database`);
+    const brandExists = await isBrandInTable(name);
+    if (brandExists) {
+        logger.error(`Brand ${name} already exists in our records`);
         throw new BrandAlreadyExistsError(
-            `Brand ${name} is already in the database`
+            `Brand ${name} already exists in our records`
         );
     }
     // otherwise insert new brand into db

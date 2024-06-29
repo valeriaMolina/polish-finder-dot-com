@@ -9,18 +9,21 @@ const {
     validateDupeSearch,
     validateMatchSearch,
 } = require('../middleware/search-validator');
-const { searchService } = require('../../service/search-service');
+const { search } = require('../../service/search-service');
 
 // Search for dupes
 // Does not need to be authenticated
 router.get('/dupes', validateDupeSearch, async (req, res) => {
     try {
         logger.info(`Finding a match...`);
-        const results = await searchService.search(req.query);
+        const results = await search(req.query);
         res.json(results);
     } catch (err) {
         if (err.statusCode) {
-            res.json({ message: `No matches found.` });
+            res.status(err.statusCode).json({
+                error: err.name,
+                message: err.message,
+            });
         } else {
             logger.error(`Error not anticipated: ${err.message}`);
             res.status(500).json({

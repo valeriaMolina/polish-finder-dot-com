@@ -45,4 +45,6 @@ router.post(
 
 // TODO: add route to modify/update an existing polish
 
+// TODO: add route to link a dupe
+
 module.exports = router;

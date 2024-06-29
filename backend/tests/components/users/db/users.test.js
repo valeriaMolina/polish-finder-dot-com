@@ -1,6 +1,5 @@
 const sinon = require('sinon');
-const User = require('../../src/models/userModel');
-const { ValidationError } = require('sequelize');
+const User = require('../../../../src/components/users/db/users');
 
 describe('User Model', () => {
     afterEach(() => {

@@ -1,7 +1,5 @@
 const sinon = require('sinon');
-const Sequelize = require('sequelize');
-const db = require('../../src/config/database');
-const Formula = require('../../src/models/formulaModel');
+const Formula = require('../../../../src/components/polish/db/formulas');
 
 describe('Formula Model', () => {
     afterEach(() => {

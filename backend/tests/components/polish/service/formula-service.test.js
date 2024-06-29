@@ -1,6 +1,6 @@
 const sinon = require('sinon');
-const formulaModel = require('../../src/models/formulaModel');
-const formulaService = require('../../src/services/formulaService');
+const formulaModel = require('../../../../src/components/polish/db/formulas');
+const formulaService = require('../../../../src/components/polish/service/formula-service');
 
 describe('formulaService', () => {
     afterEach(() => {

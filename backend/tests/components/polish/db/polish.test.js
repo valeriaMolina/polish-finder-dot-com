@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const Polish = require('../../src/models/polishModel');
+const Polish = require('../../../../src/components/polish/db/polishes');
 describe('Polish Model', () => {
     afterEach(() => {
         sinon.restore();

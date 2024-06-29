@@ -1,6 +1,6 @@
 const sinon = require('sinon');
-const typeModel = require('../../src/models/typeModel');
-const typeService = require('../../src/services/typeService');
+const typeModel = require('../../../../src/components/polish/db/types');
+const typeService = require('../../../../src/components/polish/service/type-service');
 
 describe('typeService', () => {
     afterEach(() => {

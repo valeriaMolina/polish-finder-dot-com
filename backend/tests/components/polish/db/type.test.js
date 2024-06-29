@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const Type = require('../../src/models/typeModel');
+const Type = require('../../../../src/components/polish/db/types');
 
 describe('Type Model', () => {
     afterEach(() => {

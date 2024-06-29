@@ -5,7 +5,7 @@ const {
     validateAuth,
     validateSignUp,
     validateRefresh,
-} = require('../../src/utils/authValidator');
+} = require('../../../../../src/components/users/api/middleware/auth-validator');
 
 const app = express();
 app.use(express.json());

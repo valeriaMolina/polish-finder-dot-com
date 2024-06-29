@@ -1,7 +1,5 @@
 const sinon = require('sinon');
-const Sequelize = require('sequelize');
-const db = require('../../src/config/database');
-const Color = require('../../src/models/colorModel');
+const Color = require('../../../../src/components/polish/db/colors');
 
 describe('Color Model', () => {
     afterEach(() => {

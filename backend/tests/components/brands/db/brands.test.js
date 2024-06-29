@@ -1,7 +1,5 @@
 const sinon = require('sinon');
-const Sequelize = require('sequelize');
-const db = require('../../src/config/database');
-const Brand = require('../../src/models/brandModel');
+const Brand = require('../../../../src/components/brands/db/brands');
 
 describe('Brand Model', () => {
     afterEach(() => {

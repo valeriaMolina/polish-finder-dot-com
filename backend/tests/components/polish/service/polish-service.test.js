@@ -1,6 +1,6 @@
 const sinon = require('sinon');
-const polishModel = require('../../src/models/polishModel');
-const polishService = require('../../src/services/polishService');
+const polishModel = require('../../../../src/components/polish/db/polishes');
+const polishService = require('../../../../src/components/polish/service/polish-service');
 
 describe('polishService', () => {
     afterEach(() => {

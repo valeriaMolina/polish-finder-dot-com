@@ -4,6 +4,7 @@
 
 const dupeSubmissionService = require('../service/dupe-submission-service');
 const brandSubmissionService = require('./brand-submission-service');
+const polishSubmissionService = require('./polish-submission-service');
 const {
     UserAlreadySubmittedDupeError,
     DupeAlreadySubmitterError,
@@ -153,7 +154,8 @@ async function submitPolish(data) {
         const submission = data.submission;
         submission.user_id = id;
         // create new submission
-        const newSubmission = await insertNewPolishSubmission(submission);
+        const newSubmission =
+            await polishSubmissionService.insertNewPolishSubmission(submission);
         return newSubmission;
     } catch (err) {
         logger.error(`Error while submitting polish: ${err.message}`);
@@ -182,7 +184,7 @@ async function submitBrand(data) {
     const id = user.user.id;
     // check if the brand already exists
     try {
-        const brandExists = await brandService.findBrandNameInTable(brandName);
+        const brandExists = await brandService.findBrandNameInTable(name);
         if (brandExists) {
             logger.error(`Brand ${name} already exists in our records`);
             throw new BrandAlreadyExistsError(

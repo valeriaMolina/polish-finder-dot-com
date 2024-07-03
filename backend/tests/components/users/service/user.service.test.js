@@ -7,6 +7,14 @@ describe('userService', () => {
         sinon.restore();
     });
 
+    it('should return a user if the user id exists', async () => {
+        const mockUser = { username: 'mockUser', user_id: '123' };
+        sinon.stub(userModel, 'findOne').returns(Promise.resolve(mockUser));
+
+        const user = await userService.getUserByUserId('123');
+        expect(user).toEqual(mockUser);
+    });
+
     it('should return user id if user exists', async () => {
         const mockUser = { username: 'mockUser', user_id: '123' };
         sinon.stub(userModel, 'findOne').returns(Promise.resolve(mockUser));

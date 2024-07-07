@@ -1,8 +1,4 @@
-/**
- * @author Valeria Molina Recinos
- */
-
-const { check, validationResult } = require('express-validator');
+const { validationResult, check } = require('express-validator');
 
 exports.validateInsertBrand = [
     check('name', 'Name is required').not().isEmpty(),

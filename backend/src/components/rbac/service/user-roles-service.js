@@ -6,7 +6,6 @@ const logger = require('../../../libraries/logger/logger');
 const userRolesModel = require('../db/user-roles');
 const {
     SequelizeValidationError,
-    UserAlreadyHasRoleError,
 } = require('../../../libraries/utils/error-handler');
 
 async function findUserRolesByUserId(userId) {

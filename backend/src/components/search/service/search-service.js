@@ -9,6 +9,36 @@ const {
     PolishNotFoundError,
     SearchError,
 } = require('../../../libraries/utils/error-handler');
+
+/**
+ * Searches for polishes based on the provided filters.
+ *
+ * @param {Object} filters - The filters to apply to the search.
+ * @returns {Promise<Array>} A promise that resolves to an array of polish objects.
+ * @throws {NoMatchesFoundError} If no matches are found for the provided filters.
+ * @throws {SearchError} If an error occurs while searching for polishes.
+ */
+async function search(filters) {
+    // search for polishes based on the provided filters
+    try {
+        const results = await polishService.search(filters);
+        if (results.length === 0) {
+            logger.error(
+                `No matches found for the provided filters: ${JSON.stringify(filters)}`
+            );
+            throw new NoMatchesFoundError(
+                `No matches found for the provided filters: ${JSON.stringify(filters)}`
+            );
+        }
+        return results;
+    } catch (err) {
+        logger.error(`Error while searching for polishes: ${err.message}`);
+        throw new SearchError(
+            `Error while searching for polishes: ${err.message}`
+        );
+    }
+}
+
 /**
  * Searches for the associated dupes to a given polish_id.
  *
@@ -19,7 +49,7 @@ const {
  *
  * @throws Will throw an error if there are no dupes found.
  */
-async function search(data) {
+async function searchForDupe(data) {
     try {
         // ensure polish exists
         const polish = await polishService.findPolishById(data.polishId);
@@ -51,5 +81,6 @@ async function search(data) {
 }
 
 module.exports = {
+    searchForDupe,
     search,
 };

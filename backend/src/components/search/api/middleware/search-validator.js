@@ -2,6 +2,7 @@
  * @author Valeria Molina Recinos
  */
 
+const { Op } = require('sequelize');
 const { query, check, validationResult } = require('express-validator');
 const brandService = require('../../../brands/service/brand-service');
 const typeService = require('../../../polish/service/type-service');
@@ -45,6 +46,16 @@ exports.validateSearch = [
     check('effectColors').isArray().optional(),
     check('formulas').isArray().optional(),
     check('name').isString().optional(),
+    /**
+     * Middleware function to validate and process search parameters.
+     * It checks for at least one filter, validates the provided filters, and fetches their corresponding IDs from the database.
+     *
+     * @param {Object} req - The request object
+     * @param {Object} res - The response object
+     * @param {Function} next - The next middleware function in the stack
+     *
+     * @returns {void}
+     */
     async (req, res, next) => {
         // make sure that there is at least one filter present for displaying search results
         const length = Object.keys(req.body).length;
@@ -69,7 +80,7 @@ exports.validateSearch = [
                     error: `Brand ${req.body.brandName} does not exist in database`,
                 });
             }
-            req.search.brand = brand.brand_id;
+            req.search.brand_id = brand.brand_id;
         }
         if (req.body.type) {
             // find type id by type name
@@ -79,7 +90,7 @@ exports.validateSearch = [
                     error: `Type ${req.body.type} does not exist in database`,
                 });
             }
-            req.search.type = type.type_id;
+            req.search.type_id = type.type_id;
         }
         if (req.body.primaryColor) {
             // find primary color id by color name
@@ -91,7 +102,7 @@ exports.validateSearch = [
                     error: `Primary color ${req.body.primaryColor} does not exist in database`,
                 });
             }
-            req.search.primaryColor = primaryColor.color_id;
+            req.search.primary_color = primaryColor.color_id;
         }
         if (req.body.effectColors && req.body.effectColors.length > 0) {
             // find effect color ids by color names
@@ -116,7 +127,9 @@ exports.validateSearch = [
                 });
             }
 
-            req.search.effectColors = effectColorIds;
+            req.search.effect_colors = {
+                [Op.contains]: effectColorIds,
+            };
         }
         if (req.body.formulas && req.body.formulas.length > 0) {
             // find formula ids by formula names
@@ -142,7 +155,9 @@ exports.validateSearch = [
                     error: `Formula ${req.body.formulas[i]} does not exist in database`,
                 });
             }
-            req.search.formulas = formulaIds;
+            req.search.formula_ids = {
+                [Op.contains]: formulaIds,
+            };
         }
         if (req.body.name) {
             req.search.name = req.body.name;

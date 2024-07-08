@@ -16,6 +16,16 @@ const {
 } = require('../../../libraries/utils/error-handler');
 
 /**
+ * Finds polishes that match the given filters.
+ *
+ * @param {Object} filters - The filters to use for searching.
+ */
+async function search(filters) {
+    const searchResult = await polishModel.findAll({ where: filters });
+    return searchResult;
+}
+
+/**
  * Inserts a new polish into the database
  * @param {Object} attributes
  * @returns Promise
@@ -94,6 +104,25 @@ async function addDupePolishId(polishId, dupeId) {
     return updatedPolish;
 }
 
+/**
+ * Inserts a new polish into the database based on the provided data.
+ * Validates the brand, checks for existing polish, and retrieves IDs for type, colors, and formulas.
+ * Builds an attributes object and inserts the new polish into the database.
+ *
+ * @param {Object} data - The data object containing the necessary information for inserting a new polish.
+ * @param {string} data.name - The name of the polish.
+ * @param {string} data.brandName - The name of the brand associated with the polish.
+ * @param {string} data.type - The type of the polish.
+ * @param {string} data.primaryColor - The primary color of the polish.
+ * @param {Array<string>} data.effectColors - The effect colors of the polish.
+ * @param {Array<string>} data.formulas - The formulas used in the polish.
+ * @param {string} data.description - The description of the polish.
+ *
+ * @returns {Promise<PolishModel>} A promise that resolves to the newly inserted polish model.
+ *
+ * @throws {BrandNotFoundError} If the provided brand name is not found in the database.
+ * @throws {PolishAlreadyExistsError} If a polish with the same name and brand already exists in the database.
+ */
 async function newPolishInsert(data) {
     const {
         name,
@@ -159,4 +188,5 @@ module.exports = {
     addDupePolishId,
     polishExists,
     newPolishInsert,
+    search,
 };

@@ -8,6 +8,7 @@ const logger = require('../../../../libraries/logger/logger');
 const {
     validateDupeSearch,
     validateMatchSearch,
+    validateSearch,
 } = require('../middleware/search-validator');
 const { search } = require('../../service/search-service');
 
@@ -44,6 +45,12 @@ router.get('/match', validateMatchSearch, async (req, res) => {
             message: `Error not anticipated: ${err.message}`,
         });
     }
+});
+
+// Users can filter polishes by brand, color, formula, etc.
+router.get('/', validateSearch, async (req, res) => {
+    logger.info(`Received search request: ${JSON.stringify(req.search)}`);
+    res.send('OK');
 });
 
 module.exports = router;

@@ -6,10 +6,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const mountRoutes = require('./src/routers/index');
+const { mountRoutes } = require('./src/libraries/config/routes');
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 mountRoutes(app);
 

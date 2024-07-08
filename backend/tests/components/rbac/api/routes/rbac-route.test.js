@@ -42,6 +42,17 @@ describe('RBAC routes', () => {
         const response = await request(app).post('/assign').send(newRole);
         expect(response.status).toBe(201);
     });
+    it('Should return throw an error when something goes wrong assigning', async () => {
+        rolesService.assignRole.mockRejectedValue(new Error('Test error'));
+
+        const newRole = {
+            userName: 'USER',
+            roleName: 'User role',
+        };
+
+        const response = await request(app).post('/assign').send(newRole);
+        expect(response.status).toBe(500);
+    });
     it('should revoke a role', async () => {
         const revoke = {
             userName: 'USER',
@@ -49,5 +60,14 @@ describe('RBAC routes', () => {
         };
         const response = await request(app).post('/revoke').send(revoke);
         expect(response.status).toBe(200);
+    });
+    it('Should throw an error when revoking a role', async () => {
+        rolesService.revokeRole.mockRejectedValue(new Error('Test error'));
+        const revoke = {
+            userName: 'USER',
+            roleName: 'User role',
+        };
+        const response = await request(app).post('/revoke').send(revoke);
+        expect(response.status).toBe(500);
     });
 });

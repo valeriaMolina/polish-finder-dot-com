@@ -17,17 +17,14 @@ const authenticateToken = (req, res, next) => {
     if (!token) {
         return res.status(401).json({ error: 'No token provided' });
     }
-
-    // check that the token is valid
-    jwt.verify(token, config.jwtSecret, (err, user) => {
-        if (err) {
-            return res
-                .status(403)
-                .json({ error: 'Forbidden', msg: err.message });
-        }
+    try {
+        const user = jwt.verify(token, config.jwtSecret);
         req.body.user = user;
         next();
-    });
+    } catch (err) {
+        logger.error(`Error verifying token: ${err.message}`);
+        return res.status(403).json({ error: 'Forbidden: Invalid token' });
+    }
 };
 function authorize(permissionName) {
     return async (req, res, next) => {

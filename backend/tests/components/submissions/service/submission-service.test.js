@@ -102,3 +102,35 @@ describe('submit brand', () => {
         await expect(submissionService.submitBrand(data)).rejects.toThrow();
     });
 });
+
+describe('submit dupe', () => {
+    const data = {
+        polishId: 1,
+        dupeId: 2,
+        user: { user: { id: 3 } },
+    };
+    it('Should submit a dupe and fail due to duplicate', async () => {
+        dupeSubmissionService.checkIfSubmissionExists.mockResolvedValue({
+            submission_id: 7,
+            user_id: 6,
+        });
+        expect(submissionService.submitDupe(data)).rejects.toThrow();
+    });
+    it('should submit a duoe', async () => {
+        dupeSubmissionService.checkIfSubmissionExists.mockResolvedValue(null);
+        dupeSubmissionService.insertNewDupeSubmission.mockResolvedValue({
+            submission_id: 8,
+            user_id: 3,
+            polish_id: 1,
+            dupe_id: 2,
+            status: 'pending',
+        });
+        expect(submissionService.submitDupe(data)).resolves.toEqual({
+            submission_id: 8,
+            user_id: 3,
+            polish_id: 1,
+            dupe_id: 2,
+            status: 'pending',
+        });
+    });
+});

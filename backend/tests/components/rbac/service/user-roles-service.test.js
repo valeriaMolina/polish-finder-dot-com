@@ -1,4 +1,4 @@
-const sinon = require('sinon');
+const sinon = require('sinon').createSandbox();
 const userRolesModel = require('../../../../src/components/rbac/db/user-roles');
 const userRolesService = require('../../../../src/components/rbac/service/user-roles-service');
 
@@ -33,5 +33,28 @@ describe('userRolesService', () => {
             roleId
         );
         expect(newUserRole).toEqual(mockUserRole);
+    });
+    it('Should revoke a role from a user', async () => {
+        const userId = 1;
+        const roleId = 2;
+        const mockUserRole = {
+            user_id: userId,
+            role_id: roleId,
+            destroy: () => Promise.resolve(),
+        };
+        sinon
+            .stub(userRolesModel, 'findOne')
+            .returns(Promise.resolve(mockUserRole));
+        sinon.stub(userRolesModel, 'destroy').returns(Promise.resolve());
+        await userRolesService.revokeRoleFromUser(userId, roleId);
+        expect(userRolesService.revokeRoleFromUser).toBeTruthy();
+    });
+    it('Should throw an error when user role not found', async () => {
+        const userId = 1;
+        const roleId = 2;
+        sinon.stub(userRolesModel, 'findOne').returns(Promise.resolve(null));
+        expect(
+            userRolesService.revokeRoleFromUser(userId, roleId)
+        ).rejects.toThrow();
     });
 });

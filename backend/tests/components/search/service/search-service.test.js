@@ -15,6 +15,11 @@ describe('polishService', () => {
         const mockDupes = await searchService.searchForDupe({ polishId });
         expect(mockDupes).toEqual([3]);
     });
+    it('Should throw an error if no matches are found', async () => {
+        const filters = {};
+        polishService.search.mockResolvedValue([]);
+        await expect(searchService.search(filters)).rejects.toThrow();
+    });
     it('Should look for polish matches', async () => {
         const filters = {};
         polishService.search.mockResolvedValue([{ polish_id: 1 }]);

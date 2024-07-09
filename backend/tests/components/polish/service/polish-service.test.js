@@ -1,4 +1,4 @@
-const sinon = require('sinon');
+const sinon = require('sinon').createSandbox();
 const polishModel = require('../../../../src/components/polish/db/polishes');
 const polishService = require('../../../../src/components/polish/service/polish-service');
 const brandService = require('../../../../src/components/brands/service/brand-service');
@@ -118,5 +118,14 @@ describe('polishService', () => {
             formula_ids: [1],
             description: 'description',
         });
+    });
+    it('should test searching based on filters', async () => {
+        const array = [{ polish_id: 1 }, { polish_id: 2 }, { polish_id: 3 }];
+        sinon.stub(polishModel, 'findAll').returns(Promise.resolve(array));
+        const filters = {
+            type_id: 1,
+        };
+        const matches = await polishService.search(filters);
+        expect(matches.length).toEqual(3);
     });
 });

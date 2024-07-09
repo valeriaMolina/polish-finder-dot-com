@@ -9,6 +9,16 @@ describe('polishService', () => {
         sinon.restore();
     });
 
+    it('Should throw an error if no dupe exists', async () => {
+        const polishId = 1;
+        polishService.findPolishById.mockResolvedValue(null);
+        expect(searchService.searchForDupe({ polishId })).rejects.toThrow();
+    });
+    it('Should throw an error if there are no dupes associated with the polish', async () => {
+        const polishId = 4;
+        polishService.findPolishById.mockResolvedValue({ dupes: [] });
+        expect(searchService.searchForDupe({ polishId })).rejects.toThrow();
+    });
     it('Should look for polish dupes', async () => {
         const polishId = 1;
         polishService.findPolishById.mockResolvedValue({ dupes: [3] });

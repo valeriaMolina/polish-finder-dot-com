@@ -26,6 +26,23 @@
         "editor.formatOnSave": true,
         "editor.formatOnPaste": true
     },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "prettier.singleQuote": true
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 4,
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+    },
     "sonarlint.connectedMode.project": {
         "connectionId": "valeriamolina",
         "projectKey": "valeriaMolina_polish-dupe-finder"

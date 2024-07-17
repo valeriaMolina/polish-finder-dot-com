@@ -1,26 +1,49 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
-</template>
-
-<script>
-import HelloWorld from "./components/HelloWorld.vue";
-
-export default {
-  name: "App",
-  components: {
-    HelloWorld,
-  },
-};
+<script setup>
+import IconComponent from './assets/logo.svg';
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<template>
+  <div class="header">
+    <div id="main-header" class="main-header">
+      <div class="container">
+        <div class="logo">
+          <a href="index.html"> <IconComponent></IconComponent></a>
+        </div>
+        <div class="menu">
+          <nav>
+            <ul id="navigation">
+              <li>
+                <a href="index.html">Home</a>
+              </li>
+              <li>
+                <a href="#">Explore</a>
+              </li>
+              <li>
+                <a href="#">About</a>
+              </li>
+              <li>
+                <a href="#">Sign In</a>
+              </li>
+              <li>
+                <a href="#">Contribute</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main-area">
+    <div class="container">
+      <h3>What polish are you looking for today?</h3>
+    </div>
+    <div class="search">
+      <form action="#">
+        <input type="text" placeholder="Search for a polish" />
+        <div class="search-button">
+          <button class="main-search-button">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

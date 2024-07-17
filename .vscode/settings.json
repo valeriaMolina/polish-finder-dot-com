@@ -2,24 +2,6 @@
     "files.exclude": {
         "": true
     },
-    "accessibility.signalOptions": {
-        "volume": 70,
-        "debouncePositionChanges": false,
-        "experimental.delays": {
-            "general": {
-                "announcement": 3000,
-                "sound": 400
-            },
-            "warningAtPosition": {
-                "announcement": 3000,
-                "sound": 1000
-            },
-            "errorAtPosition": {
-                "announcement": 3000,
-                "sound": 1000
-            }
-        }
-    },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -46,5 +28,18 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "valeriamolina",
         "projectKey": "valeriaMolina_polish-dupe-finder"
+    },
+    "accessibility.signalOptions.volume": 70,
+    "accessibility.signalOptions.experimental.delays.general": {
+        "announcement": 3000,
+        "sound": 400
+    },
+    "accessibility.signalOptions.experimental.delays.errorAtPosition": {
+        "announcement": 3000,
+        "sound": 1000
+    },
+    "accessibility.signalOptions.experimental.delays.warningAtPosition": {
+        "announcement": 3000,
+        "sound": 1000
     }
 }

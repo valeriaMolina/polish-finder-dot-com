@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg navbar-special-bg">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Polish Finder</a>
       <button
@@ -31,7 +31,7 @@
             </button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/brands">Brands</a></li>
-              <li><a class="dropdown-item" href="#">Polishes</a></li>
+              <li><a class="dropdown-item" href="/polishes">Polishes</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -49,7 +49,10 @@
           </li>
         </ul>
         <form class="d-flex">
-          <button class="btn btn-outline-success" type="submit">Sign In</button>
+          <button id="register-btn" class="btn btn-outline-register mx-2" type="button">
+            Register
+          </button>
+          <button class="btn btn-outline-sign-in" type="button">Sign In</button>
         </form>
       </div>
     </div>

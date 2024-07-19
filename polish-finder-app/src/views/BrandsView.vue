@@ -12,5 +12,5 @@
 import { ref } from 'vue'
 import { useBrandStore } from '../stores/brands'
 const brands = useBrandStore()
-brands.fetchAllBrands()
+// brands.fetchAllBrands()
 </script>

@@ -11,7 +11,7 @@ import search from '../components/MainSearchBar.vue'
       </div>
     </div>
     <div class="text-center">
-      <h4>Placeholder</h4>
+      <h4>Recently added to Polish Finder</h4>
     </div>
   </div>
 </template>

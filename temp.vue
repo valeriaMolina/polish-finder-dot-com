@@ -1,7 +1,3 @@
-<script setup>
-import IconComponent from './assets/logo.svg';
-</script>
-
 <template>
   <div class="header">
     <div id="main-header" class="main-header">
@@ -44,6 +40,35 @@ import IconComponent from './assets/logo.svg';
           <button class="main-search-button">Search</button>
         </div>
       </form>
+    </div>
+    <div class="container">
+      <div class="discover-header">
+        <div class="row">
+          <p>Discover</p>
+          <h3>Featured Polishes</h3>
+        </div>
+      </div>
+      <div class="discover-body">
+        <div>
+          <div class="discover-item">
+            <a href="#">Polish #1</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="discover-header">
+        <div class="row">
+          <h3>Featured Brands</h3>
+        </div>
+      </div>
+      <div class="discover-body">
+        <div>
+          <div class="discover-item">
+            <a href="#">Brand #1</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

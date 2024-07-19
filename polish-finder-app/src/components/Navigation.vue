@@ -30,7 +30,7 @@
               Explore
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Brands</a></li>
+              <li><a class="dropdown-item" href="/brands">Brands</a></li>
               <li><a class="dropdown-item" href="#">Polishes</a></li>
             </ul>
           </li>

@@ -1,8 +1,10 @@
 <template>
   <div class="form-group row mt-2">
-    <form class="d-flex" role="search">
+    <form class="d-flex justify-content-center gap-2 mb-3" role="search">
       <input class="form-control mx-2" type="search" placeholder="Search" aria-label="Search" />
-      <button class="btn btn-outline-success me-2" type="submit">Search</button>
+      <button id="heart" class="btn btn-primary" type="submit">
+        <i class="bi bi-search-heart"></i>
+      </button>
     </form>
   </div>
 </template>

@@ -42,6 +42,32 @@ router.post(
     }
 );
 
-// todo: add endpoint for removing a brand?
+/**
+ * Handles the GET request to retrieve all brands from the database.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object to send back the result.
+ * @returns {void}
+ *
+ * @async
+ * @throws Will throw an error if there is a problem with the database request.
+ *
+ * @example
+ * router.get('/all', async (req, res) => { ... });
+ */
+router.get('/all', async (req, res) => {
+    try {
+        logger.info(`Received request to get all brands`);
+        const brands = await brandService.getAllBrands();
+        res.status(200).json(brands);
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).send({ error: err.message });
+        } else {
+            // error was not anticipated
+            return res.status(500).send({ error: err.message });
+        }
+    }
+});
 
 module.exports = router;

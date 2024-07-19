@@ -95,9 +95,31 @@ async function newBrandInsert(data) {
     return newBrand;
 }
 
+/**
+ * Retrieves all brands from the database.
+ *
+ * @returns {Promise<Array>} - A promise that resolves to an array of brand models.
+ *
+ * @example
+ * // Example usage:
+ * getAllBrands()
+ * .then((brands) => {
+ *     console.log('Retrieved all brands:', brands);
+ * })
+ * .catch((error) => {
+ *     console.error('An unexpected error occurred:', error);
+ * });
+ */
+async function getAllBrands() {
+    logger.info('Retrieving all brands');
+    const allBrands = await brands.findAll();
+    return allBrands;
+}
+
 module.exports = {
     findBrandNameInTable,
     insertNewBrand,
     isBrandInTable,
+    getAllBrands,
     newBrandInsert,
 };

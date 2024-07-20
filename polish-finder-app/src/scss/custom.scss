@@ -47,6 +47,7 @@
 @import "bootstrap/scss/utilities/api";
 
 // custom implementation starts here
+
 .btn-outline-register {
     border-color: #00bbf9;
     color: #00bbf9;
@@ -58,11 +59,29 @@
 }
 
 .btn-outline-sign-in {
-    border-color: #9B5DE5;
-    color: #9B5DE5;
+    border-color: #6877f4;
+    color: #6877f4;
     &:hover {
         color: white;
-        background-color: #9B5DE5;
+        background-color: #6877f4;
+    }
+}
+
+#btn-login-colorful {
+    color: #6877f4;
+        background: white;
+        border-color: #6877f4;
+    
+    &:hover {
+        border-color: transparent;
+        color: white;
+        background: linear-gradient(110.6deg, #b88efc 2.2%, #6877f4 100.2%);
+    }
+
+    &:active {
+        border-color: #6050DC;
+        background: white;
+        color: #6050DC;
     }
 }
 

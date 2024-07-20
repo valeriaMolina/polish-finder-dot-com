@@ -3,6 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import BrandsView from '@/views/BrandsView.vue'
 import PolishesView from '@/views/PolishesView.vue'
 import ExploreView from '@/views/ExploreView.vue'
+import HelpView from '@/views/HelpView.vue'
+import AuthView from '@/views/AuthView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +37,21 @@ const router = createRouter({
       path: '/polishes',
       name: 'polishes',
       component: PolishesView
+    },
+    {
+      path: '/help',
+      name: 'help',
+      component: HelpView
+    },
+    {
+      path: '/login',
+      name: 'auth',
+      component: AuthView
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView
     }
   ]
 })

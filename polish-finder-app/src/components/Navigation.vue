@@ -19,7 +19,7 @@
             <a class="nav-link active" aria-current="page" href="/about">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="">Help</a>
+            <a class="nav-link active" aria-current="page" href="/help">Help</a>
           </li>
           <li class="nav-item dropdown">
             <button
@@ -49,10 +49,20 @@
           </li>
         </ul>
         <form class="d-flex">
-          <button id="register-btn" class="btn btn-outline-register mx-2" type="button">
-            Register
-          </button>
-          <button class="btn btn-outline-sign-in" type="button">Sign In</button>
+          <router-link to="/register" v-slot="{ register }"
+            ><button
+              id="register-btn"
+              class="btn btn-outline-register mx-2"
+              type="button"
+              @click="register"
+            >
+              Register
+            </button></router-link
+          >
+
+          <router-link to="/login" v-slot="{ navigate }">
+            <button class="btn btn-outline-sign-in" type="button" @click="navigate">Sign In</button>
+          </router-link>
         </form>
       </div>
     </div>

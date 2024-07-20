@@ -48,7 +48,10 @@
             </ul>
           </li>
         </ul>
-        <form class="d-flex">
+        <form v-if="isLoggedIn" class="d-flex">
+          <button class="btn btn-primary">My Account</button>
+        </form>
+        <form v-else class="d-flex">
           <router-link to="/register" v-slot="{ register }"
             ><button
               id="register-btn"
@@ -69,4 +72,7 @@
   </nav>
 </template>
 
-<script setup></script>
+<script setup>
+import { useSessionStore } from '../stores/session'
+const isLoggedIn = useSessionStore().$state.isLoggedIn
+</script>

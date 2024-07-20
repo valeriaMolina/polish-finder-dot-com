@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<style scoped>
+<style>
 .p-padding {
   padding-top: 5px;
 }

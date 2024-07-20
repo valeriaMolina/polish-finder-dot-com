@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-special-bg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Polish Finder</a>
+      <a class="special-hover-btn navbar-brand modak-regular stroke" href="/">Polish Finder</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -76,3 +76,12 @@
 import { useSessionStore } from '../stores/session'
 const isLoggedIn = useSessionStore().$state.isLoggedIn
 </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
+
+.modak-regular {
+  font-family: 'Modak', system-ui;
+  font-weight: 400;
+}
+</style>

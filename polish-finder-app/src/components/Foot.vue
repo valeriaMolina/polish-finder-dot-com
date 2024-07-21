@@ -9,14 +9,16 @@
       <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
         <li class="ms-3">
           <a href="">
-            <Icon class="bi" width="24" height="24" />
+            <DiscordIcon class="bi" width="24" height="24" />
           </a>
         </li>
+        <li class="ms-3">GitHub</li>
+        <li class="ms-3">Kofi</li>
       </ul>
     </footer>
   </div>
 </template>
 
 <script setup>
-import Icon from '../assets/discord-mark-blue.svg'
+import DiscordIcon from '../assets/discord-mark-blue.svg'
 </script>

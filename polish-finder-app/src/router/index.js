@@ -6,6 +6,7 @@ import ExploreView from '@/views/ExploreView.vue'
 import HelpView from '@/views/HelpView.vue'
 import AuthView from '@/views/AuthView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import ContributeView from '@/views/ContributeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +53,11 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView
+    },
+    {
+      path: '/contribute',
+      name: 'contribute',
+      component: ContributeView
     }
   ]
 })

@@ -45,6 +45,7 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Submit a brand</a></li>
               <li><a class="dropdown-item" href="#">Add polishes</a></li>
+              <li><a class="dropdown-item" href="#">Submit feedback</a></li>
             </ul>
           </li>
         </ul>

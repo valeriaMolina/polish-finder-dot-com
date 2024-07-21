@@ -18,6 +18,7 @@
     "hover.css": "^2.3.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
+    "vue-github-button": "^3.1.0",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {

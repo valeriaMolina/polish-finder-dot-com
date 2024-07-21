@@ -10,8 +10,8 @@
           {{ description }}
         </p>
         <div class="row grid gap-0 column-gap-1">
-          <a :href="productsLink" class="col btn btn-primary">All products</a>
-          <a :href="addPolishLink" class="col btn btn-success">Add a polish</a>
+          <a :href="productsLink" class="col btn btn-primary">View Profile</a>
+          <a :href="addPolishLink" class="col btn btn-success">+</a>
         </div>
       </div>
     </div>

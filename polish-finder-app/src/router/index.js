@@ -7,6 +7,7 @@ import HelpView from '@/views/HelpView.vue'
 import AuthView from '@/views/AuthView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ContributeView from '@/views/ContributeView.vue'
+import SubmissionsBrandView from '@/views/SubmissionsBrandView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +59,11 @@ const router = createRouter({
       path: '/contribute',
       name: 'contribute',
       component: ContributeView
+    },
+    {
+      path: '/contribute/new/brand',
+      name: 'contribute-brand',
+      component: SubmissionsBrandView
     }
   ]
 })

@@ -48,6 +48,16 @@
 
 // custom implementation starts here
 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 .btn-outline-register {
     border-color: #7A006E;
     color: #7A006E;

@@ -3,15 +3,12 @@ import search from '../components/MainSearchBar.vue'
 </script>
 
 <template>
-  <div>
-    <div id="rainbow" class="d-flex flex-column align-items-center">
+  <div id="rainbow" class="d-flex flex-column align-items-center px-3 py-5 h-50">
+    <div class="d-flex flex-column align-items-center">
       <div class="my-auto text-center">
         <h1>Find your perfect nail polish &#128133;</h1>
         <search></search>
       </div>
-    </div>
-    <div class="text-center">
-      <h4>Recently added to Polish Finder</h4>
     </div>
   </div>
 </template>

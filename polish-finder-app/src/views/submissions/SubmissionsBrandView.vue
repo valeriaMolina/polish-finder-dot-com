@@ -3,7 +3,7 @@
     <div class="header-area">
       <h1>Submit a New Brand</h1>
     </div>
-    <div id="form-register" class="pt-2 border shadow rounded px-4 py-4">
+    <div id="form-register" class="border shadow rounded px-4 py-4">
       <div class="submission-guidelines">
         <h4>Submission Guidelines</h4>
         <p>Before submiting a new brand, please make sure:</p>
@@ -28,7 +28,9 @@
             <small>Provide the official website URL of the brand (if available)</small>
             <input type="url" id="website" placeholder="example.com" class="icon-left" required />
           </div>
-          <button id="override-btn" class="mx-2 btn-style501 btn" type="submit">Submit</button>
+          <button id="override-btn" class="mx-2 btn-style501 btn" type="submit">
+            Submit Brand
+          </button>
         </form>
       </div>
     </div>
@@ -36,7 +38,7 @@
 </template>
 
 <style scoped>
-@import url('../../node_modules/nice-forms.css/dist/nice-forms.css');
+@import url('../../../node_modules/nice-forms.css/dist/nice-forms.css');
 #main-div-brand-submit {
   background: linear-gradient(
     76.5deg,

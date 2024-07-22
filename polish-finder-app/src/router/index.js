@@ -9,6 +9,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import ContributeView from '@/views/ContributeView.vue'
 import SubmissionsBrandView from '@/views/submissions/SubmissionsBrandView.vue'
 import SubmissionsPolishView from '@/views/submissions/SubmissionsPolishView.vue'
+import UserProfileView from '@/views/UserProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,6 +71,11 @@ const router = createRouter({
       path: '/contribute/new/polish',
       name: 'contribute-polish',
       component: SubmissionsPolishView
+    },
+    {
+      path: '/account',
+      name: 'user-profile',
+      component: UserProfileView
     }
   ]
 })

@@ -1,7 +1,16 @@
 <script setup>
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import navigation from './components/Navigation.vue'
 import foot from './components/Foot.vue'
+import { Popover } from 'bootstrap'
+
+onMounted(() => {
+  // Initialize Bootstrap Popover Component
+  document.querySelectorAll('[data-bs-toggle="popover"]').forEach((e) => {
+    new Popover(e)
+  })
+})
 </script>
 
 <template>

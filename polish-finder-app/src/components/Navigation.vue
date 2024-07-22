@@ -48,9 +48,22 @@
               <li><a class="dropdown-item" href="#">Submit feedback</a></li>
             </ul>
           </li>
+          <li class="nav-item dropdown">
+            <button
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Search
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="" class="dropdown-item">Find a Dupe</a></li>
+              <li><a href="" class="dropdown-item">Advanced Search</a></li>
+            </ul>
+          </li>
         </ul>
-        <form v-if="isLoggedIn" class="d-flex">
-          <button class="btn btn-primary">My Account</button>
+        <form class="d-flex" v-if="isLoggedIn">
+          <UserAccountDropdown :userName="userName"></UserAccountDropdown>
         </form>
         <form v-else class="d-flex">
           <router-link to="/register" v-slot="{ register }"
@@ -63,7 +76,6 @@
               Register
             </button></router-link
           >
-
           <router-link to="/login" v-slot="{ navigate }">
             <button class="btn btn-outline-sign-in" type="button" @click="navigate">Sign In</button>
           </router-link>
@@ -75,7 +87,10 @@
 
 <script setup>
 import { useSessionStore } from '../stores/session'
+import UserAccountDropdown from '../components/UserAccountDropdown.vue'
 const isLoggedIn = useSessionStore().$state.isLoggedIn
+
+const userName = 'Vale'
 </script>
 
 <style>

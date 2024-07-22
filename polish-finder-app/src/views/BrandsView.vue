@@ -72,7 +72,7 @@ const sampleBrands = [
     brand_id: 4,
     brandName: 'Cupcake Polish',
     logoUrl:
-      'https://scontent-bos5-1.xx.fbcdn.net/v/t39.30808-6/358699176_657833273054312_7028190287804206336_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=9BF1dGbLrHUQ7kNvgF_L0XU&_nc_ht=scontent-bos5-1.xx&oh=00_AYBhZNnfFJiN-Ew2YnLGsuwtvg9KOGjnsSX-drnNVyCMhw&oe=66A2893F',
+      'https://previews.dropbox.com/p/thumb/ACV3VGtRyHV7Syq8_1hnLwI9s0pVTR3M3UKI_kvMPM982BijBceKXF9kWJo-_xL0L-MDEuRyPqgKmzt1t8URaT7VaRPHQf0tbT-R_JBOIHNgCfCKI7zy48GTIIv5dfUf6FQ4Uhl-C__8ywupDEKP9_dh95jhBmSgy6wJvGED7fbA2EQhwpCb2QEGKCrQK_6rSuqk_OKsggmAREtNeCEiYLEihWQ7Ex-ESpsAif77qD-AwKmbyKTKl-gW4QXAo4Jaka6m64DSB4OOgAhk7zAh1VCSmrh88IqPhC2HpnhPELjff7XozDFzQdKf5FisyLW8Cp9pm85h3BpO4m2DHUKl3opy/p.jpeg?is_prewarmed=true',
     description: 'Cupcake Polish is a nail polish brand.',
     productsLink: '/',
     addPostLink: '/',

@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 export const useSessionStore = defineStore('session', {
   state: () => {
     return {
-      isLoggedIn: false,
+      isLoggedIn: true,
       isMod: false,
       isAdmin: false,
       user: {

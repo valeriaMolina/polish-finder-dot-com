@@ -19,20 +19,25 @@
         </router-link>
       </li>
       <li>
-        <button class="dropdown-item">
-          <i class="bi me-2 bi-chat-square-heart"></i>My Wishlist
-        </button>
+        <router-link to="/wishlist" v-slot="{ wishlist }">
+          <button class="dropdown-item" @click="wishlist">
+            <i class="bi me-2 bi-chat-square-heart"></i>My Wishlist
+          </button>
+        </router-link>
       </li>
       <li>
-        <button class="dropdown-item"><i class="bi me-2 bi-collection"></i>My Collection</button>
+        <router-link to="/my-collection" v-slot="{ collection }">
+          <button class="dropdown-item" @click="collection">
+            <i class="bi me-2 bi-collection"></i>My Collection
+          </button>
+        </router-link>
       </li>
       <li>
-        <button class="dropdown-item">
-          <i class="bi me-2 bi-patch-plus-fill"></i>My Submissions
-        </button>
-      </li>
-      <li>
-        <button class="dropdown-item"><i class="bi me-2 bi-gear-fill"></i>Settings</button>
+        <router-link to="/submissions" v-slot="{ submissions }">
+          <button class="dropdown-item">
+            <i class="bi me-2 bi-patch-plus-fill" @click="submissions"></i>My Submissions
+          </button>
+        </router-link>
       </li>
       <li>
         <button class="dropdown-item"><i class="bi me-2 bi-box-arrow-left"></i>Sign Out</button>

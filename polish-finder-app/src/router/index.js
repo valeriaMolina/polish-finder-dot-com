@@ -10,6 +10,9 @@ import ContributeView from '@/views/ContributeView.vue'
 import SubmissionsBrandView from '@/views/submissions/SubmissionsBrandView.vue'
 import SubmissionsPolishView from '@/views/submissions/SubmissionsPolishView.vue'
 import UserProfileView from '@/views/UserProfileView.vue'
+import WishListView from '@/views/WishListView.vue'
+import CollectionView from '@/views/CollectionView.vue'
+import SubmissionsView from '@/views/submissions/SubmissionsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,6 +79,21 @@ const router = createRouter({
       path: '/account',
       name: 'user-profile',
       component: UserProfileView
+    },
+    {
+      path: '/wishlist',
+      name: 'wishlist',
+      component: WishListView
+    },
+    {
+      path: '/my-collection',
+      name: 'collection',
+      component: CollectionView
+    },
+    {
+      path: '/submissions',
+      name: 'submissions',
+      component: SubmissionsView
     }
   ]
 })

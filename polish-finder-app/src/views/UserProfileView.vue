@@ -4,7 +4,7 @@
       <h1>Hi, {{ username }}!</h1>
       <p>Did you oil your cuticles today?</p>
     </div>
-    <div class="mx-2 my-2 bg-white shadow rounded row align-items-start">
+    <div class="m-2 bg-white shadow rounded row align-items-start">
       <div class="col-2">
         <ul class="nav flex-column">
           <li class="nav-item">

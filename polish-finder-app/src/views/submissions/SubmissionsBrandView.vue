@@ -28,7 +28,7 @@
             <small>Provide the official website URL of the brand (if available)</small>
             <input type="url" id="website" placeholder="example.com" class="icon-left" required />
           </div>
-          <button id="override-btn" class="mx-2 btn-style501 btn" type="submit">
+          <button id="override-btn" class="mx-2 btn-style501 btn apply-font" type="submit">
             Submit Brand
           </button>
         </form>
@@ -54,7 +54,7 @@
 }
 
 #override-btn:active {
-  border-color: #a145ed;
+  border-color: #a0c4ff;
   box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
 }
 </style>

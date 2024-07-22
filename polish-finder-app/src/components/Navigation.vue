@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-special-bg">
     <div class="container-fluid">
-      <a class="special-hover-btn navbar-brand modak-regular stroke" href="/">Polish Finder</a>
+      <a class="button-54 navbar-brand" href="/">Polish Finder</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -16,14 +16,14 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/about">About</a>
+            <a class="nav-link active apply-font" aria-current="page" href="/about">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/help">Help</a>
+            <a class="nav-link active apply-font" aria-current="page" href="/help">Help</a>
           </li>
           <li class="nav-item dropdown">
             <button
-              class="nav-link dropdown-toggle"
+              class="nav-link dropdown-toggle apply-font"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
@@ -36,7 +36,7 @@
           </li>
           <li class="nav-item dropdown">
             <button
-              class="nav-link dropdown-toggle"
+              class="nav-link dropdown-toggle apply-font"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
@@ -50,15 +50,17 @@
           </li>
           <li class="nav-item dropdown">
             <button
-              class="nav-link dropdown-toggle"
+              class="nav-link dropdown-toggle apply-font"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               Search
             </button>
             <ul class="dropdown-menu">
-              <li><a href="" class="dropdown-item">Find a Dupe</a></li>
-              <li><a href="" class="dropdown-item">Advanced Search</a></li>
+              <li>
+                <a href="/search/dupes" class="dropdown-item">Find a Dupe</a>
+              </li>
+              <li><a href="/search/advanced" class="dropdown-item">Advanced Search</a></li>
             </ul>
           </li>
         </ul>
@@ -67,17 +69,14 @@
         </form>
         <form v-else class="d-flex">
           <router-link to="/register" v-slot="{ register }"
-            ><button
-              id="register-btn"
-              class="btn btn-outline-register mx-2"
-              type="button"
-              @click="register"
-            >
+            ><button class="button-54 btn-color-register mx-2" type="button" @click="register">
               Register
             </button></router-link
           >
           <router-link to="/login" v-slot="{ navigate }">
-            <button class="btn btn-outline-sign-in" type="button" @click="navigate">Sign In</button>
+            <button class="button-54 btn-color-login mx-2" type="button" @click="navigate">
+              Sign In
+            </button>
           </router-link>
         </form>
       </div>
@@ -94,10 +93,51 @@ const userName = 'Vale'
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
+/* CSS */
+.button-54 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow:
+    1px 1px 0px 0px,
+    2px 2px 0px 0px,
+    3px 3px 0px 0px,
+    4px 4px 0px 0px,
+    5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
 
-.modak-regular {
-  font-family: 'Modak', system-ui;
-  font-weight: 400;
+.button-54:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+@media (min-width: 768px) {
+  .button-54 {
+    padding: 0.25em 0.75em;
+  }
+}
+
+.btn-color-register {
+  background-color: #ffc6ff;
+}
+
+.btn-color-login {
+  background-color: #caffbf;
+}
+
+.apply-font {
+  font-family: 'Open Sans', sans-serif;
+  text-transform: uppercase;
 }
 </style>

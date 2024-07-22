@@ -13,6 +13,8 @@ import UserProfileView from '@/views/UserProfileView.vue'
 import WishListView from '@/views/WishListView.vue'
 import CollectionView from '@/views/CollectionView.vue'
 import SubmissionsView from '@/views/submissions/SubmissionsView.vue'
+import FindDupeView from '@/views/FindDupeView.vue'
+import AdvancedSearchView from '@/views/AdvancedSearchView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -94,6 +96,16 @@ const router = createRouter({
       path: '/submissions',
       name: 'submissions',
       component: SubmissionsView
+    },
+    {
+      path: '/search/dupes',
+      name: 'find-dupe',
+      component: FindDupeView
+    },
+    {
+      path: '/search/advanced',
+      name: 'advanced-search',
+      component: AdvancedSearchView
     }
   ]
 })

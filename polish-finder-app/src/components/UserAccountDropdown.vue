@@ -11,12 +11,32 @@
       {{ userName }}
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
-      <li><button class="dropdown-item">My Account</button></li>
-      <li><button class="dropdown-item">My Wishlist</button></li>
-      <li><button class="dropdown-item">My Collection</button></li>
-      <li><button class="dropdown-item">My Submissions</button></li>
-      <li><button class="dropdown-item">Settings</button></li>
-      <li><button class="dropdown-item">Sign Out</button></li>
+      <li>
+        <router-link to="/account" v-slot="{ account }">
+          <button type="button" class="dropdown-item" @click="account">
+            <i class="bi me-2 bi-person-circle"></i>My Account
+          </button>
+        </router-link>
+      </li>
+      <li>
+        <button class="dropdown-item">
+          <i class="bi me-2 bi-chat-square-heart"></i>My Wishlist
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item"><i class="bi me-2 bi-collection"></i>My Collection</button>
+      </li>
+      <li>
+        <button class="dropdown-item">
+          <i class="bi me-2 bi-patch-plus-fill"></i>My Submissions
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item"><i class="bi me-2 bi-gear-fill"></i>Settings</button>
+      </li>
+      <li>
+        <button class="dropdown-item"><i class="bi me-2 bi-box-arrow-left"></i>Sign Out</button>
+      </li>
     </ul>
   </div>
 </template>
@@ -29,6 +49,11 @@ const props = defineProps({
 
 <style scoped>
 .usr-btn {
+  text-decoration: none;
   cursor: pointer;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

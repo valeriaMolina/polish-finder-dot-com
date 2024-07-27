@@ -60,6 +60,9 @@
               <li>
                 <a href="/search/dupes" class="dropdown-item">Find a Dupe</a>
               </li>
+              <li>
+                <a href="" class="dropdown-item">Find a Polish</a>
+              </li>
               <li><a href="/search/advanced" class="dropdown-item">Advanced Search</a></li>
             </ul>
           </li>

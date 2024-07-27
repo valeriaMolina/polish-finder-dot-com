@@ -45,3 +45,20 @@ describe('Insert brand route', () => {
         expect(res.status).toBe(201);
     });
 });
+
+describe('Get all brands route', () => {
+    it('responds with 200', async () => {
+        brandService.getAllBrands.mockResolvedValue([
+            { brand_id: 1, name: 'Test' },
+        ]);
+        const res = await request(app).get('/all');
+        expect(res.status).toBe(200);
+    });
+    it('responds with 500 on error', async () => {
+        brandService.getAllBrands.mockRejectedValue(
+            new Error('Database error')
+        );
+        const res = await request(app).get('/all');
+        expect(res.status).toBe(500);
+    });
+});

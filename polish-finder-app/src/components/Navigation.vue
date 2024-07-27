@@ -117,6 +117,12 @@ const userName = 'Vale'
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  background: #f3c17c;
+  transition: background 0.2s ease-in-out;
+}
+
+.button-54:hover {
+  background: #f0ad4f;
 }
 
 .button-54:active {
@@ -132,11 +138,17 @@ const userName = 'Vale'
 }
 
 .btn-color-register {
-  background-color: #ffc6ff;
+  background: #ffc6ff;
+}
+.btn-color-register:hover {
+  background: #f4a0fa;
 }
 
 .btn-color-login {
-  background-color: #caffbf;
+  background: #caffbf;
+}
+.btn-color-login:hover {
+  background: #99fa84;
 }
 
 .apply-font {

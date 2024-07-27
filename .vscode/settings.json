@@ -2,32 +2,44 @@
     "files.exclude": {
         "": true
     },
-    "accessibility.signalOptions": {
-        "volume": 70,
-        "debouncePositionChanges": false,
-        "experimental.delays": {
-            "general": {
-                "announcement": 3000,
-                "sound": 400
-            },
-            "warningAtPosition": {
-                "announcement": 3000,
-                "sound": 1000
-            },
-            "errorAtPosition": {
-                "announcement": 3000,
-                "sound": 1000
-            }
-        }
-    },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
         "editor.formatOnPaste": true
     },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "prettier.singleQuote": true
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 4,
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+    },
     "sonarlint.connectedMode.project": {
         "connectionId": "valeriamolina",
         "projectKey": "valeriaMolina_polish-dupe-finder"
+    },
+    "accessibility.signalOptions.volume": 70,
+    "accessibility.signalOptions.experimental.delays.general": {
+        "announcement": 3000,
+        "sound": 400
+    },
+    "accessibility.signalOptions.experimental.delays.errorAtPosition": {
+        "announcement": 3000,
+        "sound": 1000
+    },
+    "accessibility.signalOptions.experimental.delays.warningAtPosition": {
+        "announcement": 3000,
+        "sound": 1000
     }
 }

@@ -1,0 +1,171 @@
+// Include functions first
+@import "bootstrap/scss/functions";
+
+// Required
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+
+@import "bootstrap/scss/type";
+// @import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+// @import "bootstrap/scss/tables";
+// @import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+// @import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar"; // Requires nav
+// @import "bootstrap/scss/card";
+// @import "bootstrap/scss/breadcrumb";
+// @import "bootstrap/scss/accordion";
+// @import "bootstrap/scss/pagination";
+// @import "bootstrap/scss/badge";
+// @import "bootstrap/scss/alert";
+// @import "bootstrap/scss/progress";
+// @import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+// @import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal"; // Requires transitions
+// @import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/popover";
+// @import "bootstrap/scss/carousel";
+// @import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas"; // Requires transitions
+// @import "bootstrap/scss/placeholders";
+
+// Helpers
+// @import "bootstrap/scss/helpers";
+
+// Utilities
+@import "bootstrap/scss/utilities/api";
+
+// custom implementation starts here
+// TODO: clean up this css mess lol
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-outline-register {
+    border-color: #7A006E;
+    color: #7A006E;
+    &:hover {
+        color: white;
+        background-color: #7A006E;
+
+    }
+}
+
+.btn-outline-sign-in {
+    border-color: #6877f4;
+    color: #6877f4;
+    &:hover {
+        color: white;
+        background-color: #6877f4;
+    }
+}
+
+#btn-login-colorful {
+    color: #6877f4;
+    background: white;
+    border-color: #6877f4;
+    
+    &:hover {
+        border-color: transparent;
+        color: white;
+        background: linear-gradient(110.6deg, #b88efc 2.2%, #6877f4 100.2%);
+    }
+
+    &:active {
+        border-color: #6050DC;
+        background: white;
+        color: #6050DC;
+    }
+}
+
+#btn-register-colorful {
+    border-color: #e26016;
+    background: white;
+    color: #e26016;
+
+    &:hover {
+        border-color: transparent;
+        color: white;
+        background: linear-gradient(90deg, #d23378 0%, #8b1d1d 50%, #ec5500 100%);
+    }
+
+    &:active {
+        border-color: #E09540;
+        background: white;
+        color: #E09540
+    }
+}
+
+.navbar-special-bg {
+    background-color: #F2F2F3;
+}
+
+@mixin stroke-width($property) {
+	-webkit-text-stroke-width: $property;
+	-moz-text-stroke-width: $property;
+}
+
+@mixin stroke-color($property) {
+	-webkit-text-stroke-color: $property;
+	-moz-text-stroke-color: $property;
+}
+
+.stroke {
+    background-color: #fff9e2;
+    text-transform: uppercase;
+    @include stroke-width(1px);
+    @include stroke-color(#FF76CE);
+    color: #FBD6DF;
+}
+
+.sshadow {
+    text-shadow: 2px 2px #FBD6DF;
+}
+
+
+
+.data-container{
+  background:#ffebee;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* My button styles */
+
+
+.btn-style501 {
+  font-weight: bold;
+  $btn-color: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 51%, #a1c4fd 100%);
+  background-image: $btn-color;
+  background-size: 200% auto;
+  background-position: left top;
+  border-color: transparent;
+  color: #212529;
+  &:hover {
+    transition: all 0.4s ease-out;
+    background-position: right bottom;
+    color: #000;
+    box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.6);
+  }
+}
+

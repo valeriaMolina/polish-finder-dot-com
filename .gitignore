@@ -134,3 +134,5 @@ dist
 codeql/*
 # ignore launch.json from .vscode
 .vscode/launch.json
+
+.DS_Store

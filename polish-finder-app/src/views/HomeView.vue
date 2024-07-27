@@ -3,9 +3,9 @@ import search from '../components/MainSearchBar.vue'
 </script>
 
 <template>
-  <div id="rainbow" class="d-flex flex-column align-items-center px-3 py-5 h-50">
+  <div id="rainbow" class="d-flex flex-column align-items-center justify-content-center px-3 py-5">
     <div class="d-flex flex-column align-items-center">
-      <div class="my-auto text-center">
+      <div class="my-auto text-center align-items-center align-middle">
         <h1>Find your perfect nail polish &#128133;</h1>
         <search></search>
       </div>
@@ -25,5 +25,11 @@ import search from '../components/MainSearchBar.vue'
     rgb(248, 172, 172) 90%,
     rgb(254, 211, 252) 99.7%
   );
+  height: 40vh;
+}
+
+h1 {
+  font-family: 'Open Sans', sans-serif;
+  text-transform: capitalize;
 }
 </style>

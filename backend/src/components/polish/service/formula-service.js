@@ -23,11 +23,6 @@ async function findFormulaByName(name) {
     return formula;
 }
 
-async function isFormulaInTable(formula) {
-    const formulaQuery = await findFormulaByName(formula);
-    return formulaQuery;
-}
-
 async function insertFormula(formula) {
     const newRow = {
         name: formula,
@@ -45,7 +40,7 @@ async function newFormulaInsert(data) {
     const { formula } = data;
     logger.info(`Received request to add new formula ${formula}`);
     // check if formula is already in database
-    const formulaExists = await isFormulaInTable(formula);
+    const formulaExists = await findFormulaByName(formula);
     if (formulaExists) {
         logger.error(`Brand ${formula} already exists in the database`);
         throw new FormulaAlreadyExistsError(
@@ -60,4 +55,5 @@ async function newFormulaInsert(data) {
 module.exports = {
     findFormulaByName,
     newFormulaInsert,
+    getAllFormulas,
 };

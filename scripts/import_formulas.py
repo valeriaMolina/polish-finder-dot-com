@@ -25,7 +25,7 @@ url = os.getenv('SERVER')
 
 # iterate through all brands and insert through an API
 for formula in df['Formula']:
-    # insert brand into DB
+    # insert formula into DB
     endpoint = url + '/formulas/new'
     # headers = {
     #     'Authorization': 'Bearer ' + os.getenv('TOKEN')

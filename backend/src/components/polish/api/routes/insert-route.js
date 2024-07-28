@@ -33,6 +33,7 @@ router.post(
             const newPolish = await polishService.newPolishInsert(req.body);
             res.status(201).json(newPolish);
         } catch (err) {
+            logger.error(`Error while inserting new polish: ${err.message}`);
             if (err.statusCode) {
                 return res.status(err.statusCode).send({ error: err.message });
             } else {

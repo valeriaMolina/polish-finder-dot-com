@@ -1,3 +1,4 @@
+import config from '../config/index'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
@@ -10,7 +11,8 @@ export const useBrandStore = defineStore('brands', {
   actions: {
     async fetchAllBrands() {
       try {
-        const response = await axios.get('http://localhost:8040/brands/all')
+        const server = config.SERVER
+        const response = await axios.get(`${server}/brands/all`)
         this.brands = response.data
       } catch (error) {
         return error

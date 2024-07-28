@@ -23,4 +23,14 @@ describe('formulaService', () => {
         const formula = await formulaService.findFormulaByName('nonexistent');
         expect(formula).toBeNull();
     });
+
+    it('should get all formulas', async () => {
+        const mockFormulas = [{ name: 'creme' }, { name: 'shimmer' }];
+        sinon
+            .stub(formulaModel, 'findAll')
+            .returns(Promise.resolve(mockFormulas));
+
+        const formulas = await formulaService.getAllFormulas();
+        expect(formulas).toEqual(mockFormulas);
+    });
 });

@@ -210,6 +210,22 @@ class SearchError extends Error {
     }
 }
 
+class FormulaAlreadyExistsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'FormulaAlreadyExistsError';
+        this.statusCode = 400; // conflict
+    }
+}
+
+class ColorAlreadyExistsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ColorAlreadyExistsError';
+        this.statusCode = 400; // conflict
+    }
+}
+
 module.exports = {
     BrandNotFoundError,
     PolishAlreadyExistsError,
@@ -237,4 +253,6 @@ module.exports = {
     DupeSubmissionUpdateStatusError,
     PolishNotFoundError,
     SearchError,
+    FormulaAlreadyExistsError,
+    ColorAlreadyExistsError,
 };

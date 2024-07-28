@@ -17,6 +17,18 @@ const brands = db.define(
             type: Sequelize.STRING(255),
             allowNull: false,
         },
+        logo_url: {
+            type: Sequelize.TEXT,
+            allowNull: true,
+        },
+        website: {
+            type: Sequelize.STRING(255),
+            allowNull: true,
+        },
+        description: {
+            type: Sequelize.TEXT,
+            allowNull: true,
+        },
     },
     {
         timestamps: false,

@@ -7,6 +7,7 @@ const {
 } = require('../../../../../src/components/rbac/api/middleware/rbac-middeware');
 const {
     validateInsertBrand,
+    validateGetBrand,
 } = require('../../../../../src/components/brands/api/middleware/brand-validator');
 const brandService = require('../../../../../src/components/brands/service/brand-service');
 
@@ -59,6 +60,22 @@ describe('Get all brands route', () => {
             new Error('Database error')
         );
         const res = await request(app).get('/all');
+        expect(res.status).toBe(500);
+    });
+});
+
+describe('Get a specific brand based on brandId', () => {
+    it('responds with 200', async () => {
+        brandService.getBrand.mockResolvedValue({
+            brand_id: 1,
+            name: 'Test',
+        });
+        const res = await request(app).get('/1');
+        expect(res.status).toBe(200);
+    });
+    it('responds with error', async () => {
+        brandService.getBrand.mockRejectedValue(new Error('Database error'));
+        const res = await request(app).get('/1');
         expect(res.status).toBe(500);
     });
 });

@@ -26,6 +26,10 @@ export const useBrandStore = defineStore('brands', {
   getters: {
     getBrands(state) {
       return state.brands
+    },
+    getBrandById(state) {
+      console.log('getBrandById')
+      return (brandId) => state.brands.find((brand) => brand.brand_id === brandId)
     }
   }
 })

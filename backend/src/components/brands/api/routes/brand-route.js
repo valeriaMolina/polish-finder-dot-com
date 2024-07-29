@@ -4,7 +4,10 @@
  */
 
 const router = require('express').Router();
-const { validateInsertBrand } = require('../middleware/brand-validator');
+const {
+    validateInsertBrand,
+    validateGetBrand,
+} = require('../middleware/brand-validator');
 const {
     authenticateToken,
     authorize,
@@ -55,11 +58,29 @@ router.post(
  * @example
  * router.get('/all', async (req, res) => { ... });
  */
-router.get('/all', async (req, res) => {
+router.get('/all', async (_, res) => {
     try {
         logger.info(`Received request to get all brands`);
         const brands = await brandService.getAllBrands();
         res.status(200).json(brands);
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).send({ error: err.message });
+        } else {
+            // error was not anticipated
+            return res.status(500).send({ error: err.message });
+        }
+    }
+});
+
+router.get('/:brandId', validateGetBrand, async (req, res) => {
+    try {
+        logger.info(
+            `Received request to get brand by id: ${req.params.brandId}`
+        );
+        const { brandId } = req.params;
+        const brand = await brandService.getBrand(brandId);
+        return res.status(200).json(brand);
     } catch (err) {
         if (err.statusCode) {
             return res.status(err.statusCode).send({ error: err.message });

@@ -29,3 +29,19 @@ exports.validateInsertPolish = [
         next();
     },
 ];
+
+exports.validateAttributeInsert = [
+    check('name').not().isEmpty(),
+    (req, res, next) => {
+        logger.info('Validating color insert request');
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            logger.error(`Error validating color insert request:`);
+            for (const error of errors.array()) {
+                logger.error(`${error.msg}`);
+            }
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];

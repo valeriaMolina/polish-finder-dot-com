@@ -17,6 +17,7 @@
     >
       <div v-for="brand in brands.getBrands" :key="brand.brand_id">
         <brandcard
+          :brandId="brand.brand_id"
           :brandName="brand.name"
           :logoUrl="brand.logo_url"
           :description="brand.description"

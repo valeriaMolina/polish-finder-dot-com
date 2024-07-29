@@ -6,7 +6,7 @@
       </div>
       <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
         <li class="ms-3">
-          <a href="">
+          <a :href="discordLink">
             <DiscordIcon class="bi" width="24" height="24" />
           </a>
         </li>
@@ -19,4 +19,5 @@
 
 <script setup>
 import DiscordIcon from '../assets/discord-mark-blue.svg'
+const discordLink = import.meta.env.VITE_DISCORD_INVITE_LINK
 </script>

@@ -6,7 +6,9 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
-        "editor.formatOnPaste": true
+        "editor.formatOnPaste": true,
+        "prettier.semi": true,
+        "prettier.tabWidth": 4
     },
     "[html]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -17,7 +19,9 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnPaste": true,
         "editor.formatOnSave": true,
-        "prettier.singleQuote": true
+        "prettier.singleQuote": true,
+        "prettier.semi": true,
+        "prettier.tabWidth": 4
     },
     "[json]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",

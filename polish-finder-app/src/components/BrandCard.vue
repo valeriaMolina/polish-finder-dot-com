@@ -10,7 +10,9 @@
           {{ description }}
         </p>
         <div class="row grid gap-0 column-gap-1">
-          <a :href="productsLink" class="col btn btn-primary">Profile</a>
+          <router-link :to="{ name: 'brand', params: { brandId: `${props.brandId}` } }"
+            ><a :href="productsLink" class="col btn btn-primary">Profile</a></router-link
+          >
           <div class="col">
             <a :href="addPolishLink" class="btn btn-success"><i class="bi bi-plus-square"></i></a>
             <a href="" class="btn btn-danger"><i class="bi bi-heart"></i></a>
@@ -23,6 +25,7 @@
 
 <script setup>
 const props = defineProps([
+  'brandId',
   'brandName',
   'logoUrl',
   'description',

@@ -35,6 +35,10 @@ const polishes = db.define(
             type: DataTypes.ARRAY(DataTypes.INTEGER),
             allowNull: true,
         },
+        image_url: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         timestamps: false,

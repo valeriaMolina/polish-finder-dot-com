@@ -1,8 +1,8 @@
 <template>
   <div class="col">
-    <div class="card vw-20">
+    <div class="card vw-20 bg-color">
       <a :href="website">
-        <img :src="logoUrl" class="card-img-top brand-logo-img" alt="Brand Logo" />
+        <img :src="logoUrl" class="card-img-top brand-logo-img bg-image" alt="Brand Logo" />
       </a>
       <div class="card-body">
         <h5 class="card-title">{{ brandName }}</h5>
@@ -36,5 +36,13 @@ const props = defineProps([
 .brand-logo-img {
   max-width: 100%;
   height: auto;
+}
+
+.bg-color {
+  background-color: #ece6f7;
+}
+
+.bg-image {
+  background-color: white;
 }
 </style>

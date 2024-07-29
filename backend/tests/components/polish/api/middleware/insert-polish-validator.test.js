@@ -1,5 +1,6 @@
 const request = require('supertest');
 const polishRoute = require('../../../../../src/components/polish/api/routes/insert-route');
+const colorRoute = require('../../../../../src/components/polish/api/routes/color-route');
 const polishService = require('../../../../../src/components/polish/service/polish-service');
 const {
     authenticateToken,
@@ -23,7 +24,8 @@ jest.mock(
 jest.mock('../../../../../src/components/polish/service/polish-service');
 
 const app = require('../../../../../index');
-app.use(polishRoute);
+app.use('/polish', polishRoute);
+app.use('/color', colorRoute);
 
 describe('Insert polish validation test', () => {
     afterAll(() => {
@@ -41,11 +43,15 @@ describe('Insert polish validation test', () => {
             description:
                 'a black jelly base with orange/gold, purple/red, blue/purple, green/blue, blue/purple/green glass like flakes',
         };
-        const res = await request(app).post('/new').send(body);
+        const res = await request(app).post('/polish/new').send(body);
         expect(res.status).toBe(201);
     });
     it('Should respond with 400 status when body is invalid', async () => {
-        polishService.newPolishInsert.mockResolvedValue({ polish_id: 4 });
-        const res = await request(app).post('/new').send({});
+        const res = await request(app).post('/polish/new').send({});
+        expect(res.status).toBe(400);
+    });
+    it('should respond with 400 dtatus when body is invalid', async () => {
+        const res = await request(app).post('/color/new').send({});
+        expect(res.status).toBe(400);
     });
 });

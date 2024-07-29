@@ -42,4 +42,11 @@ describe('Insert polish route', () => {
         const res = await request(app).post('/new');
         expect(res.status).toBe(201);
     });
+    it('responds with an error', async () => {
+        polishService.newPolishInsert.mockRejectedValue(
+            new Error('Test error')
+        );
+        const res = await request(app).post('/new');
+        expect(res.status).toBe(500);
+    });
 });

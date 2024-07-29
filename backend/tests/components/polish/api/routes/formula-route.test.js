@@ -46,4 +46,11 @@ describe('Formula route test', () => {
         const res = await request(app).post('/new');
         expect(res.status).toBe(201);
     });
+    it('Responds with an error', async () => {
+        formulaService.newFormulaInsert.mockRejectedValue(
+            new Error('Test error')
+        );
+        const res = await request(app).post('/new');
+        expect(res.status).toBe(500);
+    });
 });

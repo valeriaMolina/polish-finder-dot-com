@@ -8,20 +8,28 @@ export const useBrandStore = defineStore('brands', {
       brands: []
     }
   },
+  persist: true,
   actions: {
     async fetchAllBrands() {
-      try {
-        const server = config.SERVER
-        const response = await axios.get(`${server}/brands/all`)
-        this.brands = response.data
-      } catch (error) {
-        return error
+      // check if we have already called the API
+      if (this.brands.length === 0) {
+        try {
+          const server = config.SERVER
+          const response = await axios.get(`${server}/brands/all`)
+          this.brands = response.data
+        } catch (error) {
+          return error
+        }
       }
     }
   },
   getters: {
     getBrands(state) {
       return state.brands
+    },
+    getBrandById(state) {
+      console.log('getBrandById')
+      return (brandId) => state.brands.find((brand) => brand.brand_id === brandId)
     }
   }
 })

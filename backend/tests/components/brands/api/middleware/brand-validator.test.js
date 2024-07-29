@@ -41,3 +41,18 @@ describe('Insert brand validator test', () => {
         expect(res.status).toBe(400);
     });
 });
+
+describe('Get brand validator test', () => {
+    afterAll(() => {
+        jest.resetAllMocks();
+    });
+    it('Should respond with 200 status when param is valid', async () => {
+        brandService.getBrand.mockResolvedValue({ brand_id: 1, name: 'Test' });
+        const res = await request(app).get('/1');
+        expect(res.status).toBe(200);
+    });
+    it('Should respond with 400 status when param is invalid', async () => {
+        const res = await request(app).get('/abc');
+        expect(res.status).toBe(400);
+    });
+});

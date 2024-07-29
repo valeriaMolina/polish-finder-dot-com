@@ -7,6 +7,7 @@ const logger = require('../../../libraries/logger/logger');
 const brands = require('../db/brands');
 const {
     BrandAlreadyExistsError,
+    BrandNotFoundError,
 } = require('../../../libraries/utils/error-handler');
 
 /**
@@ -116,10 +117,43 @@ async function getAllBrands() {
     return allBrands;
 }
 
+/**
+ * Retrieves a brand from the database by its ID.
+ *
+ * @param {number} brandId - The unique identifier of the brand to retrieve.
+ *
+ * @returns {Promise<Object>} - A promise that resolves to the retrieved brand model.
+ *
+ * @throws {BrandNotFoundError} - If a brand with the given ID is not found in the database.
+ *
+ * @example
+ * // Example usage:
+ * getBrand(123)
+ * .then((brand) => {
+ *     console.log('Retrieved brand:', brand);
+ * })
+ * .catch((error) => {
+ *     if (error instanceof BrandNotFoundError) {
+ *         console.error(error.message);
+ *     } else {
+ *         console.error('An unexpected error occurred:', error);
+ *     }
+ * });
+ */
+async function getBrand(brandId) {
+    // find the brand by id
+    const brand = await brands.findOne({ where: { brand_id: brandId } });
+    if (!brand) {
+        throw new BrandNotFoundError(`Brand with ID ${brandId} not found`);
+    }
+    return brand;
+}
+
 module.exports = {
     findBrandNameInTable,
     insertNewBrand,
     isBrandInTable,
     getAllBrands,
     newBrandInsert,
+    getBrand,
 };

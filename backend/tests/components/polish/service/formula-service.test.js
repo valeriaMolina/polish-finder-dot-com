@@ -33,4 +33,21 @@ describe('formulaService', () => {
         const formulas = await formulaService.getAllFormulas();
         expect(formulas).toEqual(mockFormulas);
     });
+    it('should insert a new formula', async () => {
+        const mockFormula = { formula: 'formula2' };
+        const newFormula = { formula_id: 4, name: 'formula2' };
+        sinon.stub(formulaModel, 'findOne').returns(Promise.resolve(null));
+        sinon.stub(formulaModel, 'create').returns(Promise.resolve(newFormula));
+
+        const test = await formulaService.newFormulaInsert(mockFormula);
+        expect(test).toEqual(newFormula);
+    });
+    it('Should throw an error if formula already exists', async () => {
+        const mockFormula = { formula: 'formula2' };
+        const returnedFormula = { name: 'formula2', formula_id: 4 };
+        sinon
+            .stub(formulaModel, 'findOne')
+            .returns(Promise.resolve(returnedFormula));
+        expect(formulaService.newFormulaInsert(mockFormula)).rejects.toThrow();
+    });
 });

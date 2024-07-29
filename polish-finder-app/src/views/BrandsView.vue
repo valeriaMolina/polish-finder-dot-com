@@ -12,27 +12,19 @@
         </div>
       </div>
     </div>
-
-    <div>
-      <div v-for="brand in brands.getBrands" :key="brand.brand_id">
-        <p>{{ brand.name }}</p>
-      </div>
-    </div>
-
-    <!-- <div
+    <div
       class="white-bg container border shadow rounded row row-cols-1 row-cols-md-4 g-2 px-3 py-3"
     >
-      <div v-for="brand in sampleBrands" :key="brand.brand_id">
+      <div v-for="brand in brands.getBrands" :key="brand.brand_id">
         <brandcard
-          :brandName="brand.brandName"
-          :logoUrl="brand.logoUrl"
+          :brandId="brand.brand_id"
+          :brandName="brand.name"
+          :logoUrl="brand.logo_url"
           :description="brand.description"
-          :productsLink="brand.productsLink"
-          :addPostLink="brand.addPostLink"
           :website="brand.website"
         ></brandcard>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 

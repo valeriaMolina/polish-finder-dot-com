@@ -62,3 +62,14 @@ describe('getAllBrands', () => {
         expect(brands).toEqual(mockBrands);
     });
 });
+
+describe('getBrand', () => {
+    it('Should retrieve a brand by id', async () => {
+        const mockBrand = { brand_id: 1, name: 'brand1' };
+        const brandId = 1;
+        sinon.stub(brandModel, 'findOne').returns(Promise.resolve(mockBrand));
+
+        const brand = await brandService.getBrand(brandId);
+        expect(brand).toEqual(mockBrand);
+    });
+});

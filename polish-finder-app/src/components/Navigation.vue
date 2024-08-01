@@ -14,7 +14,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active apply-font" aria-current="page" href="/about">About</a>
           </li>
@@ -66,11 +66,26 @@
               <li><a href="/search/advanced" class="dropdown-item">Advanced Search</a></li>
             </ul>
           </li>
+          <!-- <li v-if="isLoggedIn">
+            <UserAccountDropdown :userName="userName"></UserAccountDropdown>
+          </li>
+          <li v-else>
+            <router-link to="/register" v-slot="{ register }"
+              ><button class="button-54 btn-color-register mx-2" type="button" @click="register">
+                Register
+              </button></router-link
+            >
+            <router-link to="/login" v-slot="{ navigate }">
+              <button class="button-54 btn-color-login mx-2" type="button" @click="navigate">
+                Sign In
+              </button>
+            </router-link>
+          </li> -->
         </ul>
-        <form class="d-flex" v-if="isLoggedIn">
+        <div v-if="isLoggedIn">
           <UserAccountDropdown :userName="userName"></UserAccountDropdown>
-        </form>
-        <form v-else class="d-flex">
+        </div>
+        <div v-else>
           <router-link to="/register" v-slot="{ register }"
             ><button class="button-54 btn-color-register mx-2" type="button" @click="register">
               Register
@@ -81,16 +96,16 @@
               Sign In
             </button>
           </router-link>
-        </form>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { useSessionStore } from '../stores/session'
+import { useAuthStore } from '../stores/auth'
 import UserAccountDropdown from '../components/UserAccountDropdown.vue'
-const isLoggedIn = useSessionStore().$state.isLoggedIn
+const isLoggedIn = useAuthStore().$state.isLoggedIn
 
 const userName = 'Vale'
 </script>

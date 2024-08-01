@@ -152,7 +152,7 @@ async function createUser(username, email, password) {
  * console.log('Refresh token saved successfully');
  */
 async function saveRefreshToken(userId, refreshToken) {
-    logger.info('Saving refresh token');
+    logger.info(`Saving refresh token for user ${userId}`);
     const user = await userModel.findOne({ where: { user_id: userId } });
     user.refreshtoken = refreshToken;
     await user.save();

@@ -2,12 +2,13 @@
   <div class="dropdown">
     <button
       type="button"
-      class="btn btn-primary dropdown-toggle rounded-pill"
+      class="dropdown-toggle button-54"
+      id="user-button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
       data-bs-auto-close="outside"
     >
-      <i class="bi bi-person"></i>
+      <i class="bi bi-emoji-smile"></i>
       {{ userName }}
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
@@ -53,6 +54,15 @@ const props = defineProps({
 </script>
 
 <style scoped>
+#user-button {
+  background-color: #90e0ef;
+  text-transform: lowercase;
+}
+
+#user-button:hover {
+  background-color: #69c0ea;
+}
+
 .usr-btn {
   text-decoration: none;
   cursor: pointer;

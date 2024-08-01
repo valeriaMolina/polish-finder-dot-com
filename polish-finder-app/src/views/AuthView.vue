@@ -1,7 +1,17 @@
 <template>
   <div class="d-flex flex-column align-items-center px-3 py-5" id="main-login-div">
     <div class="pt-2">
-      <form id="form-login" class="border shadow rounded px-3 py-4">
+      <form
+        @submit.prevent="submit"
+        id="form-login"
+        class="border shadow rounded px-3 py-4"
+        novalidate
+      >
+        <div v-show="displayAlert" class="alert alert-danger" role="alert">
+          <p><i class="bi bi-exclamation-triangle"></i> Oops! Something went wrong.</p>
+          <hr />
+          <p class="mb-0">{{ errorMessage }}</p>
+        </div>
         <div class="my-3 px-5 text-center">
           <h2>Welcome Back!</h2>
           <h3>&#128133;</h3>
@@ -9,15 +19,24 @@
         <div class="d-flex flex-column mb-3 mx-2">
           <label for="inputUsername" class="form-label custom-label-size">Username</label>
           <input
+            v-model="userInput.identifier"
             type="username"
             class="custom-input"
             id="inputUsername"
             placeholder="Username or Email"
+            required
           />
         </div>
         <div class="d-flex flex-column mb-3 mx-2">
           <label for="inputPswd" class="form-label custom-label-size">Password</label>
-          <input type="password" class="custom-input" placeholder="Password" />
+          <input
+            id="inputPswd"
+            v-model="userInput.password"
+            type="password"
+            class="custom-input"
+            placeholder="Password"
+            required
+          />
           <div class="text-end">
             <p class="p-padding"><a class="custom-label-size" href="">I forgot my password</a></p>
           </div>
@@ -36,6 +55,40 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, reactive } from 'vue'
+import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
+import * as yup from 'yup'
+
+const auth = useAuthStore()
+const router = useRouter()
+
+const errorMessage = ref('')
+const userInput = reactive({
+  identifier: ref(''),
+  password: ref('')
+})
+const displayAlert = ref(false)
+
+let loginSchema = yup.object({
+  identifier: yup.string().required('Please enter a username or email'),
+  password: yup.string().required('Please enter a password')
+})
+
+const submit = async () => {
+  try {
+    loginSchema.validateSync(userInput)
+    // call the login function
+    await auth.login(userInput.identifier, userInput.password)
+    router.push({ name: 'home' })
+  } catch (error) {
+    errorMessage.value = error.message
+    displayAlert.value = true
+  }
+}
+</script>
 
 <style>
 .p-padding {

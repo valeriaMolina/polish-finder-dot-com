@@ -68,7 +68,7 @@
           </li>
         </ul>
         <div v-if="isLoggedIn">
-          <UserAccountDropdown :userName="userName"></UserAccountDropdown>
+          <UserAccountDropdown></UserAccountDropdown>
         </div>
         <div v-else>
           <router-link to="/register" v-slot="{ register }"
@@ -94,8 +94,6 @@ import UserAccountDropdown from '../components/UserAccountDropdown.vue'
 
 // reactivity setup
 const isLoggedIn = computed(() => useAuthStore().isLoggedIn)
-
-const userName = 'Vale'
 </script>
 
 <style>

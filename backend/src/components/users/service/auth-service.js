@@ -44,7 +44,12 @@ async function logInUser(auth) {
     // store refresh token in database
     await userService.saveRefreshToken(user.user_id, refreshToken);
 
-    return { accessToken, refreshToken };
+    return {
+        accessToken,
+        refreshToken,
+        userName: user.username,
+        userEmail: user.email,
+    };
 }
 
 module.exports = {

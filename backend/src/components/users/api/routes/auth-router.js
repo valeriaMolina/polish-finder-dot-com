@@ -32,15 +32,14 @@ const roles = require('../../../../libraries/constants/roles');
 router.post('/login', decodeBasicAuth, async (req, res) => {
     logger.info(`Authenticating user`);
     try {
-        const { accessToken, refreshToken } = await authService.logInUser(
-            req.auth
-        );
+        const { accessToken, refreshToken, userEmail, userName } =
+            await authService.logInUser(req.auth);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
         });
-        res.json({ accessToken });
+        res.json({ accessToken, userName, userEmail });
     } catch (err) {
         if (err.statusCode) {
             logger.error(`Error authenticating user: ${err.message}`);

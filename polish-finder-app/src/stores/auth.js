@@ -5,7 +5,9 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     isLoggedIn: localStorage.getItem('isLoggedIn') || false,
     // initialize state from local storage to enable user to stay logged in
-    user: JSON.parse(localStorage.getItem('user'))
+    user: JSON.parse(localStorage.getItem('user')),
+    username: JSON.parse(localStorage.getItem('user'))?.userName || '',
+    email: JSON.parse(localStorage.getItem('user'))?.userEmail || ''
   }),
   actions: {
     async login(username, password) {
@@ -13,8 +15,12 @@ export const useAuthStore = defineStore('auth', {
         const user = await sendLogin(username, password)
         this.isLoggedIn = true
         this.user = user
+        this.username = user.userName
+        this.email = user.userEmail
         localStorage.setItem('isLoggedIn', true)
         localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('username', user.userName)
+        localStorage.setItem('email', user.userEmail)
         return user
       } catch (error) {
         this.isLoggedIn = false
@@ -33,5 +39,8 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('isLoggedIn')
       localStorage.removeItem('user')
     }
+  },
+  getters: {
+    getUsername: (state) => state.username
   }
 })

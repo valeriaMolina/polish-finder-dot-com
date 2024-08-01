@@ -48,9 +48,11 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  userName: { type: String, required: true }
-})
+import { computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
+const auth = useAuthStore()
+
+const userName = computed(() => auth.getUsername)
 </script>
 
 <style scoped>

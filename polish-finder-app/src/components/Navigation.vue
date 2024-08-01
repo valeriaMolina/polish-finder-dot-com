@@ -66,21 +66,6 @@
               <li><a href="/search/advanced" class="dropdown-item">Advanced Search</a></li>
             </ul>
           </li>
-          <!-- <li v-if="isLoggedIn">
-            <UserAccountDropdown :userName="userName"></UserAccountDropdown>
-          </li>
-          <li v-else>
-            <router-link to="/register" v-slot="{ register }"
-              ><button class="button-54 btn-color-register mx-2" type="button" @click="register">
-                Register
-              </button></router-link
-            >
-            <router-link to="/login" v-slot="{ navigate }">
-              <button class="button-54 btn-color-login mx-2" type="button" @click="navigate">
-                Sign In
-              </button>
-            </router-link>
-          </li> -->
         </ul>
         <div v-if="isLoggedIn">
           <UserAccountDropdown :userName="userName"></UserAccountDropdown>
@@ -103,9 +88,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import UserAccountDropdown from '../components/UserAccountDropdown.vue'
-const isLoggedIn = useAuthStore().$state.isLoggedIn
+
+// reactivity setup
+const isLoggedIn = computed(() => useAuthStore().isLoggedIn)
 
 const userName = 'Vale'
 </script>

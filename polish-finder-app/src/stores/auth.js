@@ -21,6 +21,9 @@ export const useAuthStore = defineStore('auth', {
         this.user = null
         if (error.message === '404') {
           throw new Error('Username or password is incorrect')
+        } else {
+          console.error('?')
+          throw new Error('An error occurred while trying to login')
         }
       }
     },

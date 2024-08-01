@@ -46,7 +46,10 @@
           <label for="checkRememberUser" class="form-check-label">Remember me on this device</label>
         </div>
         <div class="d-flex justify-content-center mx-2">
-          <button type="submit" class="btn mb-3 w-100" id="btn-login-colorful">Sign In</button>
+          <button type="submit" class="btn mb-3 w-100" id="btn-login-colorful" :disabled="loading">
+            <span class="spinner-border spinner-border-sm" :hidden="!loading"></span>
+            <span :hidden="loading">Sign In</span>
+          </button>
         </div>
         <div class="mx-2">
           <p>Don't have an account? <a href="/register">Register</a></p>
@@ -65,27 +68,34 @@ import * as yup from 'yup'
 const auth = useAuthStore()
 const router = useRouter()
 
+// Define reactive refs for input fields and error message
 const errorMessage = ref('')
 const userInput = reactive({
   identifier: ref(''),
   password: ref('')
 })
 const displayAlert = ref(false)
+const loading = ref(false)
 
 let loginSchema = yup.object({
   identifier: yup.string().required('Please enter a username or email'),
   password: yup.string().required('Please enter a password')
 })
 
+// Event handler for form submission
+
 const submit = async () => {
   try {
     loginSchema.validateSync(userInput)
+    // disable button while processing
+    loading.value = true
     // call the login function
     await auth.login(userInput.identifier, userInput.password)
     router.push({ name: 'home' })
   } catch (error) {
     errorMessage.value = error.message
     displayAlert.value = true
+    loading.value = false
   }
 }
 </script>

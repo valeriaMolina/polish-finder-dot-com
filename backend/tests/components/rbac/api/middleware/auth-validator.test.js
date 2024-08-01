@@ -10,32 +10,9 @@ const {
 const app = express();
 app.use(express.json());
 
-app.post('/auth', validateAuth, (req, res) => res.sendStatus(200));
+// app.post('/auth', validateAuth, (req, res) => res.sendStatus(200));
 app.post('/signup', validateSignUp, (req, res) => res.sendStatus(200));
 app.post('/refresh', validateRefresh, (req, res) => res.sendStatus(200));
-
-describe('authValidator', () => {
-    it('should return 400 if no identifier is provided', async () => {
-        const res = await request(app)
-            .post('/auth')
-            .send({ password: 'password' });
-        expect(res.statusCode).toEqual(400);
-    });
-
-    it('should return 400 if no password is provided', async () => {
-        const res = await request(app)
-            .post('/auth')
-            .send({ identifier: 'username' });
-        expect(res.statusCode).toEqual(400);
-    });
-
-    it('should return 200 if valid auth data is provided', async () => {
-        const res = await request(app)
-            .post('/auth')
-            .send({ identifier: 'username', password: 'password' });
-        expect(res.statusCode).toEqual(200);
-    });
-});
 
 describe('validateSignUp', () => {
     it('should return 400 if no username is provided', async () => {

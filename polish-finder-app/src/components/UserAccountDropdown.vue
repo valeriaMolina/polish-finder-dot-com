@@ -2,12 +2,13 @@
   <div class="dropdown">
     <button
       type="button"
-      class="btn btn-primary dropdown-toggle rounded-pill"
+      class="dropdown-toggle button-54"
+      id="user-button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
       data-bs-auto-close="outside"
     >
-      <i class="bi bi-person"></i>
+      <i class="bi bi-emoji-smile"></i>
       {{ userName }}
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
@@ -47,12 +48,23 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  userName: { type: String, required: true }
-})
+import { computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
+const auth = useAuthStore()
+
+const userName = computed(() => auth.getUsername)
 </script>
 
 <style scoped>
+#user-button {
+  background-color: #90e0ef;
+  text-transform: lowercase;
+}
+
+#user-button:hover {
+  background-color: #69c0ea;
+}
+
 .usr-btn {
   text-decoration: none;
   cursor: pointer;

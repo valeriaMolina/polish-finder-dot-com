@@ -14,7 +14,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active apply-font" aria-current="page" href="/about">About</a>
           </li>
@@ -67,10 +67,10 @@
             </ul>
           </li>
         </ul>
-        <form class="d-flex" v-if="isLoggedIn">
-          <UserAccountDropdown :userName="userName"></UserAccountDropdown>
-        </form>
-        <form v-else class="d-flex">
+        <div v-if="isLoggedIn">
+          <UserAccountDropdown></UserAccountDropdown>
+        </div>
+        <div v-else>
           <router-link to="/register" v-slot="{ register }"
             ><button class="button-54 btn-color-register mx-2" type="button" @click="register">
               Register
@@ -81,18 +81,19 @@
               Sign In
             </button>
           </router-link>
-        </form>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { useSessionStore } from '../stores/session'
+import { computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
 import UserAccountDropdown from '../components/UserAccountDropdown.vue'
-const isLoggedIn = useSessionStore().$state.isLoggedIn
 
-const userName = 'Vale'
+// reactivity setup
+const isLoggedIn = computed(() => useAuthStore().isLoggedIn)
 </script>
 
 <style>

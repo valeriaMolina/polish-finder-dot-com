@@ -2,13 +2,21 @@ const request = require('supertest');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const base64 = require('base-64');
+
 const authRouter = require('../../../../../src/components/users/api/routes/auth-router');
+const authService = require('../../../../../src/components/users/service/auth-service');
 const userService = require('../../../../../src/components/users/service/user-service');
 const rolesService = require('../../../../../src/components/rbac/service/roles-service');
 const userRolesService = require('../../../../../src/components/rbac/service/user-roles-service');
+const {
+    InvalidCredentialsError,
+    UserNotFoundError,
+} = require('../../../../../src/libraries/utils/error-handler');
 
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
+jest.mock('../../../../../src/components/users/service/auth-service');
 jest.mock('../../../../../src/components/users/service/user-service');
 jest.mock('../../../../../src/components/rbac/service/roles-service');
 jest.mock('../../../../../src/components/rbac/service/user-roles-service');
@@ -30,40 +38,46 @@ describe('POST /auth', () => {
         refreshToken: validRefreshToken,
         password_hash: 'hashedPassword',
     };
-
-    beforeEach(() => {
-        userService.getUserId.mockResolvedValue(validUser);
-        bcrypt.compare.mockResolvedValue(true);
-        userService.saveRefreshToken.mockResolvedValue(null);
-        jwt.sign.mockReturnValue(validJwtToken);
-    });
+    const validBasicAuth = `Basic ${base64.encode(`${validIdentifier}:${validPassword}`)}`;
     afterEach(() => {
         jest.clearAllMocks();
     });
     test('It should authenticate user with valid credentials', async () => {
+        authService.logInUser.mockResolvedValue({
+            accessToken: validJwtToken,
+            refreshToken: validRefreshToken,
+            userName: validIdentifier,
+            userEmail: 'mail@mail.com',
+        });
         const response = await request(app)
-            .post('/auth')
-            .send({ identifier: validIdentifier, password: validPassword });
+            .post('/login')
+            .send({ username: validIdentifier })
+            .set('authorization', validBasicAuth);
 
         expect(response.status).toBe(200);
     });
     test('It should return 400 status when user is not found', async () => {
-        userService.getUserId.mockResolvedValue(null);
+        authService.logInUser.mockRejectedValue(
+            new UserNotFoundError('User not found')
+        );
 
         const response = await request(app)
-            .post('/auth')
-            .send({ identifier: validIdentifier, password: validPassword });
+            .post('/login')
+            .send({})
+            .set('authorization', validBasicAuth);
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
     });
     test('It shoould return 400 status when password does not match', async () => {
-        bcrypt.compare.mockResolvedValue(false);
-
+        authService.logInUser.mockRejectedValue(
+            new InvalidCredentialsError('Invalid Credentials')
+        );
         const response = await request(app)
-            .post('/auth')
-            .send({ identifier: validIdentifier, password: validPassword });
+            .post('/login')
+            .send()
+            .set('authorization', validBasicAuth);
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(401);
     });
 });
 

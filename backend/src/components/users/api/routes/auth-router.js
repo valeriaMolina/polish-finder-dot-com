@@ -7,12 +7,13 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {
-    validateAuth,
     validateSignUp,
     validateRefresh,
+    decodeBasicAuth,
 } = require('../middleware/auth-validator');
 const logger = require('../../../../libraries/logger/logger');
 const userService = require('../../service/user-service');
+const authService = require('../../service/auth-service');
 const config = require('../../../../libraries/config/config');
 const userRolesService = require('../../../rbac/service/user-roles-service');
 const rolesService = require('../../../rbac/service/roles-service');
@@ -28,46 +29,26 @@ const roles = require('../../../../libraries/constants/roles');
  *
  * @returns {void}
  */
-router.post('/auth', validateAuth, async (req, res) => {
-    const { identifier, password } = req.body;
-    logger.info(`Authenticating user ${identifier}`);
+router.post('/login', decodeBasicAuth, async (req, res) => {
+    logger.info(`Authenticating user`);
     try {
-        // find user in database
-        const user = await userService.getUserId(identifier);
-
-        if (!user) {
-            logger.error(`User ${identifier} not found`);
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
-
-        // check if the password matches the password in the database
-        const isMatch = await bcrypt.compare(password, user.password_hash);
-
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
-
-        // if it matches, return payload with JWT and refresh token
-        const payload = {
-            user: {
-                id: user.user_id,
-            },
-        };
-        const refreshToken = jwt.sign(payload, config.refreshTokenSecret, {
-            expiresIn: '7d',
+        const { accessToken, refreshToken, userEmail, userName } =
+            await authService.logInUser(req.auth);
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
         });
-
-        // store refresh token in database
-        await userService.saveRefreshToken(user.user_id, refreshToken);
-        const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
-
-        res.json({
-            token: token,
-            refreshToken: refreshToken,
-        });
+        res.json({ accessToken, userName, userEmail });
     } catch (err) {
-        logger.error(`Error authenticating user: ${err.message}`);
-        res.status(500).send('Internal Server Error');
+        if (err.statusCode) {
+            logger.error(`Error authenticating user: ${err.message}`);
+            return res.status(err.statusCode).send({ error: err.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${err.message}`);
+            return res.status(500).send({ error: err.message });
+        }
     }
 });
 

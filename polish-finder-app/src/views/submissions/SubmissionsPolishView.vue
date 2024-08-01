@@ -16,7 +16,7 @@
         </ul>
       </div>
       <div class="submit-polish-form">
-        <form action="">
+        <form action="" @submit.prevent="send">
           <div class="nice-form-group d-flex flex-column mb-3 mx-2 form-group">
             <label for="">Polish Name</label>
             <small>Enter the full name of the nail polish</small>
@@ -76,7 +76,13 @@
             <input type="file" />
           </div>
           <div>
-            <button id="override-btn" class="mx-2 btn-style501 btn" type="submit">
+            <button
+              id="override-btn"
+              class="mx-2 btn-style501 btn"
+              type="submit"
+              :disabled="disable"
+            >
+              <span class="spinner-border spinner-border-sm" :hidden="hiddenSpinner"> </span>
               Submit Polish
             </button>
           </div>
@@ -85,6 +91,18 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+const disable = ref(false)
+const hiddenSpinner = ref(true)
+
+const send = async () => {
+  console.log('Submitting...')
+  disable.value = true
+  hiddenSpinner.value = false
+}
+</script>
 
 <style scoped>
 @import url('../../../node_modules/nice-forms.css/dist/nice-forms.css');

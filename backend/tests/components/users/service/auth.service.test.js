@@ -26,4 +26,25 @@ describe('authService', () => {
         });
         expect(result).toEqual(expect.anything());
     });
+    it('Should throw an error when user not found', async () => {
+        userService.getUserByUsernameOrEmail.mockResolvedValue(null);
+        await expect(
+            authService.logInUser({ identifier: 'usr', password: 'pwd' })
+        ).rejects.toThrow();
+    });
+    it('should log out a user', async () => {
+        const user = {
+            user_id: '2',
+        };
+        userService.getUserByRefreshToken.mockResolvedValue(user);
+        userService.removeRefreshToken.mockResolvedValue();
+        await authService.logOutUser('refreshToken');
+        expect(userService.removeRefreshToken).toHaveBeenCalledWith(
+            user.user_id
+        );
+    });
+    it('should throw an error when user not found', async () => {
+        userService.getUserByRefreshToken.mockResolvedValue(null);
+        await expect(authService.logOutUser('refreshToken')).rejects.toThrow();
+    });
 });

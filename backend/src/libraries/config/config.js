@@ -12,4 +12,6 @@ module.exports = {
     saltRounds: process.env.SALT_ROUNDS,
     jwtSecret: process.env.JWT_SECRET,
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+    accessTokenExpiration: process.env.ACCESS_TOKEN_EXPIRES,
+    refreshTokenExpiration: process.env.REFRESH_TOKEN_EXPIRES,
 };

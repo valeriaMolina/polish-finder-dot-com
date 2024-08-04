@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
-import { sendLogin, logout } from '@/apis/authAPI'
+import { sendLogin, sendLogout } from '@/apis/authAPI'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isLoggedIn: localStorage.getItem('isLoggedIn') || false,
     // initialize state from local storage to enable user to stay logged in
-    user: JSON.parse(localStorage.getItem('user')),
-    username: JSON.parse(localStorage.getItem('user'))?.userName || '',
-    email: JSON.parse(localStorage.getItem('user'))?.userEmail || ''
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    username: JSON.parse(localStorage.getItem('user'))?.userName || null,
+    email: JSON.parse(localStorage.getItem('user'))?.userEmail || null
   }),
   actions: {
     async login(username, password) {
@@ -28,19 +28,27 @@ export const useAuthStore = defineStore('auth', {
         if (error.message === '404') {
           throw new Error('Username or password is incorrect')
         } else {
-          console.error('?')
+          console.error(error)
           throw new Error('An error occurred while trying to login')
         }
       }
     },
-    logout() {
-      this.isLoggedIn = false
-      this.user = null
-      localStorage.removeItem('isLoggedIn')
-      localStorage.removeItem('user')
+    async logout() {
+      try {
+        await sendLogout()
+        this.isLoggedIn = false
+        this.user = null
+        localStorage.setItem('isLoggedIn', false)
+        localStorage.removeItem('user')
+        localStorage.removeItem('username')
+        localStorage.removeItem('email')
+      } catch (error) {
+        throw new Error('An error occurred while trying to logout: ', error.message)
+      }
     }
   },
   getters: {
-    getUsername: (state) => state.username
+    getUsername: (state) => state.username,
+    getEmail: (state) => state.email
   }
 })

@@ -2,7 +2,7 @@
  * @author Valeria Molina Recinos
  */
 
-const { check, validationResult } = require('express-validator');
+const { check, validationResult, cookie } = require('express-validator');
 const base64 = require('base-64');
 
 exports.validateSignUp = [
@@ -19,10 +19,11 @@ exports.validateSignUp = [
 ];
 
 exports.validateRefresh = [
-    check('refreshToken', 'Refresh token is required').not().isEmpty(),
+    cookie('refreshToken', 'Refresh token is required').not().isEmpty(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.error(errors.array());
             return res.status(400).json({ errors: errors.array() });
         }
         next();

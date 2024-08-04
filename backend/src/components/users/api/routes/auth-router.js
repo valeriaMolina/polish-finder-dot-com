@@ -4,7 +4,6 @@
 
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {
     validateSignUp,
@@ -30,7 +29,7 @@ const roles = require('../../../../libraries/constants/roles');
  * @returns {void}
  */
 router.post('/login', decodeBasicAuth, async (req, res) => {
-    logger.info(`Authenticating user`);
+    logger.info(`Authenticating user...`);
     try {
         const { accessToken, refreshToken, userEmail, userName } =
             await authService.logInUser(req.auth);
@@ -38,8 +37,15 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
+            maxAge: config.refreshTokenExpiration,
         });
-        res.json({ accessToken, userName, userEmail });
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: config.accessTokenExpiration,
+        });
+        res.json({ userName, userEmail });
     } catch (err) {
         if (err.statusCode) {
             logger.error(`Error authenticating user: ${err.message}`);
@@ -173,50 +179,23 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     res.json({ token });
 });
 
-/**
- * This function handles the logout process for a user.
- * It removes the refresh token from the database to effectively log out the user.
- *
- * @param {Object} req - The request object containing the refresh token.
- * @param {Object} res - The response object to send back to the client.
- * @param {string} req.body.refreshToken - The refresh token provided by the client.
- *
- * @returns {void}
- *
- * @throws Will throw an error if the refresh token is invalid.
- *
- * @example
- * POST /api/auth/logout
- * Content-Type: application/json
- *
- * {
- *   "refreshToken": "your_refresh_token"
- * }
- *
- * @example
- * HTTP/1.1 200 OK
- * Content-Type: application/json
- *
- * {
- *   "message": "Successfully logged out"
- * }
- */
-router.post('/logout', validateRefresh, async (req, res) => {
-    const { refreshToken } = req.body;
-    logger.info(`Received request to logout ${refreshToken}`);
-
-    // find user by refresh token
-    const user = await userService.getUserByRefreshToken(refreshToken);
-
-    if (!user) {
-        logger.error('Invalid refresh token');
-        return res.status(400).json({ msg: 'Invalid refresh token' });
+router.post('/logout', async (req, res) => {
+    try {
+        const { refreshToken, accessToken } = req.cookies;
+        await authService.logOutUser(refreshToken);
+        res.clearCookie('refreshToken', refreshToken);
+        res.clearCookie('accessToken', accessToken);
+        res.end();
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error logging out user: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
     }
-
-    // remove refresh token from database
-    await userService.removeRefreshToken(user.user_id);
-
-    res.json({ message: 'Successfully logged out' });
 });
 
 module.exports = router;

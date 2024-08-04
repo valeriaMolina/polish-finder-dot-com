@@ -152,7 +152,6 @@ async function createUser(username, email, password) {
  * console.log('Refresh token saved successfully');
  */
 async function saveRefreshToken(userId, refreshToken) {
-    logger.info(`Saving refresh token for user ${userId}`);
     const user = await userModel.findOne({ where: { user_id: userId } });
     user.refreshtoken = refreshToken;
     await user.save();
@@ -172,7 +171,6 @@ async function saveRefreshToken(userId, refreshToken) {
  * console.log(user); // Output: { user_id: 123, username: 'john_doe', email: 'johndoe@example.com' }
  */
 async function getUserByRefreshToken(refreshToken) {
-    logger.info(`Finding user by refresh token ${refreshToken}`);
     const user = await userModel.findOne({
         where: { refreshtoken: refreshToken },
     });

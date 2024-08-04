@@ -12,6 +12,20 @@ const {
     InvalidCredentialsError,
 } = require('../../../libraries/utils/error-handler');
 
+async function logOutUser(refreshToken) {
+    logger.info(`Loggin Out...`);
+    // find user by refresh token
+    const user = await userService.getUserByRefreshToken(refreshToken);
+
+    if (!user) {
+        logger.error(`Invalid refresh token`);
+        throw new UserNotFoundError('Invalid refresh token');
+    }
+
+    // remove refresh token from database
+    await userService.removeRefreshToken(user.user_id);
+}
+
 async function logInUser(auth) {
     const { identifier, password } = auth;
     // find user in database
@@ -54,4 +68,5 @@ async function logInUser(auth) {
 
 module.exports = {
     logInUser,
+    logOutUser,
 };

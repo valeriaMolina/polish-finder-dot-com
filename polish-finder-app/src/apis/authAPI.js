@@ -2,7 +2,7 @@
  * @author Valeria Molina Recinos
  */
 import config from '@/config'
-import axios from 'axios'
+import axiosInstance from '@/utils/axios'
 import base64 from 'base-64'
 
 const SERVER = config.SERVER
@@ -18,7 +18,7 @@ export function authHeader() {
 
 export async function sendLogin(username, password) {
   try {
-    const instance = axios.create({
+    const instance = axiosInstance.create({
       baseURL: SERVER,
       headers: { Authorization: `Basic ${base64.encode(`${username}:${password}`)}` },
       method: 'post',
@@ -34,6 +34,15 @@ export async function sendLogin(username, password) {
   }
 }
 
-export function logout() {
-  localStorage.removeItem('user')
+export async function sendLogout() {
+  try {
+    const instance = axiosInstance.create({
+      baseURL: SERVER,
+      method: 'post'
+    })
+    const res = await instance.post('/logout')
+    return res
+  } catch (error) {
+    throw new Error(error.response.status)
+  }
 }

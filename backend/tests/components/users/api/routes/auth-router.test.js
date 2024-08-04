@@ -3,6 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
+const cookieParser = require('cookie-parser');
 
 const authRouter = require('../../../../../src/components/users/api/routes/auth-router');
 const authService = require('../../../../../src/components/users/service/auth-service');
@@ -23,6 +24,7 @@ jest.mock('../../../../../src/components/rbac/service/user-roles-service');
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use('/', authRouter);
 
 describe('POST /auth', () => {
@@ -162,7 +164,9 @@ describe('POST /refresh', () => {
 
         const response = await request(app)
             .post('/refresh')
+            .set('Cookie', `refreshToken=${refreshToken}`)
             .send({ refreshToken });
+
         expect(response.status).toBe(200);
     });
 
@@ -198,11 +202,13 @@ describe('POST /logout', () => {
     });
 
     test('It should return an error if user is not found', async () => {
-        userService.getUserByRefreshToken.mockResolvedValue(null);
+        authService.logOutUser.mockRejectedValue(
+            new UserNotFoundError('User not found')
+        );
 
         const response = await request(app)
             .post('/logout')
             .send({ refreshToken });
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
     });
 });

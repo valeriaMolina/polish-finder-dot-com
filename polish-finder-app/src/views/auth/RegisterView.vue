@@ -51,16 +51,21 @@
           <label for="input-pwd" class="form-label custom-label-size" id="pwd-label"
             >Password</label
           >
-          <input
-            v-model="userInput.password"
-            type="password"
-            id="input-pwd"
-            class="custom-input"
-            placeholder=" "
-            @focus="handleFocusPassword('pwd-div')"
-            @blur="handleBlurPassword('pwd-div')"
-            required
-          />
+          <div class="d-flex">
+            <input
+              v-model="userInput.password"
+              :type="togglePasswordVisibility"
+              id="input-pwd"
+              class="custom-input flex-fill"
+              placeholder=" "
+              @focus="handleFocusPassword('pwd-div')"
+              @blur="handleBlurPassword('pwd-div')"
+              required
+            />
+            <button class="custom-input" @click.prevent="executetogglePasswordVisibility">
+              <i :class="togglePasswordVisibilityIcon"></i>
+            </button>
+          </div>
 
           <p id="8-char" class="pwd-req">
             <i class="bi bi-x-lg"></i> Must be at least 8 characters
@@ -79,17 +84,21 @@
           <label id="confirm-pwd-label" for="input-pwd-confirm" class="form-label custom-label-size"
             >Confirm password</label
           >
-
-          <input
-            v-model="userInput.confirmPassword"
-            type="password"
-            id="input-pwd-confirm"
-            class="custom-input"
-            placeholder=" "
-            @focus="handleFocusConfirmPassword('confirm-div')"
-            @blur="handleBlurConfirmPassword('confirm-div')"
-            required
-          />
+          <div class="d-flex">
+            <input
+              v-model="userInput.confirmPassword"
+              :type="toggleConfirmPasswordVisibility"
+              id="input-pwd-confirm"
+              class="custom-input flex-fill"
+              placeholder=" "
+              @focus="handleFocusConfirmPassword('confirm-div')"
+              @blur="handleBlurConfirmPassword('confirm-div')"
+              required
+            />
+            <button class="custom-input" @click.prevent="executetoggleConfirmPasswordVisibility">
+              <i :class="toggleConfirmPasswordVisibilityIcon"></i>
+            </button>
+          </div>
 
           <span class="pwd-req" id="confirm-sp"
             ><i class="bi bi-x-lg"></i> Passwords must match</span
@@ -121,6 +130,12 @@ const userInput = reactive({
   password: ref(''),
   confirmPassword: ref('')
 })
+
+const toggleConfirmPasswordVisibility = ref('password')
+const togglePasswordVisibility = ref('password')
+
+const toggleConfirmPasswordVisibilityIcon = ref('bi bi-eye-slash')
+const togglePasswordVisibilityIcon = ref('bi bi-eye-slash')
 
 const errorMessages = (input) => {
   // get the id of the input field
@@ -188,6 +203,24 @@ const submit = async () => {
   }
 }
 
+// event handler for password visibility toggle
+const executetoggleConfirmPasswordVisibility = () => {
+  toggleConfirmPasswordVisibility.value =
+    toggleConfirmPasswordVisibility.value === 'password' ? 'text' : 'password'
+  toggleConfirmPasswordVisibilityIcon.value =
+    toggleConfirmPasswordVisibility.value === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye'
+}
+
+const executetogglePasswordVisibility = () => {
+  togglePasswordVisibility.value =
+    togglePasswordVisibility.value === 'password' ? 'text' : 'password'
+  togglePasswordVisibilityIcon.value =
+    togglePasswordVisibility.value === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye'
+}
+
+/**
+ * FOCUS AND BLUR EVENT HANDLERS
+ */
 const handleFocus = (divId) => {
   const div = document.getElementById(divId)
   const label = div.getElementsByTagName('label')[0]
@@ -227,8 +260,10 @@ const handleFocusPassword = (divId) => {
   const label = div.getElementsByTagName('label')[0]
   const p = div.getElementsByTagName('p')
   const input = div.getElementsByTagName('input')[0]
+  const button = div.getElementsByTagName('button')[0]
 
   label.classList.add('custom-focus')
+  button.style.borderBottom = '2px solid #8c92ac'
   input.style.borderBottom = '2px solid #8c92ac'
   for (let pElements of p) {
     pElements.style.display = 'block'
@@ -240,9 +275,11 @@ const handleFocusConfirmPassword = (divId) => {
   const label = div.getElementsByTagName('label')[0]
   const span = div.getElementsByTagName('span')[0]
   const input = div.getElementsByTagName('input')[0]
+  const button = div.getElementsByTagName('button')[0]
 
   label.classList.add('custom-focus')
   input.style.borderBottom = '2px solid #8c92ac'
+  button.style.borderBottom = '2px solid #8c92ac'
   span.style.display = 'block'
   span.style.color = 'red'
 }
@@ -251,15 +288,17 @@ const handleBlurConfirmPassword = (divId) => {
   const div = document.getElementById(divId)
   const input = div.getElementsByTagName('input')[0]
   const label = div.getElementsByTagName('label')[0]
-  const span = div.getElementsByTagName('span')[0]
+  const button = div.getElementsByTagName('button')[0]
 
   if (input.value.trim() === '') {
     label.classList.remove('custom-focus')
   }
   if (input.value === userInput.password && input.value.trim() !== '') {
     input.style.borderBottom = '2px solid green'
+    button.style.borderBottom = '2px solid green'
   } else {
     input.style.borderBottom = '2px solid red'
+    button.style.borderBottom = '2px solid red'
   }
 }
 
@@ -267,6 +306,7 @@ const handleBlurPassword = (divId) => {
   const div = document.getElementById(divId)
   const input = div.getElementsByTagName('input')[0]
   const label = div.getElementsByTagName('label')[0]
+  const button = div.getElementsByTagName('button')[0]
 
   if (input.value.trim() === '') {
     label.classList.remove('custom-focus')
@@ -275,8 +315,10 @@ const handleBlurPassword = (divId) => {
   const reqs = passwordRequirements.filter((req) => req.regex.test(input.value))
   if (reqs.length === passwordRequirements.length) {
     input.style.borderBottom = '2px solid green'
+    button.style.borderBottom = '2px solid green'
   } else {
     input.style.borderBottom = '2px solid red'
+    button.style.borderBottom = '2px solid red'
   }
 }
 
@@ -313,7 +355,7 @@ watch(
   () => userInput.confirmPassword,
   (newPassword) => {
     const span = document.getElementById('confirm-sp')
-    if (newPassword === userInput.password) {
+    if (newPassword === userInput.password && newPassword.trim() !== '') {
       span.style.color = 'green'
       const oldIcon = span.getElementsByTagName('i')[0]
       const newIcon = document.createElement('i')

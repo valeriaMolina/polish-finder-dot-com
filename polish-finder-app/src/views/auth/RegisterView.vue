@@ -21,7 +21,7 @@
             placeholder=" "
             id="input-email"
             class="custom-input"
-            @focus="handleFocus('email-label')"
+            @focus="handleFocus('email-div')"
             @blur="handleBlur('email-div')"
             required
           />
@@ -41,7 +41,7 @@
             class="custom-input"
             placeholder=" "
             required
-            @focus="handleFocus('usr-label')"
+            @focus="handleFocus('username-div')"
             @blur="handleBlur('username-div')"
           />
 
@@ -87,12 +87,13 @@
             class="custom-input"
             placeholder=" "
             @focus="handleFocusConfirmPassword('confirm-div')"
-            @blur="handleBlurPassword('confirm-div')"
+            @blur="handleBlurConfirmPassword('confirm-div')"
             required
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
           />
 
-          <span class="pwd-req"><i class="bi bi-x-lg"></i> Passwords must match</span>
+          <span class="pwd-req" id="confirm-sp"
+            ><i class="bi bi-x-lg"></i> Passwords must match</span
+          >
         </div>
         <div class="d-flex justify-content-center mx-2">
           <button id="btn-register-colorful" type="submit" class="btn mb-3 w-100">
@@ -187,8 +188,12 @@ const submit = async () => {
   }
 }
 
-const handleFocus = (elementId) => {
-  document.getElementById(elementId).classList.add('custom-focus')
+const handleFocus = (divId) => {
+  const div = document.getElementById(divId)
+  const label = div.getElementsByTagName('label')[0]
+  const input = div.getElementsByTagName('input')[0]
+  input.style.borderBottom = '2px solid #8c92ac'
+  label.classList.add('custom-focus')
 }
 
 const handleBlur = (divId) => {
@@ -221,8 +226,10 @@ const handleFocusPassword = (divId) => {
   // get the input, label and p elements
   const label = div.getElementsByTagName('label')[0]
   const p = div.getElementsByTagName('p')
+  const input = div.getElementsByTagName('input')[0]
 
   label.classList.add('custom-focus')
+  input.style.borderBottom = '2px solid #8c92ac'
   for (let pElements of p) {
     pElements.style.display = 'block'
   }
@@ -232,10 +239,28 @@ const handleFocusConfirmPassword = (divId) => {
   const div = document.getElementById(divId)
   const label = div.getElementsByTagName('label')[0]
   const span = div.getElementsByTagName('span')[0]
+  const input = div.getElementsByTagName('input')[0]
 
   label.classList.add('custom-focus')
+  input.style.borderBottom = '2px solid #8c92ac'
   span.style.display = 'block'
   span.style.color = 'red'
+}
+
+const handleBlurConfirmPassword = (divId) => {
+  const div = document.getElementById(divId)
+  const input = div.getElementsByTagName('input')[0]
+  const label = div.getElementsByTagName('label')[0]
+  const span = div.getElementsByTagName('span')[0]
+
+  if (input.value.trim() === '') {
+    label.classList.remove('custom-focus')
+  }
+  if (input.value === userInput.password && input.value.trim() !== '') {
+    input.style.borderBottom = '2px solid green'
+  } else {
+    input.style.borderBottom = '2px solid red'
+  }
 }
 
 const handleBlurPassword = (divId) => {
@@ -246,10 +271,12 @@ const handleBlurPassword = (divId) => {
   if (input.value.trim() === '') {
     label.classList.remove('custom-focus')
   }
-  if (!input.checkValidity()) {
-    input.style.borderBottom = '2px solid red'
-  } else {
+  // check if the password is valid
+  const reqs = passwordRequirements.filter((req) => req.regex.test(input.value))
+  if (reqs.length === passwordRequirements.length) {
     input.style.borderBottom = '2px solid green'
+  } else {
+    input.style.borderBottom = '2px solid red'
   }
 }
 
@@ -279,6 +306,28 @@ watch(
       newIcon.id = 'error-icon'
       paragraph.replaceChild(newIcon, oldIcon)
     })
+  }
+)
+
+watch(
+  () => userInput.confirmPassword,
+  (newPassword) => {
+    const span = document.getElementById('confirm-sp')
+    if (newPassword === userInput.password) {
+      span.style.color = 'green'
+      const oldIcon = span.getElementsByTagName('i')[0]
+      const newIcon = document.createElement('i')
+      newIcon.classList.add('bi', 'bi-check-lg')
+      newIcon.id = 'succes-icon'
+      span.replaceChild(newIcon, oldIcon)
+    } else {
+      span.style.color = 'red'
+      const oldIcon = span.getElementsByTagName('i')[0]
+      const newIcon = document.createElement('i')
+      newIcon.classList.add('bi', 'bi-x-lg')
+      newIcon.id = 'error-icon'
+      span.replaceChild(newIcon, oldIcon)
+    }
   }
 )
 </script>

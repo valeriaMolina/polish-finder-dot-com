@@ -1,0 +1,5 @@
+{
+    "username": "valer",
+    "verificationLink": "http://localhost:3000/verify/123456",
+    "homePage": "http://localhost:3000"
+}

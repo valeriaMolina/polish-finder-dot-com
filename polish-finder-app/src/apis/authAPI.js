@@ -46,3 +46,20 @@ export async function sendLogout() {
     throw new Error(error.response.status)
   }
 }
+
+export async function sendRegister(username, password, email) {
+  try {
+    const instance = axiosInstance.create({
+      baseURL: SERVER,
+      method: 'post',
+      data: {
+        username,
+        password,
+        email
+      }
+    })
+    const res = await instance.post('/signup')
+  } catch (error) {
+    throw new Error(error)
+  }
+}

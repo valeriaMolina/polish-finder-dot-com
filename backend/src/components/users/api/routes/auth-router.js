@@ -14,9 +14,7 @@ const logger = require('../../../../libraries/logger/logger');
 const userService = require('../../service/user-service');
 const authService = require('../../service/auth-service');
 const config = require('../../../../libraries/config/config');
-const userRolesService = require('../../../rbac/service/user-roles-service');
-const rolesService = require('../../../rbac/service/roles-service');
-const roles = require('../../../../libraries/constants/roles');
+const emailService = require('../../service/email-service');
 
 /**
  * This function authenticates a user.
@@ -93,46 +91,33 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
  */
 router.post('/signup', validateSignUp, async (req, res) => {
     logger.info(`Received request to create new user`);
-    const { username, password, email } = req.body;
-
     try {
-        // check if user already exists
-        const existingUser = await userService.getUserByUsername(username);
-        if (existingUser) {
-            logger.error(`User ${username} already exists`);
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-
-        const existingUserByEmail = await userService.getUserByEmail(email);
-        if (existingUserByEmail) {
-            logger.error(`Email ${email} already exists`);
-            return res.status(400).json({ msg: 'Email already in use' });
-        }
-
-        // create new user
-        const user = await userService.createUser(username, email, password);
-
-        // get the USER role
-        const role = await rolesService.findRolesByName(roles.USER);
-
-        // assign USER role to new user
-        const userRole = await userRolesService.assignRoleToUser(
-            user.user_id,
-            role.role_id
-        );
-        if (!userRole) {
-            return res
-                .status(500)
-                .json({ msg: 'Error assigning role to user' });
-        }
-        res.status(201).json({
-            msg: 'User created',
-            username: user.username,
-            email: user.email,
+        const { accessToken, refreshToken, userName, userEmail } =
+            await authService.registerUser(req.body);
+        // send confirmation email as well
+        const info = await emailService.sendAccountVerificationEmail(userEmail);
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: config.refreshTokenExpiration,
         });
-    } catch (err) {
-        logger.error(`Error creating user: ${err.message}`);
-        res.status(500).send('Internal Server Error');
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: config.accessTokenExpiration,
+        });
+        res.json({ userName, userEmail });
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error creating new user: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
     }
 });
 

@@ -234,6 +234,22 @@ class InvalidCredentialsError extends Error {
     }
 }
 
+class UserNameAlreadyInUseError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserNameAlreadyInUseError';
+        this.statusCode = 409; // conflict
+    }
+}
+
+class EmailAlreadyInUseError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'EmailAlreadyInUseError';
+        this.statusCode = 409; // conflict
+    }
+}
+
 module.exports = {
     BrandNotFoundError,
     PolishAlreadyExistsError,
@@ -264,4 +280,6 @@ module.exports = {
     FormulaAlreadyExistsError,
     ColorAlreadyExistsError,
     InvalidCredentialsError,
+    EmailAlreadyInUseError,
+    UserNameAlreadyInUseError,
 };

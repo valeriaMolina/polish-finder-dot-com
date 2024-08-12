@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Verify your email address</title>
+    </head>
+    <body
+        style="
+            background-color: #ececec;
+            font-family:
+                Open Sans,
+                sans-serif;
+        "
+    >
+        <table
+            style="
+                width: 550px;
+                background-color: white;
+                margin: 0 auto;
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+                border-radius: 2%;
+            "
+        >
+            <thead></thead>
+            <th></th>
+            <tbody>
+                <tr>
+                    <td style="text-align: center">
+                        <h1
+                            style="
+                                margin-inline-end: 8px;
+                                text-transform: uppercase;
+                                border: 3px solid black;
+                                letter-spacing: 2px;
+                                box-shadow:
+                                    1px 1px 0px 0px,
+                                    2px 2px 0px 0px,
+                                    3px 3px 0px 0px,
+                                    4px 4px 0px 0px,
+                                    5px 5px 0px 0px;
+                                position: inherit;
+                                background-color: #bdcbfb;
+                            "
+                        >
+                            <a
+                                style="text-decoration: none; color: black"
+                                href="<%= homePage  %>"
+                                >Polish Finder</a
+                            >
+                        </h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h2 style="text-align: center">
+                            Verify your email address
+                        </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="padding: 0.5rem">
+                            <p>Hello, <%= username %></p>
+                            <p style="padding-bottom: 0.5rem">
+                                Thank you for creating an account with Polish
+                                Finder! Please verify your email address by
+                                clicking the button below:
+                            </p>
+                            <p style="text-align: center">
+                                <a
+                                    style="
+                                        background-color: #bdfbce;
+                                        padding: 5px 10px;
+                                        text-decoration: none;
+                                        text-transform: uppercase;
+                                        border: 3px solid black;
+                                        color: black;
+                                        letter-spacing: 2px;
+                                        box-shadow:
+                                            1px 1px 0px 0px,
+                                            2px 2px 0px 0px,
+                                            3px 3px 0px 0px,
+                                            4px 4px 0px 0px,
+                                            5px 5px 0px 0px;
+                                    "
+                                    href="<%= verificationLink  %>"
+                                    >Verify your email</a
+                                >
+                            </p>
+
+                            <p style="padding-top: 0.5rem">
+                                If the button doesn't work, you can copy and
+                                paste the following link into your browser:
+                            </p>
+                            <p style="text-align: center">
+                                <a href="<%= verificationLink  %>"
+                                    ><%= verificationLink %></a
+                                >
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="padding: 0.5rem">
+                            <p>Happy polishing!</p>
+                            <p>The Polish Finder Team</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="padding: 0.5rem">
+                            <p>
+                                If you didn't create an account with Polish
+                                Finder, please ignore this email.
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

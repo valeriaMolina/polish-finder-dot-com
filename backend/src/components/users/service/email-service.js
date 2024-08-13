@@ -3,6 +3,8 @@
  */
 
 const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
 
 const config = require('../../../libraries/config/config');
 const logger = require('../../../libraries/logger/logger');
@@ -33,13 +35,21 @@ function verifyEmailClient() {
         });
 }
 
-async function sendAccountVerificationEmail(email) {
+async function sendAccountVerificationEmail(email, username, verifyLink) {
     const mailOptions = {
-        from: config.noReplyMail,
+        from: `Polish Finder <${config.noReplyMail}>`,
         to: email,
         subject: 'Verify your Polish Finder',
-        text: 'Verify your account btch',
     };
+
+    const emailContent = await ejs.renderFile(
+        path.join(__dirname, '../../../libraries/templates/verifyEmail.ejs'),
+        {
+            username,
+            verificationLink: verifyLink,
+            homePage: config.homePage,
+        }
+    );
 
     await transporter
         .sendMail(mailOptions)

@@ -95,7 +95,7 @@ router.post('/signup', validateSignUp, async (req, res) => {
         const { accessToken, refreshToken, userName, userEmail } =
             await authService.registerUser(req.body);
         // send confirmation email as well
-        const info = await emailService.sendAccountVerificationEmail(userEmail);
+        await emailService.sendAccountVerificationEmail(userEmail);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,

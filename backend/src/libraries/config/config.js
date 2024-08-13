@@ -19,4 +19,5 @@ module.exports = {
     emailId: process.env.EMAIL_USERNAME,
     emailCode: process.env.EMAIL_PASSWORD,
     noReplyMail: process.env.NO_REPLY_EMAIL,
+    homePage: process.env.HOME_PAGE,
 };

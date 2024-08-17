@@ -92,10 +92,19 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
 router.post('/signup', validateSignUp, async (req, res) => {
     logger.info(`Received request to create new user`);
     try {
-        const { accessToken, refreshToken, userName, userEmail } =
-            await authService.registerUser(req.body);
+        const {
+            accessToken,
+            refreshToken,
+            userName,
+            userEmail,
+            verificationToken,
+        } = await authService.registerUser(req.body);
         // send confirmation email as well
-        await emailService.sendAccountVerificationEmail(userEmail);
+        await emailService.sendAccountVerificationEmail(
+            userEmail,
+            userName,
+            verificationToken
+        );
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
@@ -162,6 +171,23 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     const payload = { user: { id: user.user_id } };
     const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
     res.json({ token });
+});
+
+router.post('/verify', async (req, res) => {
+    const { token } = req.query;
+    try {
+        await authService.verifyUser(token);
+        return res.status(200).json({ msg: 'User verified' });
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error verifying user: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
+    }
 });
 
 router.post('/logout', async (req, res) => {

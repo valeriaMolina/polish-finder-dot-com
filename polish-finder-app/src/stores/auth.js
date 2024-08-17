@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { sendLogin, sendLogout } from '@/apis/authAPI'
+import { sendLogin, sendLogout, verifyUser } from '@/apis/authAPI'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -7,7 +7,8 @@ export const useAuthStore = defineStore('auth', {
     // initialize state from local storage to enable user to stay logged in
     user: JSON.parse(localStorage.getItem('user')) || null,
     username: JSON.parse(localStorage.getItem('user'))?.userName || null,
-    email: JSON.parse(localStorage.getItem('user'))?.userEmail || null
+    email: JSON.parse(localStorage.getItem('user'))?.userEmail || null,
+    isUserVerified: JSON.parse(localStorage.getItem('user'))?.isUserVerified || null
   }),
   actions: {
     async login(username, password) {
@@ -45,10 +46,22 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         throw new Error('An error occurred while trying to logout: ', error.message)
       }
+    },
+    async verifyUser(token) {
+      try {
+        const res = await verifyUser(token)
+        if (res.data.isUserVerified) {
+          this.isUserVerified = true
+          localStorage.setItem('isUserVerified', true)
+        }
+      } catch (error) {
+        throw error
+      }
     }
   },
   getters: {
     getUsername: (state) => state.username,
-    getEmail: (state) => state.email
+    getEmail: (state) => state.email,
+    getUserIsVerified: (state) => state.isUserVerified
   }
 })

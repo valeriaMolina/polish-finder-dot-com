@@ -250,7 +250,25 @@ class EmailAlreadyInUseError extends Error {
     }
 }
 
+class InvalidTokenError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidTokenError';
+        this.statusCode = 401; // unauthorized
+    }
+}
+
+class UserAlreadyVerifiedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserAlreadyVerifiedError';
+        this.statusCode = 400; // bad request
+    }
+}
+
 module.exports = {
+    UserAlreadyVerifiedError,
+    InvalidTokenError,
     BrandNotFoundError,
     PolishAlreadyExistsError,
     BrandAlreadyExistsError,

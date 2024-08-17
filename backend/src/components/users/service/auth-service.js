@@ -15,6 +15,8 @@ const {
     InvalidCredentialsError,
     UserNameAlreadyInUseError,
     EmailAlreadyInUseError,
+    InvalidTokenError,
+    UserAlreadyVerifiedError,
 } = require('../../../libraries/utils/error-handler');
 
 /**
@@ -90,6 +92,24 @@ async function logInUser(auth) {
     };
 }
 
+/**
+ * Registers a new user by creating a new user
+ * record in the database, hashing the password,
+ * assigning a default role to the user, and
+ * generating acces and refresh tokens.
+ *
+ * @param {Object} newUserDetails the details of the new user to be registered
+ * @param {string} newUserDetails.username the username of the new user
+ * @param {string} newUserDetails.password the password of the new user
+ * @param {string} newUserDetails.email the email of the new user
+ * @returns {Promise<Object>} - A promise that resolves to an object
+ * containing the access token, refresh token, user's name, and email
+ *
+ * @throws {UserNameAlreadyInUseError} - If the username is already in use
+ * @throws {EmailAlreadyInUseError} - If the email is already in use
+ * @throws {Error} - If any other error occurs during the registration process
+ *
+ */
 async function registerUser(newUserDetails) {
     const { username, password, email } = newUserDetails;
     try {
@@ -131,14 +151,66 @@ async function registerUser(newUserDetails) {
             expiresIn: '7d',
         });
 
+        // generate verification token
+        const verificationToken = jwt.sign(
+            { userId: user.user_id },
+            config.jwtSecret,
+            { expiresIn: '7d' }
+        );
+
         return {
             accessToken,
             refreshToken,
             userName: user.username,
             userEmail: user.email,
+            verificationToken,
         };
     } catch (error) {
         logger.error('Error registering user', error);
+        throw error;
+    }
+}
+
+/**
+ * Verifies a user's email by updating the 'email_verified' field in the database.
+ *
+ * @param {string} token - The JWT token containing the user's ID.
+ *
+ * @returns {Promise<void>} - A promise that resolves when the user's email is successfully verified.
+ * @throws {InvalidTokenError} - If the provided token is invalid.
+ * @throws {UserNotFoundError} - If the user with the given ID is not found in the database.
+ * @throws {UserAlreadyVerifiedError} - If the user's email has already been verified.
+ */
+async function verifyUser(token) {
+    try {
+        // verify the token
+        const decoded = jwt.verify(token, config.jwtSecret);
+
+        // find the user and update the email_verified field
+        const userId = decoded.user.id;
+        if (!userId) {
+            logger.error('Invalid token');
+            throw new InvalidTokenError('Invalid token');
+        }
+        const user = await userService.getUserByUserId(userId);
+
+        if (!user) {
+            logger.error(`User with id ${userId} not found`);
+            throw new UserNotFoundError('User not found');
+        }
+
+        // check if the user's email is already verified
+        if (user.email_verified) {
+            logger.error(`User with id ${userId} has already been verified`);
+            throw new UserAlreadyVerifiedError(
+                'User has already been verified'
+            );
+        }
+
+        user.email_verified = true;
+        await user.save();
+    } catch (error) {
+        logger.error('Error verifying user', error);
         throw error;
     }
 }
@@ -147,4 +219,5 @@ module.exports = {
     logInUser,
     logOutUser,
     registerUser,
+    verifyUser,
 };

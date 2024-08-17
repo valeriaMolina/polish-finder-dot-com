@@ -63,3 +63,19 @@ export async function sendRegister(username, password, email) {
     throw new Error(error)
   }
 }
+
+export async function verifyUser(token) {
+  try {
+    const verifyRequest = axiosInstance.create({
+      baseURL: SERVER,
+      method: 'post',
+      data: {
+        mes: 'null'
+      }
+    })
+    const res = await verifyRequest.post(`/verify?token=${token}`)
+    return res
+  } catch (error) {
+    throw new Error(error)
+  }
+}

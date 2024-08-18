@@ -16,7 +16,8 @@ import CollectionView from '@/views/CollectionView.vue'
 import SubmissionsView from '@/views/submissions/SubmissionsView.vue'
 import FindDupeView from '@/views/FindDupeView.vue'
 import AdvancedSearchView from '@/views/AdvancedSearchView.vue'
-import VerifyAccountView from '@/views/VerifyAccountView.vue'
+import VerifyAccountView from '@/views/auth/VerifyAccountView.vue'
+import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -118,6 +119,11 @@ const router = createRouter({
       path: '/verify/',
       name: 'verify',
       component: VerifyAccountView
+    },
+    {
+      path: '/resend-verification',
+      name: 'resend-verification',
+      component: ResendVerificationView
     }
   ]
 })

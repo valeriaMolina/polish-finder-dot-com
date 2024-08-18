@@ -9,6 +9,8 @@ const {
     validateSignUp,
     validateRefresh,
     decodeBasicAuth,
+    validateVerifyEmail,
+    validateResendVerificationEmail,
 } = require('../middleware/auth-validator');
 const logger = require('../../../../libraries/logger/logger');
 const userService = require('../../service/user-service');
@@ -173,7 +175,7 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     res.json({ token });
 });
 
-router.post('/verify', async (req, res) => {
+router.post('/verify', validateVerifyEmail, async (req, res) => {
     const { token } = req.query;
     try {
         await authService.verifyUser(token);
@@ -189,6 +191,29 @@ router.post('/verify', async (req, res) => {
         }
     }
 });
+
+router.post(
+    '/verify/resend',
+    validateResendVerificationEmail,
+    async (req, res) => {
+        const { email } = req.body;
+        try {
+            await authService.resendVerificationEmail(email);
+            return res.status(200).json({ msg: 'Verification email sent' });
+        } catch (error) {
+            if (error.statusCode) {
+                logger.error(
+                    `Error resending verification email: ${error.message}`
+                );
+                return res.status(200).send({ msg: 'Verification email sent' });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
 
 router.post('/logout', async (req, res) => {
     try {

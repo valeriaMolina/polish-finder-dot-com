@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../../../libraries/config/config');
 const userService = require('./user-service');
 const userRoleService = require('../../rbac/service/user-roles-service');
+const emailService = require('./email-service');
 const rolesService = require('../../rbac/service/roles-service');
 const roles = require('../../../libraries/constants/roles');
 const logger = require('../../../libraries/logger/logger');
@@ -17,6 +18,7 @@ const {
     EmailAlreadyInUseError,
     InvalidTokenError,
     UserAlreadyVerifiedError,
+    JsonWebTokenVerifyError,
 } = require('../../../libraries/utils/error-handler');
 
 /**
@@ -152,11 +154,9 @@ async function registerUser(newUserDetails) {
         });
 
         // generate verification token
-        const verificationToken = jwt.sign(
-            { userId: user.user_id },
-            config.jwtSecret,
-            { expiresIn: '7d' }
-        );
+        const verificationToken = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '7d',
+        });
 
         return {
             accessToken,
@@ -187,6 +187,7 @@ async function verifyUser(token) {
         const decoded = jwt.verify(token, config.jwtSecret);
 
         // find the user and update the email_verified field
+        console.log(decoded);
         const userId = decoded.user.id;
         if (!userId) {
             logger.error('Invalid token');
@@ -210,7 +211,52 @@ async function verifyUser(token) {
         user.email_verified = true;
         await user.save();
     } catch (error) {
-        logger.error('Error verifying user', error);
+        if (error.message === 'jwt malformed') {
+            throw new JsonWebTokenVerifyError(error.message);
+        }
+        if (error.message === 'jwt expired') {
+            throw new InvalidTokenError(error.message);
+        }
+        throw error;
+    }
+}
+
+/**
+ * Resends a verification email to the user with the provided email.
+ *
+ * @param {string} email - The user's email.
+ * @returns {Promise<void>} - A promise that resolves when the verification email is successfully sent.
+ * @throws {UserNotFoundError} - If the user with the given email is not found in the database
+ * @throws {Error} - If any other error occurs during the resend process
+ * */
+async function resendVerificationEmail(email) {
+    try {
+        // find user by email
+        const user = await userService.getUserByEmail(email);
+
+        if (!user) {
+            logger.error(`User with email ${email} not found`);
+            throw new UserNotFoundError('User not found');
+        }
+
+        // generate verification token
+        const payload = {
+            user: {
+                id: user.user_id,
+            },
+        };
+
+        const newVerificationToken = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '7d',
+        });
+
+        // send verification email with new token
+        await emailService.sendAccountVerificationEmail(
+            user.email,
+            user.username,
+            newVerificationToken
+        );
+    } catch (error) {
         throw error;
     }
 }
@@ -220,4 +266,5 @@ module.exports = {
     logOutUser,
     registerUser,
     verifyUser,
+    resendVerificationEmail,
 };

@@ -266,6 +266,14 @@ class UserAlreadyVerifiedError extends Error {
     }
 }
 
+class JsonWebTokenVerifyError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'JsonWebTokenError';
+        this.statusCode = 401; // unauthorized
+    }
+}
+
 module.exports = {
     UserAlreadyVerifiedError,
     InvalidTokenError,
@@ -300,4 +308,5 @@ module.exports = {
     InvalidCredentialsError,
     EmailAlreadyInUseError,
     UserNameAlreadyInUseError,
+    JsonWebTokenVerifyError,
 };

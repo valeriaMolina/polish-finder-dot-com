@@ -18,6 +18,7 @@ import FindDupeView from '@/views/FindDupeView.vue'
 import AdvancedSearchView from '@/views/AdvancedSearchView.vue'
 import VerifyAccountView from '@/views/auth/VerifyAccountView.vue'
 import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
+import UserNotVerifiedView from '@/views/auth/UserNotVerifiedView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -124,6 +125,11 @@ const router = createRouter({
       path: '/resend-verification',
       name: 'resend-verification',
       component: ResendVerificationView
+    },
+    {
+      path: '/missing-verification',
+      name: 'missing-verification',
+      component: UserNotVerifiedView
     }
   ]
 })

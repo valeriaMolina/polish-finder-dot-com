@@ -266,6 +266,14 @@ class UserAlreadyVerifiedError extends Error {
     }
 }
 
+class UserNotVerifiedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserNotVerifiedError';
+        this.statusCode = 400; // bad request
+    }
+}
+
 class JsonWebTokenVerifyError extends Error {
     constructor(message) {
         super(message);
@@ -308,5 +316,6 @@ module.exports = {
     InvalidCredentialsError,
     EmailAlreadyInUseError,
     UserNameAlreadyInUseError,
+    UserNotVerifiedError,
     JsonWebTokenVerifyError,
 };

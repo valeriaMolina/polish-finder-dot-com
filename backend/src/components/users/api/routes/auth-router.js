@@ -49,7 +49,9 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
     } catch (err) {
         if (err.statusCode) {
             logger.error(`Error authenticating user: ${err.message}`);
-            return res.status(err.statusCode).send({ error: err.message });
+            return res
+                .status(err.statusCode)
+                .send({ error: err.message, errorName: err.name });
         } else {
             // error was not anticipated
             logger.error(`Error not anticipated: ${err.message}`);

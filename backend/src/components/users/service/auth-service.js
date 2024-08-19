@@ -18,6 +18,7 @@ const {
     EmailAlreadyInUseError,
     InvalidTokenError,
     UserAlreadyVerifiedError,
+    UserNotVerifiedError,
     JsonWebTokenVerifyError,
 } = require('../../../libraries/utils/error-handler');
 
@@ -69,6 +70,13 @@ async function logInUser(auth) {
     if (!isMatch) {
         logger.error('Invalid Credentials');
         throw new InvalidCredentialsError('Invalid Credentials');
+    }
+
+    // check if the user has already been verified
+    // if not, throw an error
+    if (!user.email_verified) {
+        logger.error('User has not been verified.');
+        throw new UserNotVerifiedError('User has not been verified.');
     }
 
     // return payload with access token and refresh token

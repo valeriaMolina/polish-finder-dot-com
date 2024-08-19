@@ -36,7 +36,7 @@
 
 <script setup>
 import BasicUserInfo from '../components/BasicUserInfo.vue'
-import AccountSettings from '../components/AccountSettigs.vue'
+import AccountSettings from '../components/AccountSettings.vue'
 import DataManagement from '../components/DataManagement.vue'
 import SupportAndFeedback from '../components/SupportAndFeedback.vue'
 import { ref } from 'vue'

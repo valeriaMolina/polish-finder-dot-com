@@ -14,7 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="root">
+  <div class="app">
     <div id="content-wrapper">
       <navigation></navigation>
       <router-view></router-view>

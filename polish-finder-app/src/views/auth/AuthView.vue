@@ -96,6 +96,11 @@ const submit = async () => {
     errorMessage.value = error.message
     displayAlert.value = true
     loading.value = false
+    // if the user is not verified, redirect to verification page
+    if (error.message === 'UserNotVerifiedError') {
+      // redirect to verification page
+      router.push({ name: 'missing-verification' })
+    }
   }
 }
 </script>

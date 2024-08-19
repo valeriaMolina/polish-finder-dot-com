@@ -3,13 +3,14 @@ import { sendLogin, sendLogout, verifyUser } from '@/apis/authAPI'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    isLoggedIn: localStorage.getItem('isLoggedIn') || false,
+    isLoggedIn: false,
     // initialize state from local storage to enable user to stay logged in
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    username: JSON.parse(localStorage.getItem('user'))?.userName || null,
-    email: JSON.parse(localStorage.getItem('user'))?.userEmail || null,
-    isUserVerified: JSON.parse(localStorage.getItem('user'))?.isUserVerified || null
+    user: null,
+    username: null,
+    email: null,
+    isUserVerified: false
   }),
+  persist: true,
   actions: {
     async login(username, password) {
       try {
@@ -18,19 +19,18 @@ export const useAuthStore = defineStore('auth', {
         this.user = user
         this.username = user.userName
         this.email = user.userEmail
-        localStorage.setItem('isLoggedIn', true)
-        localStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('username', user.userName)
-        localStorage.setItem('email', user.userEmail)
+        this.isUserVerified = true
         return user
       } catch (error) {
         this.isLoggedIn = false
         this.user = null
+        this.username = null
+        this.email = null
+        this.isUserVerified = false
         if (error.message === '404') {
           throw new Error('Username or password is incorrect')
         } else {
-          console.error(error)
-          throw new Error('An error occurred while trying to login')
+          throw error
         }
       }
     },
@@ -39,10 +39,9 @@ export const useAuthStore = defineStore('auth', {
         await sendLogout()
         this.isLoggedIn = false
         this.user = null
-        localStorage.setItem('isLoggedIn', false)
-        localStorage.removeItem('user')
-        localStorage.removeItem('username')
-        localStorage.removeItem('email')
+        this.isUserVerified = false
+        this.email = null
+        this.username = null
       } catch (error) {
         throw new Error('An error occurred while trying to logout: ', error.message)
       }
@@ -51,8 +50,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const res = await verifyUser(token)
         if (res.data.isUserVerified) {
-          this.isUserVerified = true
-          localStorage.setItem('isUserVerified', true)
+          return 1
         }
       } catch (error) {
         throw error
@@ -61,7 +59,6 @@ export const useAuthStore = defineStore('auth', {
   },
   getters: {
     getUsername: (state) => state.username,
-    getEmail: (state) => state.email,
-    getUserIsVerified: (state) => state.isUserVerified
+    getEmail: (state) => state.email
   }
 })

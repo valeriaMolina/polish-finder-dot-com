@@ -8,25 +8,6 @@ import base64 from 'base-64'
 const SERVER = config.SERVER
 
 /**
- * Retrieves the authorization header for API requests.
- * If a user is logged in, the function returns an authorization header with the user's access token.
- * If no user is logged in, the function returns an empty object.
- *
- * @returns {Object} - An object containing the authorization header.
- * If a user is logged in, the object will have the following structure:
- * { Authorization: 'Bearer <access_token>' }
- * If no user is logged in, the object will be empty: {}
- */
-export function authHeader() {
-  let user = JSON.parse(localStorage.getItem('user'))
-  if (user && user.accessToken) {
-    return { Authorization: `Bearer ${user.accessToken}` }
-  } else {
-    return {}
-  }
-}
-
-/**
  * Sends a login request to the server with the provided username and password.
  *
  * @param {string} username - The username of the user attempting to log in.
@@ -50,9 +31,11 @@ export async function sendLogin(username, password) {
       }
     })
     const res = await instance.post('/login')
-    localStorage.setItem('user', JSON.stringify(res.data))
     return res.data
   } catch (err) {
+    if (err.response.data.errorName === 'UserNotVerifiedError') {
+      throw new Error('UserNotVerifiedError')
+    }
     throw new Error(err.response.status)
   }
 }

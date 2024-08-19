@@ -121,7 +121,7 @@ router.post('/signup', validateSignUp, async (req, res) => {
             sameSite: 'strict',
             maxAge: config.accessTokenExpiration,
         });
-        res.json({ userName, userEmail });
+        res.status(201).json({ userName, userEmail });
     } catch (error) {
         if (error.statusCode) {
             logger.error(`Error creating new user: ${error.message}`);

@@ -13,6 +13,8 @@ const userRolesService = require('../../../../../src/components/rbac/service/use
 const {
     InvalidCredentialsError,
     UserNotFoundError,
+    UserNameAlreadyInUseError,
+    EmailAlreadyInUseError,
 } = require('../../../../../src/libraries/utils/error-handler');
 
 jest.mock('bcrypt');
@@ -88,10 +90,11 @@ describe('POST /signup', () => {
     const newEmail = 'email@mail.com';
     const password = 'password';
     const newUser = {
-        user_id: 4,
-        username: newUsername,
-        email: newEmail,
-        password_hash: password,
+        accessToken: 'newAccessToken',
+        refreshToken: 'newRefreshToken',
+        userName: newUsername,
+        userEmail: newEmail,
+        verificationToken: 'newVerificationToken',
     };
     const mockRole = {
         role_id: 1,
@@ -106,11 +109,7 @@ describe('POST /signup', () => {
         jest.clearAllMocks();
     });
     test('It should create a new user', async () => {
-        userService.createUser.mockResolvedValue(newUser);
-        userService.getUserByUsername.mockResolvedValue(null);
-        userService.getUserByEmail.mockResolvedValue(null);
-        rolesService.findRolesByName.mockResolvedValue(mockRole);
-        userRolesService.assignRoleToUser.mockResolvedValue(mockUserRole);
+        authService.registerUser.mockResolvedValue(newUser);
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });
@@ -119,31 +118,23 @@ describe('POST /signup', () => {
     });
 
     test('It should return 400 status when user already exists', async () => {
-        userService.getUserByUsername.mockResolvedValue(newUser);
+        authService.registerUser.mockRejectedValue(
+            new UserNameAlreadyInUseError('User name already in use')
+        );
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(409);
     });
 
     test('It should return 400 status when email already exists', async () => {
-        userService.getUserByEmail.mockResolvedValue(newUser);
+        authService.registerUser.mockRejectedValue(
+            new EmailAlreadyInUseError('Email already in use')
+        );
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });
-        expect(response.status).toBe(400);
-    });
-
-    test('It should return 500 if error when assigning role to user', async () => {
-        userService.createUser.mockResolvedValue(newUser);
-        userService.getUserByUsername.mockResolvedValue(null);
-        userService.getUserByEmail.mockResolvedValue(null);
-        rolesService.findRolesByName.mockResolvedValue(mockRole);
-        userRolesService.assignRoleToUser.mockResolvedValue(null);
-        const response = await request(app)
-            .post('/signup')
-            .send({ username: newUsername, email: newEmail, password: 123 });
-        expect(response.status).toBe(500);
+        expect(response.status).toBe(409);
     });
 });
 

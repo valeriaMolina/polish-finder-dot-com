@@ -17,6 +17,7 @@ describe('authService', () => {
     it('Should log in a user', async () => {
         userService.getUserByUsernameOrEmail.mockResolvedValue({
             user_id: '2',
+            email_verified: true,
         });
         bcrypt.compare.mockResolvedValue(true);
         userService.saveRefreshToken.mockResolvedValue();

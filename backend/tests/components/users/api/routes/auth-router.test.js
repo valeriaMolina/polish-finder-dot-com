@@ -8,11 +8,13 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('../../../../../src/components/users/api/routes/auth-router');
 const authService = require('../../../../../src/components/users/service/auth-service');
 const userService = require('../../../../../src/components/users/service/user-service');
-const rolesService = require('../../../../../src/components/rbac/service/roles-service');
-const userRolesService = require('../../../../../src/components/rbac/service/user-roles-service');
+const emailService = require('../../../../../src/components/users/service/email-service');
 const {
     InvalidCredentialsError,
     UserNotFoundError,
+    UserNameAlreadyInUseError,
+    EmailAlreadyInUseError,
+    UserNotVerifiedError,
 } = require('../../../../../src/libraries/utils/error-handler');
 
 jest.mock('bcrypt');
@@ -21,6 +23,7 @@ jest.mock('../../../../../src/components/users/service/auth-service');
 jest.mock('../../../../../src/components/users/service/user-service');
 jest.mock('../../../../../src/components/rbac/service/roles-service');
 jest.mock('../../../../../src/components/rbac/service/user-roles-service');
+jest.mock('../../../../../src/components/users/service/email-service');
 
 const app = express();
 app.use(express.json());
@@ -58,6 +61,17 @@ describe('POST /auth', () => {
 
         expect(response.status).toBe(200);
     });
+    test('It should return 400 status when username is not verified', async () => {
+        authService.logInUser.mockRejectedValue(
+            new UserNotVerifiedError('User not verified')
+        );
+        const response = await request(app)
+            .post('/login')
+            .send({})
+            .set('authorization', validBasicAuth);
+
+        expect(response.status).toBe(400);
+    });
     test('It should return 400 status when user is not found', async () => {
         authService.logInUser.mockRejectedValue(
             new UserNotFoundError('User not found')
@@ -88,10 +102,11 @@ describe('POST /signup', () => {
     const newEmail = 'email@mail.com';
     const password = 'password';
     const newUser = {
-        user_id: 4,
-        username: newUsername,
-        email: newEmail,
-        password_hash: password,
+        accessToken: 'newAccessToken',
+        refreshToken: 'newRefreshToken',
+        userName: newUsername,
+        userEmail: newEmail,
+        verificationToken: 'newVerificationToken',
     };
     const mockRole = {
         role_id: 1,
@@ -106,11 +121,8 @@ describe('POST /signup', () => {
         jest.clearAllMocks();
     });
     test('It should create a new user', async () => {
-        userService.createUser.mockResolvedValue(newUser);
-        userService.getUserByUsername.mockResolvedValue(null);
-        userService.getUserByEmail.mockResolvedValue(null);
-        rolesService.findRolesByName.mockResolvedValue(mockRole);
-        userRolesService.assignRoleToUser.mockResolvedValue(mockUserRole);
+        authService.registerUser.mockResolvedValue(newUser);
+        emailService.sendAccountVerificationEmail.mockImplementation(() => {});
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });
@@ -119,31 +131,23 @@ describe('POST /signup', () => {
     });
 
     test('It should return 400 status when user already exists', async () => {
-        userService.getUserByUsername.mockResolvedValue(newUser);
+        authService.registerUser.mockRejectedValue(
+            new UserNameAlreadyInUseError('User name already in use')
+        );
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(409);
     });
 
     test('It should return 400 status when email already exists', async () => {
-        userService.getUserByEmail.mockResolvedValue(newUser);
+        authService.registerUser.mockRejectedValue(
+            new EmailAlreadyInUseError('Email already in use')
+        );
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });
-        expect(response.status).toBe(400);
-    });
-
-    test('It should return 500 if error when assigning role to user', async () => {
-        userService.createUser.mockResolvedValue(newUser);
-        userService.getUserByUsername.mockResolvedValue(null);
-        userService.getUserByEmail.mockResolvedValue(null);
-        rolesService.findRolesByName.mockResolvedValue(mockRole);
-        userRolesService.assignRoleToUser.mockResolvedValue(null);
-        const response = await request(app)
-            .post('/signup')
-            .send({ username: newUsername, email: newEmail, password: 123 });
-        expect(response.status).toBe(500);
+        expect(response.status).toBe(409);
     });
 });
 
@@ -210,5 +214,46 @@ describe('POST /logout', () => {
             .post('/logout')
             .send({ refreshToken });
         expect(response.status).toBe(404);
+    });
+});
+
+describe('POST /verify', () => {
+    const verificationToken = 'newVerificationToken';
+    const user = {
+        user_id: 4,
+        username: 'user',
+        email: 'newEmail',
+        password_hash: 'password',
+    };
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    test('It should verify the user account', async () => {
+        authService.verifyUser.mockResolvedValue();
+        const response = await request(app).post(
+            '/verify?token=' + verificationToken
+        );
+        expect(response.status).toBe(200);
+    });
+});
+
+describe('POST /verify/resend', () => {
+    test('it should resend the verification email', async () => {
+        const email = 'email@mail.com';
+        authService.resendVerificationEmail.mockResolvedValue();
+        const response = await request(app)
+            .post('/verify/resend')
+            .send({ email });
+        expect(response.status).toBe(200);
+    });
+    test('it should return 500 if something went wrong', async () => {
+        const email = 'email@mail.com';
+        authService.resendVerificationEmail.mockRejectedValue(
+            new Error('Error')
+        );
+        const response = await request(app)
+            .post('/verify/resend')
+            .send({ email });
+        expect(response.status).toBe(500);
     });
 });

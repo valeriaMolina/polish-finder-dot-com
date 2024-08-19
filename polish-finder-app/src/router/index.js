@@ -5,8 +5,8 @@ import BrandView from '@/views/BrandView.vue'
 import PolishesView from '@/views/PolishesView.vue'
 import ExploreView from '@/views/ExploreView.vue'
 import HelpView from '@/views/HelpView.vue'
-import AuthView from '@/views/AuthView.vue'
-import RegisterView from '@/views/RegisterView.vue'
+import AuthView from '@/views/auth/AuthView.vue'
+import RegisterView from '@/views/auth/RegisterView.vue'
 import ContributeView from '@/views/ContributeView.vue'
 import SubmissionsBrandView from '@/views/submissions/SubmissionsBrandView.vue'
 import SubmissionsPolishView from '@/views/submissions/SubmissionsPolishView.vue'
@@ -16,6 +16,9 @@ import CollectionView from '@/views/CollectionView.vue'
 import SubmissionsView from '@/views/submissions/SubmissionsView.vue'
 import FindDupeView from '@/views/FindDupeView.vue'
 import AdvancedSearchView from '@/views/AdvancedSearchView.vue'
+import VerifyAccountView from '@/views/auth/VerifyAccountView.vue'
+import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
+import UserNotVerifiedView from '@/views/auth/UserNotVerifiedView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -112,6 +115,21 @@ const router = createRouter({
       path: '/search/advanced',
       name: 'advanced-search',
       component: AdvancedSearchView
+    },
+    {
+      path: '/verify/',
+      name: 'verify',
+      component: VerifyAccountView
+    },
+    {
+      path: '/resend-verification',
+      name: 'resend-verification',
+      component: ResendVerificationView
+    },
+    {
+      path: '/missing-verification',
+      name: 'missing-verification',
+      component: UserNotVerifiedView
     }
   ]
 })

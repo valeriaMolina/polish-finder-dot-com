@@ -44,3 +44,25 @@ exports.decodeBasicAuth = (req, res, next) => {
     req.auth = { identifier, password };
     next();
 };
+
+exports.validateVerifyEmail = [
+    check('token', 'Token is required').not().isEmpty(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];
+
+exports.validateResendVerificationEmail = [
+    check('email', 'Email is required').isEmail(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];

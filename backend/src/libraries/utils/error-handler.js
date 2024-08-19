@@ -234,7 +234,57 @@ class InvalidCredentialsError extends Error {
     }
 }
 
+class UserNameAlreadyInUseError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserNameAlreadyInUseError';
+        this.statusCode = 409; // conflict
+    }
+}
+
+class EmailAlreadyInUseError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'EmailAlreadyInUseError';
+        this.statusCode = 409; // conflict
+    }
+}
+
+class InvalidTokenError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidTokenError';
+        this.statusCode = 401; // unauthorized
+    }
+}
+
+class UserAlreadyVerifiedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserAlreadyVerifiedError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class UserNotVerifiedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserNotVerifiedError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class JsonWebTokenVerifyError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'JsonWebTokenError';
+        this.statusCode = 401; // unauthorized
+    }
+}
+
 module.exports = {
+    UserAlreadyVerifiedError,
+    InvalidTokenError,
     BrandNotFoundError,
     PolishAlreadyExistsError,
     BrandAlreadyExistsError,
@@ -264,4 +314,8 @@ module.exports = {
     FormulaAlreadyExistsError,
     ColorAlreadyExistsError,
     InvalidCredentialsError,
+    EmailAlreadyInUseError,
+    UserNameAlreadyInUseError,
+    UserNotVerifiedError,
+    JsonWebTokenVerifyError,
 };

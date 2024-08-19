@@ -61,7 +61,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../../stores/auth'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 
@@ -96,6 +96,11 @@ const submit = async () => {
     errorMessage.value = error.message
     displayAlert.value = true
     loading.value = false
+    // if the user is not verified, redirect to verification page
+    if (error.message === 'UserNotVerifiedError') {
+      // redirect to verification page
+      router.push({ name: 'missing-verification' })
+    }
   }
 }
 </script>

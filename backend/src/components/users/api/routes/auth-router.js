@@ -9,14 +9,14 @@ const {
     validateSignUp,
     validateRefresh,
     decodeBasicAuth,
+    validateVerifyEmail,
+    validateResendVerificationEmail,
 } = require('../middleware/auth-validator');
 const logger = require('../../../../libraries/logger/logger');
 const userService = require('../../service/user-service');
 const authService = require('../../service/auth-service');
 const config = require('../../../../libraries/config/config');
-const userRolesService = require('../../../rbac/service/user-roles-service');
-const rolesService = require('../../../rbac/service/roles-service');
-const roles = require('../../../../libraries/constants/roles');
+const emailService = require('../../service/email-service');
 
 /**
  * This function authenticates a user.
@@ -49,7 +49,9 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
     } catch (err) {
         if (err.statusCode) {
             logger.error(`Error authenticating user: ${err.message}`);
-            return res.status(err.statusCode).send({ error: err.message });
+            return res
+                .status(err.statusCode)
+                .send({ error: err.message, errorName: err.name });
         } else {
             // error was not anticipated
             logger.error(`Error not anticipated: ${err.message}`);
@@ -93,46 +95,42 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
  */
 router.post('/signup', validateSignUp, async (req, res) => {
     logger.info(`Received request to create new user`);
-    const { username, password, email } = req.body;
-
     try {
-        // check if user already exists
-        const existingUser = await userService.getUserByUsername(username);
-        if (existingUser) {
-            logger.error(`User ${username} already exists`);
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-
-        const existingUserByEmail = await userService.getUserByEmail(email);
-        if (existingUserByEmail) {
-            logger.error(`Email ${email} already exists`);
-            return res.status(400).json({ msg: 'Email already in use' });
-        }
-
-        // create new user
-        const user = await userService.createUser(username, email, password);
-
-        // get the USER role
-        const role = await rolesService.findRolesByName(roles.USER);
-
-        // assign USER role to new user
-        const userRole = await userRolesService.assignRoleToUser(
-            user.user_id,
-            role.role_id
+        const {
+            accessToken,
+            refreshToken,
+            userName,
+            userEmail,
+            verificationToken,
+        } = await authService.registerUser(req.body);
+        // send confirmation email as well
+        await emailService.sendAccountVerificationEmail(
+            userEmail,
+            userName,
+            verificationToken
         );
-        if (!userRole) {
-            return res
-                .status(500)
-                .json({ msg: 'Error assigning role to user' });
-        }
-        res.status(201).json({
-            msg: 'User created',
-            username: user.username,
-            email: user.email,
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: config.refreshTokenExpiration,
         });
-    } catch (err) {
-        logger.error(`Error creating user: ${err.message}`);
-        res.status(500).send('Internal Server Error');
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: config.accessTokenExpiration,
+        });
+        res.status(201).json({ userName, userEmail });
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error creating new user: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
     }
 });
 
@@ -178,6 +176,46 @@ router.post('/refresh', validateRefresh, async (req, res) => {
     const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
     res.json({ token });
 });
+
+router.post('/verify', validateVerifyEmail, async (req, res) => {
+    const { token } = req.query;
+    try {
+        await authService.verifyUser(token);
+        return res.status(200).json({ msg: 'User verified' });
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error verifying user: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
+    }
+});
+
+router.post(
+    '/verify/resend',
+    validateResendVerificationEmail,
+    async (req, res) => {
+        const { email } = req.body;
+        try {
+            await authService.resendVerificationEmail(email);
+            return res.status(200).json({ msg: 'Verification email sent' });
+        } catch (error) {
+            if (error.statusCode) {
+                logger.error(
+                    `Error resending verification email: ${error.message}`
+                );
+                return res.status(200).send({ msg: 'Verification email sent' });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
 
 router.post('/logout', async (req, res) => {
     try {

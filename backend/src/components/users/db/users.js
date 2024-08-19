@@ -36,6 +36,11 @@ const users = db.define(
         refreshtoken: {
             type: DataTypes.TEXT,
         },
+        email_verified: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
     },
     {
         timestamps: false,

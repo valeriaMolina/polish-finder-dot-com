@@ -204,3 +204,44 @@ describe('POST /logout', () => {
         expect(response.status).toBe(404);
     });
 });
+
+describe('POST /verify', () => {
+    const verificationToken = 'newVerificationToken';
+    const user = {
+        user_id: 4,
+        username: 'user',
+        email: 'newEmail',
+        password_hash: 'password',
+    };
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    test('It should verify the user account', async () => {
+        authService.verifyUser.mockResolvedValue();
+        const response = await request(app).post(
+            '/verify?token=' + verificationToken
+        );
+        expect(response.status).toBe(200);
+    });
+});
+
+describe('POST /verify/resend', () => {
+    test('it should resend the verification email', async () => {
+        const email = 'email@mail.com';
+        authService.resendVerificationEmail.mockResolvedValue();
+        const response = await request(app)
+            .post('/verify/resend')
+            .send({ email });
+        expect(response.status).toBe(200);
+    });
+    test('it should return 500 if something went wrong', async () => {
+        const email = 'email@mail.com';
+        authService.resendVerificationEmail.mockRejectedValue(
+            new Error('Error')
+        );
+        const response = await request(app)
+            .post('/verify/resend')
+            .send({ email });
+        expect(response.status).toBe(500);
+    });
+});

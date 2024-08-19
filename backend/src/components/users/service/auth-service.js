@@ -195,7 +195,6 @@ async function verifyUser(token) {
         const decoded = jwt.verify(token, config.jwtSecret);
 
         // find the user and update the email_verified field
-        console.log(decoded);
         const userId = decoded.user.id;
         if (!userId) {
             logger.error('Invalid token');
@@ -245,6 +244,14 @@ async function resendVerificationEmail(email) {
         if (!user) {
             logger.error(`User with email ${email} not found`);
             throw new UserNotFoundError('User not found');
+        }
+
+        // check if user's email is already verified
+        if (user.email_verified) {
+            logger.error(`User with email ${email} has already been verified`);
+            throw new UserAlreadyVerifiedError(
+                'User has already been verified'
+            );
         }
 
         // generate verification token

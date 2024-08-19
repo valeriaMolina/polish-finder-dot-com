@@ -78,6 +78,25 @@ describe('authService', () => {
             })
         ).rejects.toThrow();
     });
+    it('should throw an error when there is an error assigning a role', async () => {
+        userService.getUserByUsername.mockResolvedValue(null);
+        userService.getUserByEmail.mockResolvedValue(null);
+        userService.createUser.mockResolvedValue({
+            user_id: '2',
+            username: 'usr',
+            email: 'usr@example.com',
+            email_verified: false,
+        });
+        rolesService.findRolesByName.mockResolvedValue('USER_ROLE');
+        userRoleService.assignRoleToUser.mockResolvedValue(null);
+        await expect(
+            authService.registerUser({
+                username: 'usr',
+                email: 'usr@example.com',
+                password: 'pwd',
+            })
+        ).rejects.toThrow();
+    });
     it('Should log in a user', async () => {
         userService.getUserByUsernameOrEmail.mockResolvedValue({
             user_id: '2',
@@ -151,6 +170,13 @@ describe('authService', () => {
         userService.getUserByUserId.mockResolvedValue({
             user_id: '3',
             email_verified: true,
+        });
+        await expect(authService.verifyUser(token)).rejects.toThrow();
+    });
+    it('should throw an error if the token expired', async () => {
+        const token = 'token';
+        jwt.verify.mockImplementation(() => {
+            throw new Error('jwt expired');
         });
         await expect(authService.verifyUser(token)).rejects.toThrow();
     });

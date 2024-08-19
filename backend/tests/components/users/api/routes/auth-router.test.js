@@ -14,6 +14,7 @@ const {
     UserNotFoundError,
     UserNameAlreadyInUseError,
     EmailAlreadyInUseError,
+    UserNotVerifiedError,
 } = require('../../../../../src/libraries/utils/error-handler');
 
 jest.mock('bcrypt');
@@ -59,6 +60,17 @@ describe('POST /auth', () => {
             .set('authorization', validBasicAuth);
 
         expect(response.status).toBe(200);
+    });
+    test('It should return 400 status when username is not verified', async () => {
+        authService.logInUser.mockRejectedValue(
+            new UserNotVerifiedError('User not verified')
+        );
+        const response = await request(app)
+            .post('/login')
+            .send({})
+            .set('authorization', validBasicAuth);
+
+        expect(response.status).toBe(400);
     });
     test('It should return 400 status when user is not found', async () => {
         authService.logInUser.mockRejectedValue(

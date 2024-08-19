@@ -20,6 +20,7 @@ jest.mock('../../../../src/components/rbac/service/roles-service');
 describe('authService', () => {
     afterEach(() => {
         sinon.restore();
+        jest.restoreAllMocks();
     });
     it('should register a user', async () => {
         const userDetails = {
@@ -52,6 +53,30 @@ describe('authService', () => {
             userEmail: userDetails.email,
             verificationToken: Promise.resolve(),
         });
+    });
+    it('should throw an error when user already exists', async () => {
+        userService.getUserByUsername.mockResolvedValue({ username: 'usr' });
+        await expect(
+            authService.registerUser({
+                username: 'usr',
+                email: 'usr@example.com',
+                password: 'pwd',
+            })
+        ).rejects.toThrow();
+    });
+    it('should throw an error when email is already in use', async () => {
+        userService.getUserByUsername.mockResolvedValue(null);
+        userService.getUserByEmail.mockResolvedValue({
+            username: 'usr',
+            email: 'usr@example.com',
+        });
+        await expect(
+            authService.registerUser({
+                username: 'usr',
+                email: 'usr@example.com',
+                password: 'pwd',
+            })
+        ).rejects.toThrow();
     });
     it('Should log in a user', async () => {
         userService.getUserByUsernameOrEmail.mockResolvedValue({
@@ -97,6 +122,13 @@ describe('authService', () => {
         });
         await authService.verifyUser(token);
         expect(userService.getUserByUserId).toHaveBeenCalledWith('3');
+    });
+    it('Should throw an error if token is malformed', async () => {
+        const token = 'invalidToken';
+        jwt.verify.mockImplementation(() => {
+            throw new Error('jwt malformed');
+        });
+        await expect(authService.verifyUser(token)).rejects.toThrow();
     });
     it('should throw an error when token is invalid', async () => {
         const token = 'invalidToken';

@@ -8,8 +8,7 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('../../../../../src/components/users/api/routes/auth-router');
 const authService = require('../../../../../src/components/users/service/auth-service');
 const userService = require('../../../../../src/components/users/service/user-service');
-const rolesService = require('../../../../../src/components/rbac/service/roles-service');
-const userRolesService = require('../../../../../src/components/rbac/service/user-roles-service');
+const emailService = require('../../../../../src/components/users/service/email-service');
 const {
     InvalidCredentialsError,
     UserNotFoundError,
@@ -23,6 +22,7 @@ jest.mock('../../../../../src/components/users/service/auth-service');
 jest.mock('../../../../../src/components/users/service/user-service');
 jest.mock('../../../../../src/components/rbac/service/roles-service');
 jest.mock('../../../../../src/components/rbac/service/user-roles-service');
+jest.mock('../../../../../src/components/users/service/email-service');
 
 const app = express();
 app.use(express.json());
@@ -110,6 +110,7 @@ describe('POST /signup', () => {
     });
     test('It should create a new user', async () => {
         authService.registerUser.mockResolvedValue(newUser);
+        emailService.sendAccountVerificationEmail.mockImplementation(() => {});
         const response = await request(app)
             .post('/signup')
             .send({ username: newUsername, email: newEmail, password: 123 });

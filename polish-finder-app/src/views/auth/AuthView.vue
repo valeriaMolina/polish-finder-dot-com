@@ -38,7 +38,11 @@
             required
           />
           <div class="text-end">
-            <p class="p-padding"><a class="custom-label-size" href="">I forgot my password</a></p>
+            <p class="p-padding">
+              <router-link class="custom-label-size" to="/password-reset"
+                >I forgot my password</router-link
+              >
+            </p>
           </div>
         </div>
         <div class="mb-3 form-check mx-2">

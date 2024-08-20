@@ -19,6 +19,7 @@ import AdvancedSearchView from '@/views/AdvancedSearchView.vue'
 import VerifyAccountView from '@/views/auth/VerifyAccountView.vue'
 import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
 import UserNotVerifiedView from '@/views/auth/UserNotVerifiedView.vue'
+import PasswordResetView from '@/views/auth/PasswordResetView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -130,6 +131,11 @@ const router = createRouter({
       path: '/missing-verification',
       name: 'missing-verification',
       component: UserNotVerifiedView
+    },
+    {
+      path: '/password-reset',
+      name: 'password-reset',
+      component: PasswordResetView
     }
   ]
 })

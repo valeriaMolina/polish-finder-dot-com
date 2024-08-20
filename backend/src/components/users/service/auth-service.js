@@ -3,11 +3,12 @@
  */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const crypto = require('crypto');
 const config = require('../../../libraries/config/config');
 const userService = require('./user-service');
 const userRoleService = require('../../rbac/service/user-roles-service');
 const emailService = require('./email-service');
+const tokenService = require('./token-service');
 const rolesService = require('../../rbac/service/roles-service');
 const roles = require('../../../libraries/constants/roles');
 const logger = require('../../../libraries/logger/logger');
@@ -276,10 +277,41 @@ async function resendVerificationEmail(email) {
     }
 }
 
+async function passwordReset(identifier) {
+    try {
+        // find user by username or email
+        const user = await userService.getUserByUsernameOrEmail(identifier);
+
+        if (!user) {
+            logger.error(`User with identifier ${identifier} not found`);
+            throw new UserNotFoundError('User not found');
+        }
+
+        // check if there is already a token in place for this user
+        const token = await tokenService.findTokenByUserId(user.user_id);
+        if (token) {
+            // delete the old token
+            await tokenService.deleteTokenByUserId(user.user_id);
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        // create a hash of this token and save into the DB
+        const hash = await bcrypt.hash(resetToken, parseInt(config.saltRounds));
+
+        await tokenService.insertNewToken(user.user_id, hash);
+
+        // send password reset email with the rest token
+        return `https://your-app.com/reset-password?token=${resetToken}`;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     logInUser,
     logOutUser,
     registerUser,
     verifyUser,
     resendVerificationEmail,
+    passwordReset,
 };

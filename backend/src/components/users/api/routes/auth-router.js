@@ -11,6 +11,7 @@ const {
     decodeBasicAuth,
     validateVerifyEmail,
     validateResendVerificationEmail,
+    validateResetPassword,
 } = require('../middleware/auth-validator');
 const logger = require('../../../../libraries/logger/logger');
 const userService = require('../../service/user-service');
@@ -208,6 +209,31 @@ router.post(
                     `Error resending verification email: ${error.message}`
                 );
                 return res.status(200).send({ msg: 'Verification email sent' });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
+
+router.post(
+    '/send-password-reset-email',
+    validateResetPassword,
+    async (req, res) => {
+        const { identifier } = req.body;
+        try {
+            const link = await authService.passwordReset(identifier);
+            res.json({ link });
+        } catch (error) {
+            if (error.statusCode) {
+                logger.error(
+                    `Error sending password reset email: ${error.message}`
+                );
+                return res
+                    .status(error.statusCode)
+                    .send({ error: error.message });
             } else {
                 // error was not anticipated
                 logger.error(`Error not anticipated: ${error.message}`);

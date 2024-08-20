@@ -29,6 +29,17 @@ exports.validateRefresh = [
     },
 ];
 
+exports.validateResetPassword = [
+    check('identifier', 'identifier is required').not().isEmpty(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];
+
 exports.decodeBasicAuth = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Basic ')) {

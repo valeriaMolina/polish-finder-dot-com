@@ -224,8 +224,16 @@ router.post(
     async (req, res) => {
         const { identifier } = req.body;
         try {
-            const link = await authService.passwordReset(identifier);
-            res.json({ link });
+            const { resetPasswordToken, username, email } =
+                await authService.passwordReset(identifier);
+
+            // call email service
+            await emailService.sendPasswordResetEmail(
+                email,
+                username,
+                resetPasswordToken
+            );
+            res.status(201).json({ msg: 'Password reset email sent' });
         } catch (error) {
             if (error.statusCode) {
                 logger.error(
@@ -242,6 +250,23 @@ router.post(
         }
     }
 );
+
+router.post('/reset-password', async (req, res) => {
+    const { token } = req.query;
+    const { password } = req.body;
+    try {
+        return res.json({ msg: 'Password reset successful' });
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error resetting password: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
+    }
+});
 
 router.post('/logout', async (req, res) => {
     try {

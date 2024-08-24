@@ -277,6 +277,19 @@ async function resendVerificationEmail(email) {
     }
 }
 
+/**
+ * Resets a user's password by generating a new reset token,
+ * hashing it, and saving it to the database. It also creates a JWT
+ * for the password reset process.
+ *
+ * @param {string} identifier - The user's username or email.
+ *
+ * @returns {Promise<Object>} - A promise that resolves to an object containing
+ * the reset password token, user's username, and email.
+ *
+ * @throws {UserNotFoundError} - If the user with the given identifier is not found in the database.
+ * @throws {Error} - If any other error occurs during the password reset process.
+ */
 async function passwordReset(identifier) {
     try {
         // find user by username or email
@@ -295,14 +308,29 @@ async function passwordReset(identifier) {
         }
 
         const resetToken = crypto.randomBytes(32).toString('hex');
+
         // create a hash of this token and save into the DB
         const hash = await bcrypt.hash(resetToken, parseInt(config.saltRounds));
 
         await tokenService.insertNewToken(user.user_id, hash);
 
-        // send password reset email with the rest token
-        return `https://your-app.com/reset-password?token=${resetToken}`;
+        // create a jwt and return
+        const payload = {
+            user: {
+                id: user.user_id,
+            },
+            resetToken: resetToken,
+        };
+        const resetPasswordToken = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '1h',
+        });
+        return {
+            resetPasswordToken,
+            username: user.username,
+            email: user.email,
+        };
     } catch (error) {
+        logger.error('Error resetting password', error);
         throw error;
     }
 }

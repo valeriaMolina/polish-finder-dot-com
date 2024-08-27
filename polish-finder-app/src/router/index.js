@@ -20,6 +20,7 @@ import VerifyAccountView from '@/views/auth/VerifyAccountView.vue'
 import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
 import UserNotVerifiedView from '@/views/auth/UserNotVerifiedView.vue'
 import PasswordResetView from '@/views/auth/PasswordResetView.vue'
+import NewPasswordView from '@/views/auth/NewPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -136,6 +137,11 @@ const router = createRouter({
       path: '/password-reset',
       name: 'password-reset',
       component: PasswordResetView
+    },
+    {
+      path: '/reset-password/:token?',
+      name: 'password-reset-token',
+      component: NewPasswordView
     }
   ]
 })

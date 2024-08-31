@@ -141,3 +141,31 @@ export async function resendVerification(email) {
   })
   await resendRequest.post('/verify/resend', { email })
 }
+
+/**
+ * Sends a password reset email to the server for the provided identifier (username or email).
+ *
+ * @param {string} identifier - The username or email of the user for whom the password reset email needs to be sent.
+ *
+ * @returns {Promise<void>} - A promise that resolves upon successful sending of the password reset email.
+ * If the email is sent successfully, the promise will resolve without any value.
+ * If the email sending fails, the promise will reject with an error containing the HTTP status code.
+ *
+ * @throws {Error} - Throws an error if the password reset email sending request fails.
+ * The error will contain the HTTP status code.
+ */
+export async function forgotPassword(identifier) {
+  const forgotPasswordRequest = axiosInstance.create({
+    baseURL: SERVER,
+    method: 'post'
+  })
+  await forgotPasswordRequest.post('/send-password-reset-email', { identifier })
+}
+
+export async function verifyPasswordResetToken(token) {
+  const verifyTokenRequest = axiosInstance.create({
+    baseURL: SERVER,
+    method: 'get'
+  })
+  await verifyTokenRequest.get(`/verify-reset-password-token?token=${token}`)
+}

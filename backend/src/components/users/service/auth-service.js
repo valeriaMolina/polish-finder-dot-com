@@ -335,6 +335,77 @@ async function passwordReset(identifier) {
     }
 }
 
+/**
+ * Verifies a reset password token by verifying its signature using the JWT secret.
+ *
+ * @param {string} token - The JWT token to be verified.
+ *
+ * @returns {Promise<void>} - A promise that resolves when the token is successfully verified.
+ *
+ * @throws {JsonWebTokenVerifyError} - If the provided token is invalid or expired.
+ *
+ * @throws {Error} - If any other error occurs during the verification process.
+ */
+async function verifyResetPasswordToken(token) {
+    try {
+        // determine if the token is valid
+        jwt.verify(token, config.jwtSecret);
+    } catch (error) {
+        logger.error('Error verifying reset password token', error);
+        if (error.name === 'JsonWebTokenError') {
+            throw new JsonWebTokenVerifyError(error.message);
+        }
+        throw error;
+    }
+}
+
+async function resetUserPassword(jwtToken, newPassword) {
+    try {
+        // decode the token
+        const decoded = jwt.decode(jwtToken, config.jwtSecret);
+        // get the user id and token
+        const userId = decoded.user.id;
+        const resetToken = decoded.resetToken;
+
+        // find the token by user id
+        const token = await tokenService.findTokenByUserId(userId);
+        if (!token) {
+            logger.error(`No token found`);
+            throw new InvalidTokenError('Token not found');
+        }
+
+        // check if the token is valid
+        const isValid = await bcrypt.compare(resetToken, token.token_hash);
+
+        if (!isValid) {
+            logger.error(`Invalid password reset token`);
+            throw new InvalidTokenError(
+                'Password reset token does not match the stored token'
+            );
+        }
+
+        // hash the new password
+        const hash = await bcrypt.hash(
+            newPassword,
+            parseInt(config.saltRounds)
+        );
+
+        // update the user's password in the database
+        await userService.updateUserPassword(userId, hash);
+
+        // delete the token from the database
+        await tokenService.deleteTokenByUserId(userId);
+
+        return userId;
+    } catch (error) {
+        logger.error(`Error decoding token error: ${error}`);
+        if (error.name === 'JsonWebTokenError') {
+            throw new JsonWebTokenVerifyError(error.message);
+        }
+        throw error;
+    }
+}
+
 module.exports = {
     logInUser,
     logOutUser,
@@ -342,4 +413,6 @@ module.exports = {
     verifyUser,
     resendVerificationEmail,
     passwordReset,
+    verifyResetPasswordToken,
+    resetUserPassword,
 };

@@ -2,7 +2,14 @@
  * @author Valeria Molina Recinos
  */
 
-const { check, validationResult, cookie } = require('express-validator');
+const {
+    check,
+    validationResult,
+    cookie,
+    query,
+    param,
+    body,
+} = require('express-validator');
 const base64 = require('base-64');
 
 exports.validateSignUp = [
@@ -138,6 +145,35 @@ exports.validateVerifyEmail = [
  */
 exports.validateResendVerificationEmail = [
     check('email', 'Email is required').isEmail(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];
+
+/**
+ * Middleware function to validate the request body for the verify reset password token endpoint.
+ */
+exports.validateVerifyResetPasswordToken = [
+    query('token', 'Token is required').isString().not().isEmpty(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];
+
+/**
+ * Middleware function to validate the request body for the reset password endpoint.
+ */
+exports.validateResetPasswordToken = [
+    param('token', 'Token is required').not().isEmpty(),
+    body('newPassword').not().isEmpty(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

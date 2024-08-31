@@ -73,6 +73,7 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { verifyPasswordResetToken } from '@/apis/authAPI'
 
 /**
  * New password and new password confirm refs
@@ -115,10 +116,16 @@ const router = useRouter()
 /**
  * onMounted hook to check if token is provided in the route parameters
  */
-onMounted(() => {
+onMounted(async () => {
   const token = route.params.token
   if (token) {
-    // TODO: Implement password reset logic using the provided token
+    // verify that the token is valid
+    try {
+      await verifyPasswordResetToken(token)
+    } catch (error) {
+      console.error(error.message)
+      router.push({ name: 'auth' })
+    }
   } else {
     // Redirect to login page if token is not provided
     router.push({ name: 'auth' })
@@ -295,7 +302,7 @@ watch(
   background: radial-gradient(
     circle at 4.3% 10.7%,
     rgb(138, 118, 249) 13.6%,
-    rgb(75, 252, 235) 100.7%
+    rgb(75, 252, 149) 100.7%
   );
   color: white;
 }

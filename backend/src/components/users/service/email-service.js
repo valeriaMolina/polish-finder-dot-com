@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const config = require('../../../libraries/config/config');
 const logger = require('../../../libraries/logger/logger');
+const userService = require('../service/user-service');
 
 const transporter = nodemailer.createTransport({
     host: config.emailHost,
@@ -62,7 +63,7 @@ function verifyEmailClient() {
  * The error message will contain details about the failure.
  */
 async function sendPasswordResetEmail(email, username, passwordResetToken) {
-    const passwordResetLink = `${config.homePage}/reset-password?token=${passwordResetToken}`;
+    const passwordResetLink = `${config.homePage}/reset-password/${passwordResetToken}`;
 
     const template = fs.readFileSync(
         path.join(
@@ -162,8 +163,73 @@ async function sendAccountVerificationEmail(
         });
 }
 
+/**
+ * Send a password changed email to the user associated with
+ * the provided userId.
+ * @function sendPasswordChangedEmail
+ * @param {string} userId - The unique identifier of the user whose
+ * password has been changed.
+ * @returns {Promise<object>} - A Promise that resolves with the info object returned by nodemailer's sendMail function.
+ * If the email is successfully sent, the info object will contain details about the sent email.
+ * If there is an error sending the email, the Promise will be rejected with an error.
+ * @throws {Error} - Throws an error if there is an issue sending the password changed email.
+ * The error message will contain details about the failure.
+ */
+async function sendPasswordChangedEmail(userId) {
+    // get the user based on userId
+    try {
+        const template = fs.readFileSync(
+            path.join(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'libraries',
+                'templates',
+                'password-reset-success.ejs'
+            ),
+            'utf8'
+        );
+
+        const user = await userService.getUserByUserId(userId);
+
+        const emailContent = await ejs.render(template, {
+            username,
+            homePage: config.homePage,
+            resetPasswordRoute: '/password-reset',
+            email: user.email,
+        });
+
+        const mailOptions = {
+            from: `Polish Finder <${config.noReplyMail}>`,
+            to: user.email,
+            subject: 'Verify your Polish Finder',
+            html: emailContent,
+        };
+
+        await transporter
+            .sendMail(mailOptions)
+            .then((info) => {
+                logger.info('Password changed email sent');
+                return info;
+            })
+            .catch((error) => {
+                logger.error(
+                    `Error sending password change email: ${error.message}`
+                );
+                throw new Error(`Error sending password change email`);
+            });
+    } catch (error) {
+        logger.error(
+            `Error fetching user for password change email: ${error.message}`
+        );
+        throw new Error('Error fetching user for password change email');
+    }
+}
+
 module.exports = {
     sendAccountVerificationEmail,
     verifyEmailClient,
     sendPasswordResetEmail,
+    sendPasswordChangedEmail,
 };

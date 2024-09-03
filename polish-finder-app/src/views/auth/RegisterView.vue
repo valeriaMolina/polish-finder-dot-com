@@ -110,7 +110,7 @@
           </button>
         </div>
         <div class="mx-2">
-          <p>Already have an account? <a href="/login">Log In</a></p>
+          <p>Already have an account?<router-link to="/login">Log In</router-link></p>
         </div>
         <div class="mx-2">
           <p>By clicking "Create account" I accept the Terms of Service</p>

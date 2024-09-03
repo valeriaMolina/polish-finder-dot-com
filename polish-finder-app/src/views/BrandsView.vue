@@ -4,7 +4,7 @@
       <h1>Brands</h1>
       <p>
         Browse all our available brands. Did we miss something?
-        <a href="/contribute/new/brand">Add it here!</a>
+        <router-link to="/contribute/new/brand">Add it here!</router-link>
       </p>
       <div class="w-100">
         <div class="w-50 nice-form-group mx-auto">

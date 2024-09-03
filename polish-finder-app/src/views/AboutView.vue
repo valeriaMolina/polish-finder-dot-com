@@ -33,7 +33,7 @@
         <h3>Cool Features</h3>
         <ul>
           <li>
-            <span>Advanced Search <a href="?">></a>:</span>
+            <span>Advanced Search <a href="/">></a>:</span>
             Easily find nail polishes similar to the ones you love.
           </li>
           <li>

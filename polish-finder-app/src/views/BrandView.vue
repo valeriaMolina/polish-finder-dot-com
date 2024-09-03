@@ -14,7 +14,6 @@ const brands = useBrandStore()
 const brand = ref({})
 
 onMounted(() => {
-  console.log('Checking if brand is populated...')
   const exists = brands.getBrandById(parseInt(route.params.brandId))
   if (exists) {
     console.log('Brand is already populated:', exists)

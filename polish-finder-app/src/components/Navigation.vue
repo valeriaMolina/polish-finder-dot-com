@@ -21,7 +21,9 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link active apply-font" aria-current="page" href="/help">Help</a>
+            <router-link class="nav-link active apply-font" aria-current="page" to="/help"
+              >Help</router-link
+            >
           </li>
           <li class="nav-item dropdown">
             <button
@@ -33,10 +35,10 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <router-link class="dropdown-item" to="/brands"></router-link>
+                <router-link class="dropdown-item" to="/brands">Brands</router-link>
               </li>
               <li>
-                <router-link class="dropdown-item" to="/polishes"></router-link>
+                <router-link class="dropdown-item" to="/polishes">Polishes</router-link>
               </li>
             </ul>
           </li>
@@ -50,13 +52,17 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <router-link class="dropdown-item" to="/contribute/new/brand"></router-link>
+                <router-link class="dropdown-item" to="/contribute/new/brand"
+                  >Submit a brand</router-link
+                >
               </li>
               <li>
-                <router-link class="dropdown-item" to="/contribute/new/polish"></router-link>
+                <router-link class="dropdown-item" to="/contribute/new/polish"
+                  >Add polishes</router-link
+                >
               </li>
               <li>
-                <router-link class="dropdown-item" to="/"></router-link>
+                <router-link class="dropdown-item" to="/">Submit feedback</router-link>
               </li>
             </ul>
           </li>

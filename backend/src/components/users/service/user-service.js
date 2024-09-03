@@ -196,6 +196,28 @@ async function removeRefreshToken(userId) {
     await user.save();
 }
 
+/**
+ * Updates the password of a user in the database.
+ *
+ * @function updateUserPassword
+ * @param {number} userId - The ID of the user whose password needs to be updated.
+ * @param {string} hashedPassword - The hashed password to be set for the user.
+ * @returns {Promise<void>} A promise that resolves when the password is updated successfully.
+ * @throws Will throw an error if there is a problem with the database connection or query execution.
+ *
+ * @example
+ * const userId = 123;
+ * const hashedPassword = await bcrypt.hash('newPassword123', parseInt(saltRounds)); // Assume bcrypt and saltRounds are defined elsewhere.
+ * await updateUserPassword(userId, hashedPassword);
+ * console.log('User password updated successfully');
+ */
+async function updateUserPassword(userId, hashedPassword) {
+    logger.info('Updating user password');
+    const user = await userModel.findOne({ where: { user_id: userId } });
+    user.password_hash = hashedPassword;
+    await user.save();
+}
+
 module.exports = {
     getUserByUserId,
     getUserId,
@@ -206,4 +228,5 @@ module.exports = {
     saveRefreshToken,
     getUserByRefreshToken,
     removeRefreshToken,
+    updateUserPassword,
 };

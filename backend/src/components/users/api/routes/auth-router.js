@@ -11,6 +11,9 @@ const {
     decodeBasicAuth,
     validateVerifyEmail,
     validateResendVerificationEmail,
+    validateResetPassword,
+    validateVerifyResetPasswordToken,
+    validateResetPasswordToken,
 } = require('../middleware/auth-validator');
 const logger = require('../../../../libraries/logger/logger');
 const userService = require('../../service/user-service');
@@ -194,6 +197,34 @@ router.post('/verify', validateVerifyEmail, async (req, res) => {
     }
 });
 
+/**
+ * This function handles the resend verification email process for users.
+ * It sends a verification email to the user's registered email address.
+ *
+ * @param {Object} req - The request object containing the user's email.
+ * @param {Object} res - The response object to send back to the client.
+ * @param {string} req.body.email - The email of the user.
+ *
+ * @returns {Promise<void>} Resolves with no value.
+ *
+ * @throws Will throw an error if there is an issue sending the verification email.
+ *
+ * @example
+ * POST /api/auth/verify/resend
+ * Content-Type: application/json
+ *
+ * {
+ *   "email": "user@example.com"
+ * }
+ *
+ * @example
+ * HTTP/1.1 200 OK
+ * Content-Type: application/json
+ *
+ * {
+ *   "msg": "Verification email sent"
+ * }
+ */
 router.post(
     '/verify/resend',
     validateResendVerificationEmail,
@@ -217,6 +248,189 @@ router.post(
     }
 );
 
+/**
+ * This function handles the password reset process for users.
+ * It sends a password reset email to the user's registered email address.
+ *
+ * @param {Object} req - The request object containing the user's identifier.
+ * @param {Object} res - The response object to send back to the client.
+ * @param {string} req.body.identifier - The username or email of the user.
+ *
+ * @returns {Promise<void>} Resolves with no value.
+ *
+ * @throws Will throw an error if there is an issue sending the password reset email.
+ *
+ * @example
+ * POST /api/auth/send-password-reset-email
+ * Content-Type: application/json
+ *
+ * {
+ *   "identifier": "user@example.com"
+ * }
+ *
+ * @example
+ * HTTP/1.1 201 Created
+ * Content-Type: application/json
+ *
+ * {
+ *   "msg": "Password reset email sent"
+ * }
+ */
+router.post(
+    '/send-password-reset-email',
+    validateResetPassword,
+    async (req, res) => {
+        const { identifier } = req.body;
+        try {
+            const { resetPasswordToken, username, email } =
+                await authService.passwordReset(identifier);
+
+            // call email service
+            await emailService.sendPasswordResetEmail(
+                email,
+                username,
+                resetPasswordToken
+            );
+            res.status(201).json({ msg: 'Password reset email sent' });
+        } catch (error) {
+            if (error.statusCode) {
+                logger.error(
+                    `Error sending password reset email: ${error.message}`
+                );
+                return res
+                    .status(201)
+                    .send({ msg: 'Password reset email sent' });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
+
+/**
+ * This function verifies a reset password token.
+ *
+ * @param {Object} req - The request object containing the reset password token.
+ * @param {Object} res - The response object to send back to the client.
+ * @param {string} req.query.token - The reset password token provided by the client.
+ *
+ * @returns {Promise<void>} Resolves with no value.
+ *
+ * @throws Will throw an error if the reset password token is invalid or if there is an issue verifying the token.
+ *
+ * @example
+ * GET /api/auth/verify-reset-password-token?token=your_reset_password_token
+ *
+ * @example
+ * HTTP/1.1 200 OK
+ * Content-Type: application/json
+ *
+ * {
+ *   "msg": "Token verified"
+ * }
+ */
+router.get(
+    '/verify-reset-password-token',
+    validateVerifyResetPasswordToken,
+    async (req, res) => {
+        const { token } = req.query;
+        try {
+            logger.info(`Received request to verify reset password token`);
+            await authService.verifyResetPasswordToken(token);
+            res.status(200).json({ msg: 'Token verified' });
+        } catch (error) {
+            if (error.statusCode) {
+                logger.error(
+                    `Error verifying reset password token: ${error.message}`
+                );
+                return res
+                    .status(error.statusCode)
+                    .send({ error: error.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
+
+/**
+ * This function handles the password reset process for users.
+ * It updates the user's password and sends a password reset success email.
+ *
+ * @param {Object} req - The request object containing the reset password token and new password.
+ * @param {Object} res - The response object to send back to the client.
+ * @param {string} req.params.token - The reset password token provided by the client.
+ * @param {string} req.body.newPassword - The new password provided by the client.
+ *
+ * @returns {Promise<void>} Resolves with no value.
+ *
+ * @throws Will throw an error if there is an issue resetting the password or sending the success email.
+ *
+ * @example
+ * POST /api/auth/reset-password/:token
+ * Content-Type: application/json
+ *
+ * {
+ *   "newPassword": "new_password"
+ * }
+ *
+ * @example
+ * HTTP/1.1 200 OK
+ */
+router.post(
+    '/reset-password/:token',
+    validateResetPasswordToken,
+    async (req, res) => {
+        try {
+            const { token } = req.params;
+            const { newPassword } = req.body;
+            logger.info(`Received a request to reset a password`);
+            // update user's password
+            const userId = await authService.resetUserPassword(
+                token,
+                newPassword
+            );
+
+            // send a password reset success email to user
+            await emailService.sendPasswordChangedEmail(userId);
+            res.status(201).send();
+        } catch (error) {
+            if (error.statusCode) {
+                logger.error(`Error resetting password: ${error.message}`);
+                return res
+                    .status(error.statusCode)
+                    .send({ error: error.message });
+            } else {
+                // error was not anticipated
+                logger.error(`Error not anticipated: ${error.message}`);
+                return res.status(500).send({ error: error.message });
+            }
+        }
+    }
+);
+
+/**
+ * This functions handles the user logout process.
+ * It clears the refresh and access tokens from the client's cookies
+ * and logs out the use from the server.
+ *
+ * @param {Object} req - The request object containing the cookies with the refresh and access tokens.
+ * @param {Object} res - The response object to send back to the client.
+ * @param {string} req.cookies.refreshToken - The refresh token stored in the client's cookies.
+ * @param {string} req.cookies.accessToken - The access token stored in the client's cookies.
+ * @returns {Promise<void>} Resolves with no value.
+ * @throws Will throw an error if there is an issue logging out the user.
+ *
+ * @example
+ * POST /api/auth/logout
+ *
+ * @example
+ * HTTP/1.1 200 OK
+ */
 router.post('/logout', async (req, res) => {
     try {
         const { refreshToken, accessToken } = req.cookies;

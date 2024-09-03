@@ -6,6 +6,7 @@ const emailService = require('../../../../src/components/users/service/email-ser
 const userService = require('../../../../src/components/users/service/user-service');
 const userRoleService = require('../../../../src/components/rbac/service/user-roles-service');
 const rolesService = require('../../../../src/components/rbac/service/roles-service');
+const tokenService = require('../../../../src/components/users/service/token-service');
 const roles = require('../../../../src/libraries/constants/roles');
 
 const authService = require('../../../../src/components/users/service/auth-service');
@@ -16,6 +17,7 @@ jest.mock('../../../../src/components/users/service/email-service');
 jest.mock('../../../../src/components/users/service/user-service');
 jest.mock('../../../../src/components/rbac/service/user-roles-service');
 jest.mock('../../../../src/components/rbac/service/roles-service');
+jest.mock('../../../../src/components/users/service/token-service');
 
 describe('authService', () => {
     afterEach(() => {
@@ -215,6 +217,90 @@ describe('authService', () => {
         userService.getUserByEmail.mockResolvedValue(user);
         await expect(
             authService.resendVerificationEmail('test@example.com')
+        ).rejects.toThrow();
+    });
+    it('should generate a password reset token', async () => {
+        const user = {
+            user_id: '3',
+            username: 'testUser',
+            email: 'test@example.com',
+            email_verified: true,
+        };
+        const identifier = 'testUser';
+        userService.getUserByUsernameOrEmail.mockResolvedValue(user);
+        tokenService.findTokenByUserId.mockResolvedValue(null);
+        jwt.sign.mockResolvedValue('signedToken');
+
+        const result = await authService.passwordReset(identifier);
+        expect(result.email).toEqual(user.email);
+    });
+    it('Should throw an error if user not found', async () => {
+        userService.getUserByUsernameOrEmail.mockResolvedValue(null);
+        await expect(authService.passwordReset('testUser')).rejects.toThrow();
+    });
+    it('should verify a password reset token', async () => {
+        jwt.verify.mockResolvedValue({ user: { id: '3' } });
+        await authService.verifyResetPasswordToken('resetToken');
+        expect(jwt.verify).toHaveReturned();
+    });
+
+    it('should throw an error if token is malformed', async () => {
+        jwt.verify.mockImplementation(() => {
+            throw new Error('jwt malformed');
+        });
+        await expect(
+            authService.verifyResetPasswordToken('resetToken')
+        ).rejects.toThrow();
+    });
+    it('should reset a user password', async () => {
+        jwt.decode.mockImplementation(() => {
+            return {
+                user: { id: '3' },
+                resetToken: 'resetToken',
+            };
+        });
+
+        tokenService.findTokenByUserId.mockResolvedValue({
+            user_id: '3',
+            token_hash: 'resetToken',
+        });
+
+        bcrypt.compare.mockResolvedValue(true);
+        userService.updateUserPassword.mockResolvedValue();
+        tokenService.deleteTokenByUserId.mockResolvedValue();
+
+        const userId = await authService.resetUserPassword(
+            'resetToken',
+            'newPassword'
+        );
+        expect(userId).toEqual('3');
+    });
+    it('should throw an error if token is invalid', async () => {
+        jwt.decode.mockImplementation(() => {
+            return {
+                user: { id: '3' },
+                resetToken: 'invalidToken',
+            };
+        });
+        tokenService.findTokenByUserId.mockResolvedValue(null);
+        await expect(
+            authService.resetUserPassword('invalidToken', 'newPassword')
+        ).rejects.toThrow();
+    });
+    it('should throw an error if token does not match', async () => {
+        jwt.decode.mockImplementation(() => {
+            return {
+                user: { id: '3' },
+                resetToken: 'wrongToken',
+            };
+        });
+        tokenService.findTokenByUserId.mockResolvedValue({
+            user_id: '3',
+            token_hash: 'correctToken',
+        });
+        bcrypt.compare.mockResolvedValue(false);
+        await expect(
+            authService.resetUserPassword('wrongToken', 'newPassword')
         ).rejects.toThrow();
     });
 });

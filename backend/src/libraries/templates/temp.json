@@ -1,5 +1,8 @@
 {
     "username": "valer",
     "verificationLink": "http://localhost:3000/verify/123456",
-    "homePage": "http://localhost:3000"
+    "resetPasswordLink": "https://your-app.com/reset-password?token=${resetToken}",
+    "homePage": "http://localhost:3000",
+    "email": "valer@example.com",
+    "resetPasswordRoute": "/password-reset"
 }

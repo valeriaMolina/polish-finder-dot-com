@@ -3,11 +3,12 @@
  */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const crypto = require('crypto');
 const config = require('../../../libraries/config/config');
 const userService = require('./user-service');
 const userRoleService = require('../../rbac/service/user-roles-service');
 const emailService = require('./email-service');
+const tokenService = require('./token-service');
 const rolesService = require('../../rbac/service/roles-service');
 const roles = require('../../../libraries/constants/roles');
 const logger = require('../../../libraries/logger/logger');
@@ -276,10 +277,142 @@ async function resendVerificationEmail(email) {
     }
 }
 
+/**
+ * Resets a user's password by generating a new reset token,
+ * hashing it, and saving it to the database. It also creates a JWT
+ * for the password reset process.
+ *
+ * @param {string} identifier - The user's username or email.
+ *
+ * @returns {Promise<Object>} - A promise that resolves to an object containing
+ * the reset password token, user's username, and email.
+ *
+ * @throws {UserNotFoundError} - If the user with the given identifier is not found in the database.
+ * @throws {Error} - If any other error occurs during the password reset process.
+ */
+async function passwordReset(identifier) {
+    try {
+        // find user by username or email
+        const user = await userService.getUserByUsernameOrEmail(identifier);
+
+        if (!user) {
+            logger.error(`User with identifier ${identifier} not found`);
+            throw new UserNotFoundError('User not found');
+        }
+
+        // check if there is already a token in place for this user
+        const token = await tokenService.findTokenByUserId(user.user_id);
+        if (token) {
+            // delete the old token
+            await tokenService.deleteTokenByUserId(user.user_id);
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+
+        // create a hash of this token and save into the DB
+        const hash = await bcrypt.hash(resetToken, parseInt(config.saltRounds));
+
+        await tokenService.insertNewToken(user.user_id, hash);
+
+        // create a jwt and return
+        const payload = {
+            user: {
+                id: user.user_id,
+            },
+            resetToken: resetToken,
+        };
+        const resetPasswordToken = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '1h',
+        });
+        return {
+            resetPasswordToken,
+            username: user.username,
+            email: user.email,
+        };
+    } catch (error) {
+        logger.error('Error resetting password', error);
+        throw error;
+    }
+}
+
+/**
+ * Verifies a reset password token by verifying its signature using the JWT secret.
+ *
+ * @param {string} token - The JWT token to be verified.
+ *
+ * @returns {Promise<void>} - A promise that resolves when the token is successfully verified.
+ *
+ * @throws {JsonWebTokenVerifyError} - If the provided token is invalid or expired.
+ *
+ * @throws {Error} - If any other error occurs during the verification process.
+ */
+async function verifyResetPasswordToken(token) {
+    try {
+        // determine if the token is valid
+        jwt.verify(token, config.jwtSecret);
+    } catch (error) {
+        logger.error('Error verifying reset password token', error);
+        if (error.name === 'JsonWebTokenError') {
+            throw new JsonWebTokenVerifyError(error.message);
+        }
+        throw error;
+    }
+}
+
+async function resetUserPassword(jwtToken, newPassword) {
+    try {
+        // decode the token
+        const decoded = jwt.decode(jwtToken, config.jwtSecret);
+        // get the user id and token
+        const userId = decoded.user.id;
+        const resetToken = decoded.resetToken;
+
+        // find the token by user id
+        const token = await tokenService.findTokenByUserId(userId);
+        if (!token) {
+            logger.error(`No token found`);
+            throw new InvalidTokenError('Token not found');
+        }
+
+        // check if the token is valid
+        const isValid = await bcrypt.compare(resetToken, token.token_hash);
+
+        if (!isValid) {
+            logger.error(`Invalid password reset token`);
+            throw new InvalidTokenError(
+                'Password reset token does not match the stored token'
+            );
+        }
+
+        // hash the new password
+        const hash = await bcrypt.hash(
+            newPassword,
+            parseInt(config.saltRounds)
+        );
+
+        // update the user's password in the database
+        await userService.updateUserPassword(userId, hash);
+
+        // delete the token from the database
+        await tokenService.deleteTokenByUserId(userId);
+
+        return userId;
+    } catch (error) {
+        logger.error(`Error decoding token error: ${error}`);
+        if (error.name === 'JsonWebTokenError') {
+            throw new JsonWebTokenVerifyError(error.message);
+        }
+        throw error;
+    }
+}
+
 module.exports = {
     logInUser,
     logOutUser,
     registerUser,
     verifyUser,
     resendVerificationEmail,
+    passwordReset,
+    verifyResetPasswordToken,
+    resetUserPassword,
 };

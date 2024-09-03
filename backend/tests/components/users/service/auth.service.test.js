@@ -238,4 +238,41 @@ describe('authService', () => {
         userService.getUserByUsernameOrEmail.mockResolvedValue(null);
         await expect(authService.passwordReset('testUser')).rejects.toThrow();
     });
+    it('should verify a password reset token', async () => {
+        jwt.verify.mockResolvedValue({ user: { id: '3' } });
+        await authService.verifyResetPasswordToken('resetToken');
+        expect(jwt.verify).toHaveReturned();
+    });
+
+    it('should throw an error if token is malformed', async () => {
+        jwt.verify.mockImplementation(() => {
+            throw new Error('jwt malformed');
+        });
+        await expect(
+            authService.verifyResetPasswordToken('resetToken')
+        ).rejects.toThrow();
+    });
+    it('should reset a user password', async () => {
+        jwt.decode.mockImplementation(() => {
+            return {
+                user: { id: '3' },
+                resetToken: 'resetToken',
+            };
+        });
+
+        tokenService.findTokenByUserId.mockResolvedValue({
+            user_id: '3',
+            token_hash: 'resetToken',
+        });
+
+        bcrypt.compare.mockResolvedValue(true);
+        userService.updateUserPassword.mockResolvedValue();
+        tokenService.deleteTokenByUserId.mockResolvedValue();
+
+        const userId = await authService.resetUserPassword(
+            'resetToken',
+            'newPassword'
+        );
+        expect(userId).toEqual('3');
+    });
 });

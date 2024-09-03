@@ -14,7 +14,7 @@ services:
     sync: false
   rootDir: polish-finder-app
   buildCommand: npm run build
-  staticPublishPath: ../dist
+  staticPublishPath: dist
 - type: web
   name: polish-finder-dev
   runtime: node

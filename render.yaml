@@ -1,0 +1,56 @@
+# Exported from Render on 2024-09-03T03:05:26Z
+services:
+- type: web
+  name: polish-finder-test
+  runtime: static
+  repo: https://github.com/valeriaMolina/polish-finder-dot-com
+  branch: develop
+  envVars:
+  - key: VITE_DISCORD_INVITE_LINK
+    sync: false
+  - key: VITE_SERVER
+    sync: false
+  - key: VITE_GITHUB_REPO_URL
+    sync: false
+  rootDir: polish-finder-app
+  buildCommand: npm run build
+  staticPublishPath: ../dist
+- type: web
+  name: polish-finder-dev
+  runtime: node
+  repo: https://github.com/valeriaMolina/polish-finder-dot-com
+  branch: develop
+  plan: free
+  envVars:
+  - key: HOME_PAGE
+    sync: false
+  - key: NO_REPLY_EMAIL
+    sync: false
+  - key: EMAIL_PASSWORD
+    sync: false
+  - key: EMAIL_USERNAME
+    sync: false
+  - key: SMTP_EMAIL_PORT
+    sync: false
+  - key: SMTP_EMAIL_HOST
+    sync: false
+  - key: REFRESH_TOKEN_EXPIRES
+    sync: false
+  - key: ACCESS_TOKEN_EXPIRES
+    sync: false
+  - key: REFRESH_TOKEN_SECRET
+    sync: false
+  - key: JWT_SECRET
+    sync: false
+  - key: SALT_ROUNDS
+    sync: false
+  - key: POSTGRES_URI
+    sync: false
+  - key: PORT
+    sync: false
+  - fromGroup: backend-dev
+  region: ohio
+  buildCommand: npm install
+  startCommand: node server.js
+  rootDir: backend
+version: "1"

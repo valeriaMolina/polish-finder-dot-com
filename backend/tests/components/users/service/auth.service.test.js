@@ -6,6 +6,7 @@ const emailService = require('../../../../src/components/users/service/email-ser
 const userService = require('../../../../src/components/users/service/user-service');
 const userRoleService = require('../../../../src/components/rbac/service/user-roles-service');
 const rolesService = require('../../../../src/components/rbac/service/roles-service');
+const tokenService = require('../../../../src/components/users/service/token-service');
 const roles = require('../../../../src/libraries/constants/roles');
 
 const authService = require('../../../../src/components/users/service/auth-service');
@@ -16,6 +17,7 @@ jest.mock('../../../../src/components/users/service/email-service');
 jest.mock('../../../../src/components/users/service/user-service');
 jest.mock('../../../../src/components/rbac/service/user-roles-service');
 jest.mock('../../../../src/components/rbac/service/roles-service');
+jest.mock('../../../../src/components/users/service/token-service');
 
 describe('authService', () => {
     afterEach(() => {
@@ -216,5 +218,24 @@ describe('authService', () => {
         await expect(
             authService.resendVerificationEmail('test@example.com')
         ).rejects.toThrow();
+    });
+    it('should generate a password reset token', async () => {
+        const user = {
+            user_id: '3',
+            username: 'testUser',
+            email: 'test@example.com',
+            email_verified: true,
+        };
+        const identifier = 'testUser';
+        userService.getUserByUsernameOrEmail.mockResolvedValue(user);
+        tokenService.findTokenByUserId.mockResolvedValue(null);
+        jwt.sign.mockResolvedValue('signedToken');
+
+        const result = await authService.passwordReset(identifier);
+        expect(result.email).toEqual(user.email);
+    });
+    it('Should throw an error if user not found', async () => {
+        userService.getUserByUsernameOrEmail.mockResolvedValue(null);
+        await expect(authService.passwordReset('testUser')).rejects.toThrow();
     });
 });

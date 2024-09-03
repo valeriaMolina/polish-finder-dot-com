@@ -153,4 +153,16 @@ describe('userService', () => {
         sinon.stub(userModel, 'findOne').returns(Promise.reject(new Error()));
         expect(userService.removeRefreshToken(badUser)).rejects.toThrow();
     });
+    it('Should update user password', async () => {
+        const userId = '123';
+        sinon.stub(userModel, 'findOne').returns(
+            Promise.resolve({
+                user_id: userId,
+                password_hash: 'hashedPassword',
+                save: jest.fn(),
+            })
+        );
+        await userService.updateUserPassword(userId, 'hashedPassword');
+        expect(userModel.findOne.calledOnce).toBeTruthy();
+    });
 });

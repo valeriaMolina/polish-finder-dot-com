@@ -275,4 +275,32 @@ describe('authService', () => {
         );
         expect(userId).toEqual('3');
     });
+    it('should throw an error if token is invalid', async () => {
+        jwt.decode.mockImplementation(() => {
+            return {
+                user: { id: '3' },
+                resetToken: 'invalidToken',
+            };
+        });
+        tokenService.findTokenByUserId.mockResolvedValue(null);
+        await expect(
+            authService.resetUserPassword('invalidToken', 'newPassword')
+        ).rejects.toThrow();
+    });
+    it('should throw an error if token does not match', async () => {
+        jwt.decode.mockImplementation(() => {
+            return {
+                user: { id: '3' },
+                resetToken: 'wrongToken',
+            };
+        });
+        tokenService.findTokenByUserId.mockResolvedValue({
+            user_id: '3',
+            token_hash: 'correctToken',
+        });
+        bcrypt.compare.mockResolvedValue(false);
+        await expect(
+            authService.resetUserPassword('wrongToken', 'newPassword')
+        ).rejects.toThrow();
+    });
 });

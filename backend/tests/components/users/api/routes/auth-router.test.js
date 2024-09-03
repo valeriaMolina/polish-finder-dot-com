@@ -246,6 +246,16 @@ describe('POST /verify/resend', () => {
             .send({ email });
         expect(response.status).toBe(200);
     });
+    test('it should return 201 if the email is not found', async () => {
+        const email = 'email@mail.com';
+        authService.resendVerificationEmail.mockRejectedValue(
+            new UserNotFoundError('User not found')
+        );
+        const response = await request(app)
+            .post('/verify/resend')
+            .send({ email });
+        expect(response.status).toBe(200);
+    });
     test('it should return 500 if something went wrong', async () => {
         const email = 'email@mail.com';
         authService.resendVerificationEmail.mockRejectedValue(

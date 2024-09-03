@@ -21,9 +21,10 @@ import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
 import UserNotVerifiedView from '@/views/auth/UserNotVerifiedView.vue'
 import PasswordResetView from '@/views/auth/PasswordResetView.vue'
 import NewPasswordView from '@/views/auth/NewPasswordView.vue'
+import ForgotPasswordView from '@/views/NotFoundView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -142,6 +143,12 @@ const router = createRouter({
       path: '/reset-password/:token?',
       name: 'password-reset-token',
       component: NewPasswordView
+    },
+    // catch all fallback route
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: ForgotPasswordView
     }
   ]
 })

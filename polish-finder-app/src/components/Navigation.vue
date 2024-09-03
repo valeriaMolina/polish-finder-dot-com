@@ -32,8 +32,12 @@
               Explore
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/brands">Brands</a></li>
-              <li><a class="dropdown-item" href="/polishes">Polishes</a></li>
+              <li>
+                <router-link class="dropdown-item" to="/brands"></router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/polishes"></router-link>
+              </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -45,9 +49,15 @@
               Contribute
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/contribute/new/brand">Submit a brand</a></li>
-              <li><a class="dropdown-item" href="/contribute/new/polish">Add polishes</a></li>
-              <li><a class="dropdown-item" href="#">Submit feedback</a></li>
+              <li>
+                <router-link class="dropdown-item" to="/contribute/new/brand"></router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/contribute/new/polish"></router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/"></router-link>
+              </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -60,12 +70,16 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a href="/search/dupes" class="dropdown-item">Find a Dupe</a>
+                <router-link class="dropdown-item" to="/search/dupes">Find a Dupe</router-link>
               </li>
               <li>
-                <a href="" class="dropdown-item">Find a Polish</a>
+                <router-link class="dropdown-item" to="/">Find a Polish</router-link>
               </li>
-              <li><a href="/search/advanced" class="dropdown-item">Advanced Search</a></li>
+              <li>
+                <router-link class="dropdown-item" to="/search/advanced"
+                  >Advanced Search</router-link
+                >
+              </li>
             </ul>
           </li>
         </ul>

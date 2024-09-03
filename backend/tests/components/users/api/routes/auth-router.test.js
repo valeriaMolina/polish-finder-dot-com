@@ -297,6 +297,12 @@ describe('POST /reset-password/:token', () => {
             .send({ newPassword: 'newPassword' });
         expect(response.status).toBe(500);
     });
+    test('it should return 400 if the new password is missing', async () => {
+        const response = await request(app)
+            .post('/reset-password/invalidToken')
+            .send({});
+        expect(response.status).toBe(400);
+    });
 });
 
 describe('GET /verify-reset-password-token', () => {
@@ -324,6 +330,10 @@ describe('GET /verify-reset-password-token', () => {
             '/verify-reset-password-token?token=invalidToken'
         );
         expect(response.status).toBe(500);
+    });
+    test('it should return 400 if the token is missing', async () => {
+        const response = await request(app).get('/verify-reset-password-token');
+        expect(response.status).toBe(400);
     });
 });
 

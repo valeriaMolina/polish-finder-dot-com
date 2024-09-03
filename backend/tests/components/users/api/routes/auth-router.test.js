@@ -269,6 +269,24 @@ describe('POST /reset-password/:token', () => {
             .send({ newPassword });
         expect(response.status).toBe(201);
     });
+    test('it should return 400 if the token is invalid', async () => {
+        authService.resetUserPassword.mockRejectedValue(
+            new InvalidCredentialsError('Invalid credentials')
+        );
+
+        const response = await request(app)
+            .post('/reset-password/invalidToken')
+            .send({ newPassword: 'newPassword' });
+        expect(response.status).toBe(401);
+    });
+    test('it should return 500 if something went wrong', async () => {
+        authService.resetUserPassword.mockRejectedValue(new Error('Error'));
+
+        const response = await request(app)
+            .post('/reset-password/invalidToken')
+            .send({ newPassword: 'newPassword' });
+        expect(response.status).toBe(500);
+    });
 });
 
 describe('GET /verify-reset-password-token', () => {
@@ -278,6 +296,24 @@ describe('GET /verify-reset-password-token', () => {
             '/verify-reset-password-token?token=token'
         );
         expect(response.status).toBe(200);
+    });
+    test('it should return 400 if the token is invalid', async () => {
+        authService.verifyResetPasswordToken.mockRejectedValue(
+            new InvalidCredentialsError('Invalid credentials')
+        );
+        const response = await request(app).get(
+            '/verify-reset-password-token?token=invalidToken'
+        );
+        expect(response.status).toBe(401);
+    });
+    test('it should return 500 if something went wrong', async () => {
+        authService.verifyResetPasswordToken.mockRejectedValue(
+            new Error('Error')
+        );
+        const response = await request(app).get(
+            '/verify-reset-password-token?token=invalidToken'
+        );
+        expect(response.status).toBe(500);
     });
 });
 
@@ -294,5 +330,23 @@ describe('POST /send-password-reset-email', () => {
             .post('/send-password-reset-email')
             .send({ identifier });
         expect(response.status).toBe(201);
+    });
+    test('it should return 400 if the identifier is not found', async () => {
+        const identifier = 'identifier';
+        authService.passwordReset.mockRejectedValue(
+            new UserNotFoundError('User not found')
+        );
+        const response = await request(app)
+            .post('/send-password-reset-email')
+            .send({ identifier });
+        expect(response.status).toBe(201);
+    });
+    test('it should return 500 if something went wrong', async () => {
+        const identifier = 'identifier';
+        authService.passwordReset.mockRejectedValue(new Error('Error'));
+        const response = await request(app)
+            .post('/send-password-reset-email')
+            .send({ identifier });
+        expect(response.status).toBe(500);
     });
 });

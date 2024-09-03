@@ -12,8 +12,9 @@ services:
     sync: false
   - key: VITE_GITHUB_REPO_URL
     sync: false
-  buildCommand: cd polish-finder-app; npm run build
-  staticPublishPath: dist
+  rootDir: polish-finder-app
+  buildCommand: npm run build
+  staticPublishPath: ../dist
 - type: web
   name: polish-finder-dev
   runtime: node

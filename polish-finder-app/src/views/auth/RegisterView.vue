@@ -410,4 +410,15 @@ form > div > span.error {
   font-size: 0.77rem;
   z-index: 1;
 }
+
+.custom-input {
+  padding-bottom: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #c0c0c0;
+  background-color: #ececec;
+}
+.custom-input:focus {
+  border-bottom: 2px solid #8c92ac;
+}
 </style>

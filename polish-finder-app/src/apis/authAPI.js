@@ -54,7 +54,8 @@ export async function sendLogout() {
   try {
     const instance = axiosInstance.create({
       baseURL: SERVER,
-      method: 'post'
+      method: 'post',
+      withCredentials: true
     })
     const res = await instance.post('/logout')
     return res

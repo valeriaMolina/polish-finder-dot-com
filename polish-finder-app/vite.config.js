@@ -8,7 +8,15 @@ import path from 'node:path'
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+  server: {
+    historyApiFallback: true
   },
   plugins: [vue(), svgLoader()],
   resolve: {

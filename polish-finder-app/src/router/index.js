@@ -1,27 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isAuthenticated } from '@/utils/authUtils'
 import HomeView from '../views/HomeView.vue'
-import BrandsView from '@/views/BrandsView.vue'
-import BrandView from '@/views/BrandView.vue'
-import PolishesView from '@/views/PolishesView.vue'
-import ExploreView from '@/views/ExploreView.vue'
-import HelpView from '@/views/HelpView.vue'
-import AuthView from '@/views/auth/AuthView.vue'
-import RegisterView from '@/views/auth/RegisterView.vue'
-import ContributeView from '@/views/ContributeView.vue'
-import SubmissionsBrandView from '@/views/submissions/SubmissionsBrandView.vue'
-import SubmissionsPolishView from '@/views/submissions/SubmissionsPolishView.vue'
-import UserProfileView from '@/views/UserProfileView.vue'
-import WishListView from '@/views/WishListView.vue'
-import CollectionView from '@/views/CollectionView.vue'
-import SubmissionsView from '@/views/submissions/SubmissionsView.vue'
-import FindDupeView from '@/views/FindDupeView.vue'
-import AdvancedSearchView from '@/views/AdvancedSearchView.vue'
-import VerifyAccountView from '@/views/auth/VerifyAccountView.vue'
-import ResendVerificationView from '@/views/auth/ResendVerificationView.vue'
-import UserNotVerifiedView from '@/views/auth/UserNotVerifiedView.vue'
-import PasswordResetView from '@/views/auth/PasswordResetView.vue'
-import NewPasswordView from '@/views/auth/NewPasswordView.vue'
-import ForgotPasswordView from '@/views/NotFoundView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -42,113 +21,190 @@ const router = createRouter({
     {
       path: '/explore',
       name: 'explore',
-      component: ExploreView
+      component: () => import('../views/ExploreView.vue')
     },
     {
       path: '/brands',
       name: 'brands',
-      component: BrandsView
+      component: () => import('../views/BrandsView.vue')
     },
     {
       path: '/brands/:brandId',
       name: 'brand',
-      component: BrandView
+      component: () => import('../views/BrandView.vue')
     },
     {
       path: '/polishes',
       name: 'polishes',
-      component: PolishesView
+      component: () => import('../views/PolishesView.vue')
     },
     {
       path: '/help',
       name: 'help',
-      component: HelpView
+      component: () => import('../views/HelpView.vue')
     },
     {
       path: '/login',
       name: 'auth',
-      component: AuthView
+      component: () => import('../views/auth/AuthView.vue'),
+      beforeEnter: (to, from) => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: () => import('../views/auth/RegisterView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     {
       path: '/contribute',
       name: 'contribute',
-      component: ContributeView
+      component: () => import('../views/ContributeView.vue')
     },
     {
       path: '/contribute/new/brand',
       name: 'contribute-brand',
-      component: SubmissionsBrandView
+      component: () => import('../views/submissions/SubmissionsBrandView.vue')
     },
     {
       path: '/contribute/new/polish',
       name: 'contribute-polish',
-      component: SubmissionsPolishView
+      component: () => import('../views/submissions/SubmissionsPolishView.vue')
     },
     {
       path: '/account',
       name: 'user-profile',
-      component: UserProfileView
+      component: () => import('../views/UserProfileView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'auth' }
+        }
+      }
     },
     {
       path: '/wishlist',
       name: 'wishlist',
-      component: WishListView
+      component: () => import('../views/WishListView.vue'),
+      beforeEnter: (to, from) => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'auth' }
+        }
+      }
     },
     {
       path: '/my-collection',
       name: 'collection',
-      component: CollectionView
+      component: () => import('../views/CollectionView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'auth' }
+        }
+      }
     },
     {
       path: '/submissions',
       name: 'submissions',
-      component: SubmissionsView
+      component: () => import('../views/submissions/SubmissionsView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return true
+        } else {
+          return { name: 'auth' }
+        }
+      }
     },
     {
       path: '/search/dupes',
       name: 'find-dupe',
-      component: FindDupeView
+      component: () => import('../views/FindDupeView.vue')
     },
     {
       path: '/search/advanced',
       name: 'advanced-search',
-      component: AdvancedSearchView
+      component: () => import('../views/AdvancedSearchView.vue')
     },
     {
       path: '/verify/',
       name: 'verify',
-      component: VerifyAccountView
+      component: () => import('../views/auth/VerifyAccountView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     {
       path: '/resend-verification',
       name: 'resend-verification',
-      component: ResendVerificationView
+      component: () => import('../views/auth/ResendVerificationView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     {
       path: '/missing-verification',
       name: 'missing-verification',
-      component: UserNotVerifiedView
+      component: () => import('../views/auth/UserNotVerifiedView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     {
       path: '/password-reset',
       name: 'password-reset',
-      component: PasswordResetView
+      component: () => import('../views/auth/PasswordResetView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     {
       path: '/reset-password/:token?',
       name: 'password-reset-token',
-      component: NewPasswordView
+      component: () => import('../views/auth/NewPasswordView.vue'),
+      beforeEnter: () => {
+        if (isAuthenticated()) {
+          return { name: 'home' }
+        } else {
+          return true
+        }
+      }
     },
     // catch all fallback route
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: ForgotPasswordView
+      component: () => import('../views/NotFoundView.vue')
     }
   ]
 })

@@ -1,5 +1,6 @@
 <template>
   <div id="main-div-brand-submit" class="d-flex flex-column align-items-center px-3 py-5">
+    <Modal ref="thisModal"></Modal>
     <div class="pt-2">
       <form
         id="form-register"
@@ -62,7 +63,26 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import Modal from '@/components/Modal.vue'
+
+onMounted(() => {
+  // check if there is a user logged in
+  const button = document.getElementById('button-submit')
+  if (!authStore.getIsLoggedIn) {
+    showModal()
+    button.disabled = true
+  }
+})
+
+const authStore = useAuthStore()
+
+let thisModal = ref(null)
+
+function showModal() {
+  thisModal.value.show()
+}
 
 const newBrand = reactive({
   brandName: ref(''),

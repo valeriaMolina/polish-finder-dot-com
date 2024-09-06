@@ -32,7 +32,6 @@ const {
  * @throws {UserNotFoundError} - If the refresh token is not found in the database.
  */
 async function logOutUser(refreshToken) {
-    logger.info(`Loggin Out...`);
     // find user by refresh token
     const user = await userService.getUserByRefreshToken(refreshToken);
 
@@ -155,12 +154,6 @@ async function registerUser(newUserDetails) {
                 id: user.user_id,
             },
         };
-        const accessToken = jwt.sign(payload, config.jwtSecret, {
-            expiresIn: '24h',
-        });
-        const refreshToken = jwt.sign(payload, config.refreshTokenSecret, {
-            expiresIn: '7d',
-        });
 
         // generate verification token
         const verificationToken = jwt.sign(payload, config.jwtSecret, {
@@ -168,8 +161,6 @@ async function registerUser(newUserDetails) {
         });
 
         return {
-            accessToken,
-            refreshToken,
             userName: user.username,
             userEmail: user.email,
             verificationToken,

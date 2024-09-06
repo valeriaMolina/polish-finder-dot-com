@@ -49,8 +49,6 @@ describe('authService', () => {
 
         const result = await authService.registerUser(userDetails);
         expect(result).toEqual({
-            accessToken: Promise.resolve(),
-            refreshToken: Promise.resolve(),
             userName: userDetails.username,
             userEmail: userDetails.email,
             verificationToken: Promise.resolve(),

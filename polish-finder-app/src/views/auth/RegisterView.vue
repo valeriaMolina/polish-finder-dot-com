@@ -113,7 +113,7 @@
           <p>Already have an account? <router-link to="/login">Log In</router-link></p>
         </div>
         <div class="mx-2">
-          <p>By clicking "Create account" I accept the Terms of Service</p>
+          <p>By clicking "Create account", I accept the Terms of Service</p>
         </div>
       </form>
     </div>

@@ -78,42 +78,6 @@ body {
     }
 }
 
-#btn-login-colorful {
-    color: #6877f4;
-    background: white;
-    border-color: #6877f4;
-    
-    &:hover {
-        border-color: transparent;
-        color: white;
-        background: linear-gradient(110.6deg, #b88efc 2.2%, #6877f4 100.2%);
-    }
-
-    &:active {
-        border-color: #6050DC;
-        background: white;
-        color: #6050DC;
-    }
-}
-
-#btn-register-colorful {
-    border-color: #e26016;
-    background: white;
-    color: #e26016;
-
-    &:hover {
-        border-color: transparent;
-        color: white;
-        background: linear-gradient(90deg, #d23378 0%, #8b1d1d 50%, #ec5500 100%);
-    }
-
-    &:active {
-        border-color: #E09540;
-        background: white;
-        color: #E09540
-    }
-}
-
 .navbar-special-bg {
     background-color: #F2F2F3;
 }

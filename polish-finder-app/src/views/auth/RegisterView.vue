@@ -105,12 +105,12 @@
           >
         </div>
         <div class="d-flex justify-content-center mx-2">
-          <button id="btn-register-colorful" type="submit" class="btn mb-3 w-100">
+          <button id="btn-register-colorful" class="rounded w-50" type="submit">
             Create Account
           </button>
         </div>
         <div class="mx-2">
-          <p>Already have an account?<router-link to="/login">Log In</router-link></p>
+          <p>Already have an account? <router-link to="/login">Log In</router-link></p>
         </div>
         <div class="mx-2">
           <p>By clicking "Create account" I accept the Terms of Service</p>
@@ -381,6 +381,23 @@ watch(
 
 #form-register {
   background-color: #ececec;
+}
+
+#btn-register-colorful {
+  color: #212529;
+  border-color: #212529;
+  padding: 0.25em 0.75em;
+  background: #ffbde9;
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 2px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+
+#btn-register-colorful:hover {
+  background: #ff9dde;
 }
 
 .pwd-req {

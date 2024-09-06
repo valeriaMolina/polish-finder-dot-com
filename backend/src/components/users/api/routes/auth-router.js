@@ -115,13 +115,13 @@ router.post('/signup', validateSignUp, async (req, res) => {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: config.refreshTokenExpiration,
         });
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: config.accessTokenExpiration,
         });
         res.status(201).json({ userName, userEmail });
@@ -434,6 +434,7 @@ router.post(
 router.post('/logout', async (req, res) => {
     try {
         const { refreshToken, accessToken } = req.cookies;
+        logger.info(`Received a request to log out a user`);
         await authService.logOutUser(refreshToken);
         res.clearCookie('refreshToken', refreshToken);
         res.clearCookie('accessToken', accessToken);

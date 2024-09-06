@@ -44,19 +44,21 @@
               >
             </p>
           </div>
-        </div>
-        <div class="mb-3 form-check mx-2">
-          <input type="checkbox" class="form-check-input" id="checkRememberUser" />
-          <label for="checkRememberUser" class="form-check-label">Remember me on this device</label>
-        </div>
-        <div class="d-flex justify-content-center mx-2">
-          <button type="submit" class="btn mb-3 w-100" id="btn-login-colorful" :disabled="loading">
-            <span class="spinner-border spinner-border-sm" :hidden="!loading"></span>
-            <span :hidden="loading">Sign In</span>
-          </button>
-        </div>
-        <div class="mx-2">
-          <p>Don't have an account? <a href="/register">Register</a></p>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="checkRememberUser" />
+            <label for="checkRememberUser" class="form-check-label"
+              >Remember me on this device</label
+            >
+          </div>
+          <div class="d-flex justify-content-center mx-2">
+            <button type="submit" class="rounded w-50" id="btn-login-colorful" :disabled="loading">
+              <span class="spinner-border spinner-border-sm" :hidden="!loading"></span>
+              <span :hidden="loading">Sign In</span>
+            </button>
+          </div>
+          <div class="mt-2">
+            <p>Don't have an account? <a href="/register">Register</a></p>
+          </div>
         </div>
       </form>
     </div>
@@ -135,5 +137,22 @@ const submit = async () => {
 
 #form-login {
   background-color: #ececec;
+}
+
+#btn-login-colorful {
+  color: #212529;
+  border-color: #212529;
+  padding: 0.25em 0.75em;
+  background: #c6bdff;
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 2px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+
+#btn-login-colorful:hover {
+  background: #aa9dff;
 }
 </style>

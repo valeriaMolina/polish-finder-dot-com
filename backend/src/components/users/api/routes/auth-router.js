@@ -39,13 +39,13 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: config.refreshTokenExpiration,
         });
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: config.accessTokenExpiration,
         });
         res.json({ userName, userEmail });
@@ -99,31 +99,14 @@ router.post('/login', decodeBasicAuth, async (req, res) => {
 router.post('/signup', validateSignUp, async (req, res) => {
     logger.info(`Received request to create new user`);
     try {
-        const {
-            accessToken,
-            refreshToken,
-            userName,
-            userEmail,
-            verificationToken,
-        } = await authService.registerUser(req.body);
+        const { userName, userEmail, verificationToken } =
+            await authService.registerUser(req.body);
         // send confirmation email as well
         await emailService.sendAccountVerificationEmail(
             userEmail,
             userName,
             verificationToken
         );
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: config.refreshTokenExpiration,
-        });
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: config.accessTokenExpiration,
-        });
         res.status(201).json({ userName, userEmail });
     } catch (error) {
         if (error.statusCode) {

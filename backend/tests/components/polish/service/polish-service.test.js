@@ -9,7 +9,6 @@ jest.mock('../../../../src/components/brands/service/brand-service');
 jest.mock('../../../../src/components/polish/service/type-service');
 jest.mock('../../../../src/components/polish/service/color-service');
 jest.mock('../../../../src/components/polish/service/formula-service');
-
 describe('polishService', () => {
     afterEach(() => {
         sinon.restore();
@@ -127,5 +126,21 @@ describe('polishService', () => {
         };
         const matches = await polishService.search(filters);
         expect(matches.length).toEqual(3);
+    });
+    it('should fetch all polishes', async () => {
+        const array = [{ polish_id: 1 }, { polish_id: 2 }, { polish_id: 3 }];
+        sinon
+            .stub(polishModel, 'findAndCountAll')
+            .returns(Promise.resolve(array));
+        const polishes = await polishService.fetchAllPolishes(3, 0);
+        expect(polishes.length).toEqual(3);
+    });
+    it('should get all the polishes', async () => {
+        const array = [{ polish_id: 1 }, { polish_id: 2 }, { polish_id: 3 }];
+        sinon
+            .stub(polishModel, 'findAndCountAll')
+            .returns(Promise.resolve(array));
+        const polishes = await polishService.getAllPolishes(1, 3);
+        expect(polishes.currentPage).toEqual(1);
     });
 });

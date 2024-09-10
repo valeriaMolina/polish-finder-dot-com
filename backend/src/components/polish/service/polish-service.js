@@ -16,6 +16,17 @@ const {
 } = require('../../../libraries/utils/error-handler');
 
 /**
+ * Finds all polishes from the database.
+ * @param {Number} limit - The maximum number of polishes to return.
+ * @param {Number} offset - The number of polishes to skip before returning results.
+ * @returns
+ */
+async function fetchAllPolishes(limit, offset) {
+    const allPolishes = await polishModel.findAndCountAll({ limit, offset });
+    return allPolishes;
+}
+
+/**
  * Finds polishes that match the given filters.
  *
  * @param {Object} filters - The filters to use for searching.
@@ -182,11 +193,43 @@ async function newPolishInsert(data) {
     return newPolish;
 }
 
+/**
+ * Retrieves a paginated list of polishes from the database.
+ *
+ * @param {number} page - The page number to retrieve.
+ * @param {number} limit - The maximum number of polishes to return per page.
+ *
+ * @returns {Promise<Object>} A promise that resolves to an object containing the following properties:
+ * - totalItems: The total number of polishes in the database.
+ * - totalPages: The total number of pages based on the given limit.
+ * - currentPage: The current page number.
+ * - polishes: An array of polish objects.
+ *
+ * @throws {Error} If an error occurs during the database query.
+ */
+async function getAllPolishes(page, limit) {
+    const offset = (page - 1) * limit;
+    try {
+        const polishes = await fetchAllPolishes(limit, offset);
+        return {
+            totalItems: polishes.count,
+            totalPages: Math.ceil(polishes.count / limit),
+            currentPage: page,
+            polishes: polishes.rows,
+        };
+    } catch (error) {
+        logger.error(`Error fetching polishes: ${error.message}`);
+        throw error;
+    }
+}
+
 module.exports = {
+    fetchAllPolishes,
     insertNewPolish,
     findPolishById,
     addDupePolishId,
     polishExists,
     newPolishInsert,
     search,
+    getAllPolishes,
 };

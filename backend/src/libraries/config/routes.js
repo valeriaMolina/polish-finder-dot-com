@@ -1,6 +1,7 @@
 // import routers
 const brand = require('../../components/brands/api/routes/brand-route');
 const insert = require('../../components/polish/api/routes/insert-route');
+const polishes = require('../../components/polish/api/routes/polishes-route');
 const rbac = require('../../components/rbac/api/routes/rbac-route');
 const search = require('../../components/search/api/routes/search-route');
 const userSubmissions = require('../../components/submissions/api/routes/user-submissions-router');
@@ -12,6 +13,7 @@ const colors = require('../../components/polish/api/routes/color-route');
 const mountRoutes = (app) => {
     app.use('/brands', brand);
     app.use('/polish', insert);
+    app.use('/polish', polishes);
     app.use('/colors', colors);
     app.use('/formulas', formula);
     app.use('/role', rbac);

@@ -5,14 +5,8 @@
       <p>Browse all our available nail polish</p>
     </div>
     <div
-      class="white-bg container border shadow rounded row row-cols-1 row-cols-md-5 g-2 px-3 py-3"
-    >
-      <PolishCard></PolishCard>
-      <PolishCard></PolishCard>
-      <PolishCard></PolishCard>
-      <PolishCard></PolishCard>
-      <PolishCard></PolishCard>
-    </div>
+      class="white-bg container border shadow rounded row row-cols-1 row-cols-md-6 g-2 px-3 py-3"
+    ></div>
   </div>
 </template>
 

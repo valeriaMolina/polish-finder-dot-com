@@ -7,11 +7,7 @@
     <div
       class="white-bg container border shadow rounded row row-cols-1 row-cols-md-6 g-2 px-3 py-3"
     >
-      <div
-        v-for="polish in polishes.polishes"
-        :key="polish.polish_id"
-        class="d-flex align-items-stretch"
-      >
+      <div v-for="polish in polishes" :key="polish.polish_id" class="d-flex align-items-stretch">
         <PolishCard
           :brand-name="polish.brand.name"
           :picture-url="polish.image_url"
@@ -24,7 +20,7 @@
 
 <script setup>
 import PolishCard from '@/components/PolishCard.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { fetchPolish } from '@/apis/polishAPI'
 
 let page = 1
@@ -32,11 +28,28 @@ const polishes = ref([])
 
 const loadMorePolishes = async () => {
   let newLoad = await fetchPolish(page + 1, 60)
-  polishes.value.push(...newLoad)
+  polishes.value.push(...newLoad.polishes)
+}
+
+const handleScroll = async (e) => {
+  let element = document.getElementById('polishes')
+  if (element.getBoundingClientRect().bottom < window.innerHeight) {
+    setTimeout(async () => {
+      await loadMorePolishes()
+      page++ // Increment page number for next fetch request.
+    }, '1000') // Delay the execution of the function to prevent unnecessary API calls.
+  }
 }
 
 onMounted(async () => {
-  polishes.value = await fetchPolish(page, 60)
+  window.addEventListener('scroll', handleScroll)
+  const polishesFetched = await fetchPolish(page, 60)
+  polishes.value = polishesFetched.polishes
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  polishes.value = [] // Clear polishes on unmount to prevent memory leakage.
 })
 </script>
 

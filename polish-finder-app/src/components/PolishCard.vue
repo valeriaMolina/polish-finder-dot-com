@@ -15,17 +15,6 @@
       <div>
         <p class="brand-name my-0">{{ brandName }}</p>
       </div>
-      <!-- <div class="row">
-        <div class="col">
-          <p class="fs-5">{{ polishName }}</p>
-          <hr />
-        </div>
-      </div>
-      <div class="row align-self-end">
-        <div class="col">
-          <p class="brand-name">{{ brandName }}</p>
-        </div>
-      </div> -->
     </div>
     <div class="card-footer">
       <p class="text-start mb-0"><i class="bi bi-heart"></i></p>

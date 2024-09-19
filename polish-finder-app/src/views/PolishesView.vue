@@ -7,7 +7,13 @@
     <div
       class="white-bg container border shadow rounded row row-cols-1 row-cols-md-6 g-2 px-3 py-3"
     >
-      <div v-for="polish in polishes" :key="polish.polish_id"></div>
+      <div v-for="polish in polishes.polishes" :key="polish.polish_id">
+        <PolishCard
+          :brand-name="polish.brand.name"
+          :picture-url="polish.image_url"
+          :polish-name="polish.name"
+        ></PolishCard>
+      </div>
     </div>
   </div>
 </template>
@@ -16,8 +22,11 @@
 import PolishCard from '@/components/PolishCard.vue'
 import { ref, onMounted } from 'vue'
 import { fetchPolish } from '@/apis/polishAPI'
+const polishes = ref([])
 
-const polishes = ref(fetchPolish(1, 10))
+onMounted(async () => {
+  polishes.value = await fetchPolish(1, 60)
+})
 </script>
 
 <style scoped>

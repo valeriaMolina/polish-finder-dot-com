@@ -14,6 +14,7 @@ const {
     BrandNotFoundError,
     PolishAlreadyExistsError,
 } = require('../../../libraries/utils/error-handler');
+const brands = require('../../brands/db/brands');
 
 /**
  * Finds all polishes from the database.
@@ -22,7 +23,11 @@ const {
  * @returns
  */
 async function fetchAllPolishes(limit, offset) {
-    const allPolishes = await polishModel.findAndCountAll({ limit, offset });
+    const allPolishes = await polishModel.findAndCountAll({
+        limit,
+        offset,
+        include: [{ model: brands, attributes: ['name'] }],
+    });
     return allPolishes;
 }
 
@@ -75,6 +80,40 @@ async function polishExists(name, brandId) {
         },
     });
     return polish;
+}
+
+/**
+ *
+ * @param {*} polish
+ * @returns
+ */
+async function getPolishInfo(polish) {
+    // get the brand name, effect colors, formulas, colors, ans types
+    const brandName = await brandService.getBrand(polish.brand_id);
+    const primaryColor = await colorService.findColorById(polish.primary_color);
+    const effectColors = [];
+    for (const effectColor of polish.effect_colors) {
+        const effectColorInfo = await colorService.findColorById(effectColor);
+        effectColors.push(effectColorInfo);
+    }
+    const formulas = [];
+    for (const formula of polish.formula_ids) {
+        const formulaInfo = await formulaService.findFormulaById(formula);
+        formulas.push(formulaInfo);
+    }
+    const type = await typeService.findTypeById(polish.type_id);
+    return {
+        polishId: polish.polish_id,
+        effectColors,
+        formulas,
+        name: polish.name,
+        description: polish.description,
+        dupes: polish.dupes,
+        image_url: polish.image_url,
+        brandName: brandName,
+        type,
+        primaryColor,
+    };
 }
 
 /**

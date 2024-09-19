@@ -6,12 +6,18 @@
     </div>
     <div
       class="white-bg container border shadow rounded row row-cols-1 row-cols-md-6 g-2 px-3 py-3"
-    ></div>
+    >
+      <div v-for="polish in polishes" :key="polish.polish_id"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import PolishCard from '@/components/PolishCard.vue'
+import { ref, onMounted } from 'vue'
+import { fetchPolish } from '@/apis/polishAPI'
+
+const polishes = ref(fetchPolish(1, 10))
 </script>
 
 <style scoped>

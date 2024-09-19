@@ -10,6 +10,12 @@ async function findTypeByName(name) {
     return type;
 }
 
+async function findTypeById(id) {
+    const type = await typeModel.findOne({ where: { type_id: id } });
+    return type;
+}
+
 module.exports = {
     findTypeByName,
+    findTypeById,
 };

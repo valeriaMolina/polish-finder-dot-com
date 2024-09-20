@@ -24,6 +24,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { fetchPolish } from '@/apis/polishAPI'
 
 let page = 1
+let timeout = 1000
 const polishes = ref([])
 
 const loadMorePolishes = async () => {
@@ -31,7 +32,18 @@ const loadMorePolishes = async () => {
   polishes.value.push(...newLoad.polishes)
 }
 
+const debounce = (func, delay) => {
+  let debounceTimer
+  return function () {
+    const context = this
+    const args = arguments
+    clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => func.apply(context, args), delay)
+  }
+}
+
 const handleScroll = async (e) => {
+  console.log('scrolled')
   let element = document.getElementById('polishes')
   if (element.getBoundingClientRect().bottom < window.innerHeight) {
     setTimeout(async () => {
@@ -41,14 +53,16 @@ const handleScroll = async (e) => {
   }
 }
 
+const debounceHandleScroll = debounce(handleScroll, 1000)
+
 onMounted(async () => {
-  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', debounceHandleScroll)
   const polishesFetched = await fetchPolish(page, 60)
   polishes.value = polishesFetched.polishes
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', debounceHandleScroll)
   polishes.value = [] // Clear polishes on unmount to prevent memory leakage.
 })
 </script>

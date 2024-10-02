@@ -14,6 +14,11 @@
           :polish-name="polish.name"
         ></PolishCard>
       </div>
+      <div class="container mt-4 text-center">
+        <div class="spinner-border" role="status" :hidden="!isLoading">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -26,10 +31,13 @@ import { fetchPolish } from '@/apis/polishAPI'
 let page = 1
 let timeout = 1000
 const polishes = ref([])
+const isLoading = ref(false)
 
 const loadMorePolishes = async () => {
+  isLoading.value = true
   let newLoad = await fetchPolish(page + 1, 60)
   polishes.value.push(...newLoad.polishes)
+  isLoading.value = false
 }
 
 const debounce = (func, delay) => {
@@ -43,7 +51,6 @@ const debounce = (func, delay) => {
 }
 
 const handleScroll = async (e) => {
-  console.log('scrolled')
   let element = document.getElementById('polishes')
   if (element.getBoundingClientRect().bottom < window.innerHeight) {
     setTimeout(async () => {
@@ -53,7 +60,7 @@ const handleScroll = async (e) => {
   }
 }
 
-const debounceHandleScroll = debounce(handleScroll, 1000)
+const debounceHandleScroll = debounce(handleScroll, timeout)
 
 onMounted(async () => {
   window.addEventListener('scroll', debounceHandleScroll)
@@ -62,7 +69,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', debounceHandleScroll)
+  //window.removeEventListener('scroll', debounceHandleScroll)
   polishes.value = [] // Clear polishes on unmount to prevent memory leakage.
 })
 </script>

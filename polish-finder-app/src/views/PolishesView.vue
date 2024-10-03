@@ -1,22 +1,43 @@
 <template>
-  <div id="polishes" class="d-flex flex-column align-items-center px-3 py-5">
+  <div id="polishes" class="d-flex flex-column py-5">
     <div class="container mb-3">
       <h1>Polishes</h1>
       <p>Browse all our available nail polish</p>
     </div>
-    <div
-      class="white-bg container border shadow rounded row row-cols-1 row-cols-md-6 g-2 px-3 py-3"
-    >
-      <div v-for="polish in polishes" :key="polish.polish_id" class="d-flex align-items-stretch">
-        <PolishCard
-          :brand-name="polish.brand.name"
-          :picture-url="polish.image_url"
-          :polish-name="polish.name"
-        ></PolishCard>
+    <div class="row">
+      <div class="col-2 ms-2">
+        <div class="white-bg container border shadow rounded row g-2 py-3">
+          <div class="">
+            <div>
+              <p>Brand</p>
+            </div>
+            <hr />
+            <div><p>Primary Color</p></div>
+            <hr />
+            <div><p>Secondary Colors</p></div>
+            <hr />
+            <div><p>Formula</p></div>
+          </div>
+        </div>
       </div>
-      <div class="container mt-4 text-center">
-        <div class="spinner-border" role="status" :hidden="!isLoading">
-          <span class="visually-hidden">Loading...</span>
+      <div class="col">
+        <div class="white-bg container border shadow rounded row row-cols-md-6 g-2 px-3 py-3">
+          <div
+            v-for="polish in polishes"
+            :key="polish.polish_id"
+            class="d-flex align-items-stretch"
+          >
+            <PolishCard
+              :brand-name="polish.brand.name"
+              :picture-url="polish.image_url"
+              :polish-name="polish.name"
+            ></PolishCard>
+          </div>
+          <div class="container mt-4 text-center">
+            <div class="spinner-border" role="status" :hidden="!isLoading">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

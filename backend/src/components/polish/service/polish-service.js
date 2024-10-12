@@ -15,6 +15,7 @@ const {
     PolishAlreadyExistsError,
 } = require('../../../libraries/utils/error-handler');
 const brands = require('../../brands/db/brands');
+const colors = require('../../polish/db/colors');
 
 /**
  * Finds all polishes from the database.
@@ -26,7 +27,10 @@ async function fetchAllPolishes(limit, offset) {
     const allPolishes = await polishModel.findAndCountAll({
         limit,
         offset,
-        include: [{ model: brands, attributes: ['name'] }],
+        include: [
+            { model: brands, attributes: ['name'] },
+            { model: colors, attributes: ['name'] },
+        ],
     });
     return allPolishes;
 }

@@ -46,98 +46,9 @@
               </h4>
               <div id="collapseTwo" class="accordion-collapse collapse">
                 <div class="accordion-body">
-                  <fieldset id="filterByColor">
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="whiteColor" class="colorCheck" />
-                      <label for="whiteColor"> <span class="color-dot"></span> White</label>
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="greyColor" class="colorCheck" />
-                      <label for="greyColor">
-                        <span class="color-dot" style="background-color: grey"></span> Grey</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="blackColor" class="colorCheck" />
-                      <label for="blackColor"
-                        ><span class="color-dot" style="background-color: black"></span>
-                        Black</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="redColor" class="colorCheck" />
-                      <label for="redColor"
-                        ><span class="color-dot" style="background-color: red"></span> Red</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="orangeColor" class="colorCheck" />
-                      <label for="orangeColor"
-                        ><span class="color-dot" style="background-color: orange"></span>
-                        Orange</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="yellowColor" class="colorCheck" />
-                      <label for="yellowColor"
-                        ><span class="color-dot" style="background-color: yellow"></span>
-                        Yellow</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="greenColor" class="colorCheck" />
-                      <label for="greenColor"
-                        ><span class="color-dot" style="background-color: green"></span>
-                        Green</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="blueColor" class="colorCheck" />
-                      <label for="blueColor"
-                        ><span class="color-dot" style="background-color: blue"></span> Blue</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="indigoColor" class="colorCheck" />
-                      <label for="indigoColor"
-                        ><span class="color-dot" style="background-color: indigo"></span>
-                        Indigo</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="purpleColor" class="colorCheck" />
-                      <label for="purpleColor"
-                        ><span class="color-dot" style="background-color: purple"></span>
-                        Purple</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="pinkColor" class="colorCheck" />
-                      <label for="pinkColor"
-                        ><span class="color-dot" style="background-color: pink"></span> Pink</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="brownColor" class="colorCheck" />
-                      <label for="brownColor"
-                        ><span class="color-dot" style="background-color: brown"></span>
-                        Brown</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="goldColor" class="colorCheck" />
-                      <label for="goldColor"
-                        ><span class="color-dot" style="background-color: gold"></span> Gold</label
-                      >
-                    </div>
-                    <div class="nice-form-group">
-                      <input type="checkbox" id="silverColor" class="colorCheck" />
-                      <label for="silverColor"
-                        ><span class="color-dot" style="background-color: silver"></span>
-                        Silver</label
-                      >
-                    </div>
-                  </fieldset>
+                  <div class="nice-form-group">
+                    <input type="text" placeholder="Color" id="colorSearch" v-model="colorSearch" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -178,15 +89,17 @@ let timeout = 1000
 const polishes = ref([])
 const isLoading = ref(false)
 const brandSearch = ref('')
+const colorSearch = ref('')
 
 const filteredList = computed(() => {
-  if (brandSearch.value === '') {
+  if (brandSearch.value === '' && colorSearch.value === '') {
     return polishes.value
   }
 
   return polishes.value.filter((polish) => {
     const brand = polish.brand.name.toLowerCase().includes(brandSearch.value.toLowerCase())
-    return brand
+    const color = polish.color.name.toLowerCase().includes(colorSearch.value.toLowerCase())
+    return brand & color
   })
 })
 

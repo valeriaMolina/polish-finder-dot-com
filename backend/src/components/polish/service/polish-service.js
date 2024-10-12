@@ -64,7 +64,13 @@ async function insertNewPolish(attributes) {
  * @throws {Error} If an error occurs during the database query.
  */
 async function findPolishById(id) {
-    const polish = await polishModel.findOne({ where: { polish_id: id } });
+    const polish = await polishModel.findOne({
+        where: { polish_id: id },
+        include: [
+            { model: brands, attributes: ['name'] },
+            { model: colors, attributes: ['name'] },
+        ],
+    });
     return polish;
 }
 

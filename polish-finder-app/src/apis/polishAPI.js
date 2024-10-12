@@ -20,3 +20,20 @@ export async function fetchPolish(page, limit) {
     throw new Error('Failed to fetch polishes')
   }
 }
+
+/**
+ * Fetches a single polish from the server by its id.
+ *
+ * @param {number} polishId - The id of the polish to fetch.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the fetched polish.
+ * @throws {Error} - Throws an error if the request fails.
+ */
+export async function findOnePolish(polishId) {
+  try {
+    const request = await axios.get(`${SERVER}/polish/${polishId}`)
+    return request.data
+  } catch (error) {
+    console.error(error)
+    throw new Error(error)
+  }
+}

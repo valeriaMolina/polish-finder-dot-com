@@ -30,4 +30,27 @@ router.get('/all', validateAllPolishesSearch, async (req, res) => {
     }
 });
 
+/**
+ * Handles the GET request to get a polish by its id
+ */
+router.get('/:polishId', async (req, res) => {
+    logger.info(`Fetching polish with id: ${req.params.polishId}`);
+    try {
+        const polishId = req.params.polishId;
+        const polish = await polishService.findPolishById(polishId);
+        res.json(polish);
+    } catch (error) {
+        if (error.statusCode) {
+            res.status(error.statusCode).send({ message: error.message });
+        } else {
+            // error not anticipated
+            logger.error(error);
+            logger.error(
+                `Error fetching polish with id: ${req.params.polishId}`
+            );
+            res.status(500).send({ message: 'Error fetching polish' });
+        }
+    }
+});
+
 module.exports = router;

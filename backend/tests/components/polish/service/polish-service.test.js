@@ -176,4 +176,30 @@ describe('polishService', () => {
             formulas: ['flake'],
         });
     });
+    it('should fetch one polish', async () => {
+        const mockPolish = {
+            polish_id: 1,
+            name: 'name',
+            brand_id: 1,
+            type_id: 1,
+            primary_color: 1,
+            effect_colors: [4],
+            formula_ids: [1],
+            description: 'description',
+            toJSON: () => mockPolish,
+        };
+        sinon.stub(polishModel, 'findOne').returns(Promise.resolve(mockPolish));
+        colorService.findColorById.mockResolvedValue({
+            color_id: 1,
+            name: 'blue',
+        });
+        formulaService.findFormulaById.mockResolvedValue({
+            formula_id: 1,
+            name: 'flake',
+        });
+        const received = await polishService.findOnePolish(
+            mockPolish.polish_id
+        );
+        expect(received.name).toEqual('name');
+    });
 });

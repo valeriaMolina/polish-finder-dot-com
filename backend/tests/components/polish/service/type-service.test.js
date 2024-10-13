@@ -21,4 +21,11 @@ describe('typeService', () => {
         const type = await typeService.findTypeByName('nonexistentType');
         expect(type).toBeNull();
     });
+    it('should return a type by id', async () => {
+        const mockType = { type_id: 1, name: 'mockType' };
+        sinon.stub(typeModel, 'findOne').returns(Promise.resolve(mockType));
+
+        const type = await typeService.findTypeById(1);
+        expect(type).toEqual(mockType);
+    });
 });

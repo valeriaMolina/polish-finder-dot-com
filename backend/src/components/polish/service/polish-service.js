@@ -287,4 +287,5 @@ module.exports = {
     newPolishInsert,
     search,
     getAllPolishes,
+    findPolishById,
 };

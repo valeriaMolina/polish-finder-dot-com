@@ -11,6 +11,8 @@ jest.mock('../../../../src/components/polish/service/color-service');
 jest.mock('../../../../src/components/polish/service/formula-service');
 describe('polishService', () => {
     afterEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
         sinon.restore();
     });
 

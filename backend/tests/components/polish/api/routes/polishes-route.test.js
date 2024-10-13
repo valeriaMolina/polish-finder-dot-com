@@ -11,6 +11,7 @@ app.use('/', polishesRoute);
 describe('polishes route', () => {
     afterAll(() => {
         jest.resetAllMocks();
+        jest.restoreAllMocks();
     });
     it('responds with 200', async () => {
         polishService.getAllPolishes.mockResolvedValue([
@@ -22,6 +23,13 @@ describe('polishes route', () => {
     it('returns 400 if the queries are incorrect', async () => {
         const res = await request(app).get('/all?page=abc&limit=10');
         expect(res.status).toBe(400);
+    });
+    it('returns a 500 error if there is an unexpected error', async () => {
+        polishService.getAllPolishes.mockRejectedValue(
+            new Error('Database error')
+        );
+        const res = await request(app).get('/all?page=1&limit=10');
+        expect(res.status).toBe(500);
     });
     it('returns a polish based on the query string', async () => {
         polishService.findOnePolish.mockResolvedValue({});

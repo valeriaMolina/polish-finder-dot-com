@@ -120,6 +120,9 @@ describe('POST /signup', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
+    afterAll(() => {
+        jest.restoreAllMocks();
+    });
     test('It should create a new user', async () => {
         authService.registerUser.mockResolvedValue(newUser);
         emailService.sendAccountVerificationEmail.mockImplementation(() => {});
@@ -161,6 +164,9 @@ describe('POST /refresh', () => {
     const refreshToken = 'oldRefreshToken';
     afterEach(() => {
         jest.clearAllMocks();
+    });
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
     test('It should return a new token', async () => {
         jwt.sign.mockReturnValue('newJwtToken');

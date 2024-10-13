@@ -48,6 +48,11 @@ function verifyEmailClient() {
         });
 }
 
+function close() {
+    transporter.close();
+    logger.info('Email client closed');
+}
+
 /**
  * Sends a password reset email to the provided email address.
  *
@@ -229,6 +234,7 @@ async function sendPasswordChangedEmail(userId) {
 
 module.exports = {
     sendAccountVerificationEmail,
+    close,
     verifyEmailClient,
     sendPasswordResetEmail,
     sendPasswordChangedEmail,

@@ -279,6 +279,7 @@ async function findOnePolish(polishId) {
 }
 
 module.exports = {
+    getPolishInfo,
     fetchAllPolishes,
     insertNewPolish,
     findOnePolish,

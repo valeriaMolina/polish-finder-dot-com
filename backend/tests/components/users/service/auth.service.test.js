@@ -45,13 +45,14 @@ describe('authService', () => {
             user_id: '2',
             role_id: '1',
         });
-        jwt.sign.mockResolvedValue(Promise.resolve());
+        const resolvedPromise = Promise.resolve();
+        jwt.sign.mockResolvedValue(resolvedPromise);
 
         const result = await authService.registerUser(userDetails);
         expect(result).toEqual({
             userName: userDetails.username,
             userEmail: userDetails.email,
-            verificationToken: Promise.resolve(),
+            verificationToken: resolvedPromise,
         });
     });
     it('should throw an error when user already exists', async () => {

@@ -143,4 +143,37 @@ describe('polishService', () => {
         const polishes = await polishService.getAllPolishes(1, 3);
         expect(polishes.currentPage).toEqual(1);
     });
+    it('should fetch all the polishes', async () => {
+        const array = [{ polish_id: 1 }, { polish_id: 2 }, { polish_id: 3 }];
+        sinon
+            .stub(polishModel, 'findAndCountAll')
+            .returns(Promise.resolve(array));
+        const polishes = await polishService.fetchAllPolishes(3, 0);
+        expect(polishes).toEqual(array);
+    });
+    it('should get extra information about the nail polish', async () => {
+        const mockPolish = {
+            polish_id: 1,
+            name: 'name',
+            brand_id: 1,
+            type_id: 1,
+            primary_color: 1,
+            effect_colors: [4],
+            formula_ids: [1],
+            description: 'description',
+        };
+        colorService.findColorById.mockResolvedValue({
+            color_id: 1,
+            name: 'blue',
+        });
+        formulaService.findFormulaById.mockResolvedValue({
+            formula_id: 1,
+            name: 'flake',
+        });
+        const extraInfo = await polishService.getPolishInfo(mockPolish);
+        expect(extraInfo).toEqual({
+            effectColors: ['blue'],
+            formulas: ['flake'],
+        });
+    });
 });

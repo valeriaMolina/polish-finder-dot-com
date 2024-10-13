@@ -25,6 +25,7 @@ describe('Search route test', () => {
     });
     afterEach(() => {
         jest.clearAllMocks();
+        jest.restoreAllMocks();
     });
     it('Should search for polishes base on the search query', async () => {
         brandService.findBrandNameInTable.mockResolvedValue({ brand_id: 4 });

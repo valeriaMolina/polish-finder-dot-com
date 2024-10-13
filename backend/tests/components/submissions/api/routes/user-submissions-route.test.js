@@ -45,6 +45,7 @@ app.use('/', userSubmissionRoute);
 describe('User submissions route', () => {
     afterAll(() => {
         jest.resetAllMocks();
+        jest.restoreAllMocks();
     });
     it('Should handle call to submit a dupe', async () => {
         submissionService.submitDupe.mockResolvedValue({ submission_id: 5 });

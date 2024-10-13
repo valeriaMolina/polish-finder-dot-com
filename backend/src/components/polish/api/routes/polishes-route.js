@@ -37,7 +37,7 @@ router.get('/:polishId', async (req, res) => {
     logger.info(`Fetching polish with id: ${req.params.polishId}`);
     try {
         const polishId = req.params.polishId;
-        const polish = await polishService.findPolishById(polishId);
+        const polish = await polishService.findOnePolish(polishId);
         res.json(polish);
     } catch (error) {
         if (error.statusCode) {

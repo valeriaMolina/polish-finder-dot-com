@@ -37,16 +37,39 @@
             <table class="table">
               <tbody>
                 <tr>
-                  <td>Color</td>
-                  <td>color tags</td>
+                  <td>Primary Color</td>
+                  <td>
+                    <span class="badge text-bg-light">{{ polish.color.name }}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Secondary Colors</td>
+                  <td>
+                    <span
+                      class="badge text-bg-light"
+                      v-for="(eColor, index) in polish.effectColors"
+                      :key="polish.effectColors[index]"
+                    >
+                      {{ eColor }}
+                    </span>
+                  </td>
                 </tr>
                 <tr>
                   <td>Formula</td>
-                  <td>formula tags</td>
+                  <td>
+                    <span
+                      class="badge text-bg-light"
+                      v-for="(formula, index) in polish.formulas"
+                      :key="polish.formulas[index]"
+                      >{{ formula }}</span
+                    >
+                  </td>
                 </tr>
                 <tr>
                   <td>Type</td>
-                  <td>type tag</td>
+                  <td>
+                    <span class="badge text-bg-light">{{ polish.type.name }}</span>
+                  </td>
                 </tr>
               </tbody>
             </table>

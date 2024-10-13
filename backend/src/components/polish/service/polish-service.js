@@ -16,6 +16,7 @@ const {
 } = require('../../../libraries/utils/error-handler');
 const brands = require('../../brands/db/brands');
 const colors = require('../../polish/db/colors');
+const type = require('../db/types');
 
 /**
  * Finds all polishes from the database.
@@ -30,6 +31,7 @@ async function fetchAllPolishes(limit, offset) {
         include: [
             { model: brands, attributes: ['name'] },
             { model: colors, attributes: ['name'] },
+            { model: type, attributes: ['name'] },
         ],
     });
     return allPolishes;
@@ -69,6 +71,7 @@ async function findPolishById(id) {
         include: [
             { model: brands, attributes: ['name'] },
             { model: colors, attributes: ['name'] },
+            { model: type, attributes: ['name'] },
         ],
     });
     return polish;
@@ -98,31 +101,19 @@ async function polishExists(name, brandId) {
  * @returns
  */
 async function getPolishInfo(polish) {
-    // get the brand name, effect colors, formulas, colors, ans types
-    const brandName = await brandService.getBrand(polish.brand_id);
-    const primaryColor = await colorService.findColorById(polish.primary_color);
     const effectColors = [];
     for (const effectColor of polish.effect_colors) {
         const effectColorInfo = await colorService.findColorById(effectColor);
-        effectColors.push(effectColorInfo);
+        effectColors.push(effectColorInfo.name);
     }
     const formulas = [];
     for (const formula of polish.formula_ids) {
         const formulaInfo = await formulaService.findFormulaById(formula);
-        formulas.push(formulaInfo);
+        formulas.push(formulaInfo.name);
     }
-    const type = await typeService.findTypeById(polish.type_id);
     return {
-        polishId: polish.polish_id,
         effectColors,
         formulas,
-        name: polish.name,
-        description: polish.description,
-        dupes: polish.dupes,
-        image_url: polish.image_url,
-        brandName: brandName,
-        type,
-        primaryColor,
     };
 }
 
@@ -272,10 +263,25 @@ async function getAllPolishes(page, limit) {
     }
 }
 
+async function findOnePolish(polishId) {
+    try {
+        const polish = await findPolishById(polishId);
+        // get extra information
+        const polishInfo = await getPolishInfo(polish);
+        // convert the sequelize model to a plain javascript object and return
+        return { ...polish.toJSON(), ...polishInfo };
+    } catch (error) {
+        logger.error(
+            `Error fetching polish with id ${polishId}: ${error.message}`
+        );
+        throw error;
+    }
+}
+
 module.exports = {
     fetchAllPolishes,
     insertNewPolish,
-    findPolishById,
+    findOnePolish,
     addDupePolishId,
     polishExists,
     newPolishInsert,

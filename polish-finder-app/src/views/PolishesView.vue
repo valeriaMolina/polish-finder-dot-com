@@ -66,6 +66,7 @@
               :brand-name="polish.brand.name"
               :picture-url="polish.image_url"
               :polish-name="polish.name"
+              :id="polish.polish_id"
             ></PolishCard>
           </div>
           <div class="container mt-4 text-center">

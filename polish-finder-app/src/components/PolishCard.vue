@@ -1,15 +1,20 @@
 <template>
   <div class="card h-100 bg-color">
-    <img
-      v-if="!pictureUrl"
-      :src="config.IMG_NOT_AVAILABLE"
-      class="card-img-top"
-      alt="Unavailable"
-    />
-    <img v-else :src="pictureUrl" class="card-img-top" alt="Polish" />
+    <router-link :to="`/polishes/${id}`">
+      <img
+        v-if="!pictureUrl"
+        :src="config.IMG_NOT_AVAILABLE"
+        class="card-img-top"
+        alt="Unavailable"
+      />
+      <img v-else :src="pictureUrl" class="card-img-top" alt="Polish" />
+    </router-link>
+
     <div class="card-body d-flex flex-column">
       <div class="mb-auto">
-        <p class="fs-5">{{ polishName }}</p>
+        <p class="fs-5">
+          <router-link class="polish-link" :to="`/polishes/${id}`">{{ polishName }}</router-link>
+        </p>
       </div>
 
       <div>
@@ -29,7 +34,7 @@
 <script setup>
 import config from '@/config'
 import { ref } from 'vue'
-const props = defineProps(['polishName', 'brandName', 'pictureUrl'])
+const props = defineProps(['id', 'polishName', 'brandName', 'pictureUrl'])
 
 const iconClass = ref('bi bi-heart')
 
@@ -57,5 +62,10 @@ const handleLike = () => {
 #heartIcon {
   font-size: 20px;
   color: #f00;
+}
+
+.polish-link {
+  text-decoration: none;
+  color: black;
 }
 </style>

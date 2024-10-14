@@ -14,7 +14,7 @@ services:
     sync: false
   - key: VITE_KOFI_LINK
     sync: false
-  - key: VITE_SERVER
+  - key: VITE_IMG_NOT_AVAILABLE
     sync: false
   rootDir: polish-finder-app
   buildCommand: npm run build

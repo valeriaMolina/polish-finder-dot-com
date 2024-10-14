@@ -12,6 +12,10 @@ services:
     sync: false
   - key: VITE_GITHUB_REPO_URL
     sync: false
+  - key: VITE_KOFI_LINK
+    key: false
+  - key: VITE_SERVER
+    sync: false
   rootDir: polish-finder-app
   buildCommand: npm run build
   staticPublishPath: dist

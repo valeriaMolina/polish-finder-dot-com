@@ -5,8 +5,12 @@
 const router = require('express').Router();
 const logger = require('../../../../libraries/logger/logger');
 const likesService = require('../../service/likes-service');
+const {
+    validateLikeRequest,
+    validateGetLikesRequest,
+} = require('../middleware/likes-validator');
 
-router.post('/like', async (req, res) => {
+router.post('/like', validateLikeRequest, async (req, res) => {
     logger.info('Received like request');
     try {
         const userId = req.body.userId;
@@ -24,7 +28,7 @@ router.post('/like', async (req, res) => {
     }
 });
 
-router.post('/unlike', async (req, res) => {
+router.post('/unlike', validateLikeRequest, async (req, res) => {
     logger.info('Received unlike request');
     try {
         const userId = req.body.userId;
@@ -37,7 +41,7 @@ router.post('/unlike', async (req, res) => {
     }
 });
 
-router.get('/:userId/likes', async (req, res) => {
+router.get('/:userId/likes', validateGetLikesRequest, async (req, res) => {
     logger.info('Received request to get likes for a user');
     try {
         const userId = req.params.userId;

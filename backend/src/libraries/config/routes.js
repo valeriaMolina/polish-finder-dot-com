@@ -9,6 +9,7 @@ const submissionReviews = require('../../components/submissions/api/routes/submi
 const auth = require('../../components/users/api/routes/auth-router');
 const formula = require('../../components/polish/api/routes/formula-route');
 const colors = require('../../components/polish/api/routes/color-route');
+const likes = require('../../components/likes/api/routes/likes-route');
 
 const mountRoutes = (app) => {
     app.use('/brands', brand);
@@ -20,6 +21,7 @@ const mountRoutes = (app) => {
     app.use('/search', search);
     app.use('/submit', userSubmissions);
     app.use('/update', submissionReviews);
+    app.use('/user-likes', likes);
     app.use(auth);
 };
 

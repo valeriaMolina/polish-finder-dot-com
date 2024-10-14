@@ -13,7 +13,7 @@ services:
   - key: VITE_GITHUB_REPO_URL
     sync: false
   - key: VITE_KOFI_LINK
-    key: false
+    sync: false
   - key: VITE_SERVER
     sync: false
   rootDir: polish-finder-app

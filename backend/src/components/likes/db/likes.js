@@ -7,25 +7,23 @@ const db = require('../../../libraries/db/database');
 const user = require('../../users/db/users');
 const polish = require('../../polish/db/polishes');
 
-const userLikes = db.define('user_likes_polish', {
-    polish_id: {
-        type: Sequelize.INTEGER,
-        references: {
-            model: 'polishes',
-            key: 'polish_id',
+const userLikes = db.define(
+    'user_likes',
+    {
+        polish_id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
         },
-        primaryKey: true,
-    },
-    user_id: {
-        type: Sequelize.INTEGER,
-        references: {
-            model: 'users',
-            key: 'user_id',
+        user_id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
         },
-        primaryKey: true,
     },
-});
+    { timestamps: false }
+);
 
 // define relationships
-user.belongsToMany(polish, { through: userLikes });
-polish.belongsToMany(user, { through: userLikes });
+user.belongsToMany(polish, { through: userLikes, foreignKey: 'user_id' });
+polish.belongsToMany(user, { through: userLikes, foreignKey: 'polish_id' });
+
+module.exports = userLikes;

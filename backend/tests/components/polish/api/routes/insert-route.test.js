@@ -36,6 +36,7 @@ app.use('/', insertRoute);
 describe('Insert polish route', () => {
     afterAll(() => {
         jest.resetAllMocks();
+        jest.restoreAllMocks();
     });
     it('responds with 201', async () => {
         polishService.newPolishInsert.mockResolvedValue({ polish_id: 4 });

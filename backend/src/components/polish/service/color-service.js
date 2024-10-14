@@ -26,6 +26,16 @@ async function findColorByName(name) {
 }
 
 /**
+ * Finds a color by its id in the database.
+ * @param {Number} colorId  - the id of the color to find.
+ * @returns {Promise<Object>} A promise that resolves to the found color object, or null if not found.
+ */
+async function findColorById(colorId) {
+    const color = await colorModel.findOne({ where: { color_id: colorId } });
+    return color;
+}
+
+/**
  * Retrieves all colors from the database.
  *
  * @returns {Promise<Array>} A promise that resolves to an array of color objects.
@@ -111,6 +121,7 @@ async function newColorInsert(data) {
 }
 
 module.exports = {
+    findColorById,
     findColorByName,
     getAllColors,
     newColorInsert,

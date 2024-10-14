@@ -13,7 +13,7 @@
       </div>
     </div>
     <div
-      class="white-bg container border shadow rounded row row-cols-1 row-cols-md-4 g-2 px-3 py-3"
+      class="white-bg container border shadow rounded row row-cols-1 row-cols-md-5 g-2 px-3 py-3"
     >
       <div v-for="brand in brands.getBrands" :key="brand.brand_id">
         <brandcard
@@ -29,7 +29,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useBrandStore } from '../stores/brands'
 const brands = useBrandStore()
 // call the action

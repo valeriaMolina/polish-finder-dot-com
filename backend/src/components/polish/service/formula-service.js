@@ -23,6 +23,18 @@ async function findFormulaByName(name) {
     return formula;
 }
 
+/**
+ * Finds a formula by its id in the database.
+ * @param {*} formulaId
+ * @returns
+ */
+async function findFormulaById(formulaId) {
+    const formula = await formulaModel.findOne({
+        where: { formula_id: formulaId },
+    });
+    return formula;
+}
+
 async function insertFormula(formula) {
     const newRow = {
         name: formula,
@@ -54,6 +66,7 @@ async function newFormulaInsert(data) {
 }
 module.exports = {
     findFormulaByName,
+    findFormulaById,
     newFormulaInsert,
     getAllFormulas,
 };

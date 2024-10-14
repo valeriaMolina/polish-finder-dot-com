@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('../views/PolishesView.vue')
     },
     {
+      path: '/polishes/:polishId',
+      name: 'polish',
+      component: () => import('../views/PolishView.vue')
+    },
+    {
       path: '/help',
       name: 'help',
       component: () => import('../views/HelpView.vue')

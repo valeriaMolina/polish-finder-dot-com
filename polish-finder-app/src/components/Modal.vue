@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { Modal } from 'bootstrap'
 import { useRouter } from 'vue-router'
 
@@ -9,6 +9,10 @@ let thisModal = null
 
 onMounted(() => {
   thisModal = new Modal(modalObj.value)
+})
+
+onUnmounted(() => {
+  thisModal.hide()
 })
 
 function _show() {

@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useBrandStore } from '../stores/brands'
 import { useRoute } from 'vue-router'
 

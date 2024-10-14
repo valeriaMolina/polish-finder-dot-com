@@ -4,6 +4,7 @@
 
 const Sequelize = require('sequelize');
 const db = require('../../../libraries/db/database');
+
 const brands = db.define(
     'brands',
     {

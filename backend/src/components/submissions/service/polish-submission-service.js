@@ -2,7 +2,6 @@
  * @author Valeria Molina Recinos
  */
 // external dependencies
-const logger = require('../../../libraries/logger/logger');
 const polishSubmissionsModel = require('../db/polish-submissions');
 
 async function insertNewPolishSubmission(attributes) {

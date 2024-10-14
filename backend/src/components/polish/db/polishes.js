@@ -7,6 +7,7 @@ const db = require('../../../libraries/db/database');
 
 const brand = require('../../brands/db/brands');
 const type = require('./types');
+const color = require('./colors');
 
 const polishes = db.define(
     'polishes',
@@ -48,6 +49,6 @@ const polishes = db.define(
 // create associations with foreign keys
 polishes.belongsTo(brand, { foreignKey: 'brand_id' });
 polishes.belongsTo(type, { foreignKey: 'type_id' });
-polishes.belongsTo(type, { foreignKey: 'primary_color' });
+polishes.belongsTo(color, { foreignKey: 'primary_color' });
 
 module.exports = polishes;

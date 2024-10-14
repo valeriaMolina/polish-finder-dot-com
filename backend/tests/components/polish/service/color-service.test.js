@@ -5,6 +5,8 @@ const colorService = require('../../../../src/components/polish/service/color-se
 describe('colorService', () => {
     afterEach(() => {
         sinon.restore();
+        jest.resetAllMocks();
+        jest.clearAllMocks();
     });
 
     it('should find color by name', async () => {
@@ -40,6 +42,13 @@ describe('colorService', () => {
         sinon.stub(colorModel, 'create').returns(Promise.resolve(mockColor));
 
         const color = await colorService.newColorInsert({ name: 'green' });
+        expect(color).toEqual(mockColor);
+    });
+    it('should find a color by id', async () => {
+        const mockColor = { name: 'green', value: '#00FF00', color_id: 3 };
+        sinon.stub(colorModel, 'findOne').returns(Promise.resolve(mockColor));
+
+        const color = await colorService.findColorById(3);
         expect(color).toEqual(mockColor);
     });
 });

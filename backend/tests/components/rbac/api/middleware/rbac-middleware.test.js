@@ -35,6 +35,7 @@ describe('Authenticate token test', () => {
     });
     afterAll(() => {
         jest.resetAllMocks();
+        jest.restoreAllMocks();
     });
     it('Should succesfully authenticate user', async () => {
         jwt.verify.mockResolvedValue(validUser);

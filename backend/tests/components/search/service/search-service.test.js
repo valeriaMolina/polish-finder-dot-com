@@ -7,6 +7,8 @@ jest.mock('../../../../src/components/polish/service/polish-service');
 describe('polishService', () => {
     afterEach(() => {
         sinon.restore();
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
     });
 
     it('Should throw an error if no dupe exists', async () => {

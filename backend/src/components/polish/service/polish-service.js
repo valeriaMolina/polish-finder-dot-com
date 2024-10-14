@@ -14,6 +14,28 @@ const {
     BrandNotFoundError,
     PolishAlreadyExistsError,
 } = require('../../../libraries/utils/error-handler');
+const brands = require('../../brands/db/brands');
+const colors = require('../../polish/db/colors');
+const type = require('../db/types');
+
+/**
+ * Finds all polishes from the database.
+ * @param {Number} limit - The maximum number of polishes to return.
+ * @param {Number} offset - The number of polishes to skip before returning results.
+ * @returns
+ */
+async function fetchAllPolishes(limit, offset) {
+    const allPolishes = await polishModel.findAndCountAll({
+        limit,
+        offset,
+        include: [
+            { model: brands, attributes: ['name'] },
+            { model: colors, attributes: ['name'] },
+            { model: type, attributes: ['name'] },
+        ],
+    });
+    return allPolishes;
+}
 
 /**
  * Finds polishes that match the given filters.
@@ -44,7 +66,14 @@ async function insertNewPolish(attributes) {
  * @throws {Error} If an error occurs during the database query.
  */
 async function findPolishById(id) {
-    const polish = await polishModel.findOne({ where: { polish_id: id } });
+    const polish = await polishModel.findOne({
+        where: { polish_id: id },
+        include: [
+            { model: brands, attributes: ['name'] },
+            { model: colors, attributes: ['name'] },
+            { model: type, attributes: ['name'] },
+        ],
+    });
     return polish;
 }
 
@@ -64,6 +93,28 @@ async function polishExists(name, brandId) {
         },
     });
     return polish;
+}
+
+/**
+ *
+ * @param {*} polish
+ * @returns
+ */
+async function getPolishInfo(polish) {
+    const effectColors = [];
+    for (const effectColor of polish.effect_colors) {
+        const effectColorInfo = await colorService.findColorById(effectColor);
+        effectColors.push(effectColorInfo.name);
+    }
+    const formulas = [];
+    for (const formula of polish.formula_ids) {
+        const formulaInfo = await formulaService.findFormulaById(formula);
+        formulas.push(formulaInfo.name);
+    }
+    return {
+        effectColors,
+        formulas,
+    };
 }
 
 /**
@@ -182,11 +233,60 @@ async function newPolishInsert(data) {
     return newPolish;
 }
 
+/**
+ * Retrieves a paginated list of polishes from the database.
+ *
+ * @param {number} page - The page number to retrieve.
+ * @param {number} limit - The maximum number of polishes to return per page.
+ *
+ * @returns {Promise<Object>} A promise that resolves to an object containing the following properties:
+ * - totalItems: The total number of polishes in the database.
+ * - totalPages: The total number of pages based on the given limit.
+ * - currentPage: The current page number.
+ * - polishes: An array of polish objects.
+ *
+ * @throws {Error} If an error occurs during the database query.
+ */
+async function getAllPolishes(page, limit) {
+    const offset = (page - 1) * limit;
+    try {
+        const polishes = await fetchAllPolishes(limit, offset);
+        return {
+            totalItems: polishes.count,
+            totalPages: Math.ceil(polishes.count / limit),
+            currentPage: page,
+            polishes: polishes.rows,
+        };
+    } catch (error) {
+        logger.error(`Error fetching polishes: ${error.message}`);
+        throw error;
+    }
+}
+
+async function findOnePolish(polishId) {
+    try {
+        const polish = await findPolishById(polishId);
+        // get extra information
+        const polishInfo = await getPolishInfo(polish);
+        // convert the sequelize model to a plain javascript object and return
+        return { ...polish.toJSON(), ...polishInfo };
+    } catch (error) {
+        logger.error(
+            `Error fetching polish with id ${polishId}: ${error.message}`
+        );
+        throw error;
+    }
+}
+
 module.exports = {
+    getPolishInfo,
+    fetchAllPolishes,
     insertNewPolish,
-    findPolishById,
+    findOnePolish,
     addDupePolishId,
     polishExists,
     newPolishInsert,
     search,
+    getAllPolishes,
+    findPolishById,
 };

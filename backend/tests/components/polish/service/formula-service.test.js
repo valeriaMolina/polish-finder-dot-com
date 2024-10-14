@@ -50,4 +50,12 @@ describe('formulaService', () => {
             .returns(Promise.resolve(returnedFormula));
         expect(formulaService.newFormulaInsert(mockFormula)).rejects.toThrow();
     });
+    it('Should find a formula by id', async () => {
+        const mockFormula = { name: 'formula1', formula_id: 1 };
+        sinon
+            .stub(formulaModel, 'findOne')
+            .returns(Promise.resolve(mockFormula));
+        const formula = await formulaService.findFormulaById(1);
+        expect(formula).toEqual(mockFormula);
+    });
 });

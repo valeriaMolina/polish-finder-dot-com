@@ -4,6 +4,7 @@
 
 const likesModel = require('../db/likes');
 const polishesModel = require('../../polish/db/polishes');
+const userService = require('../../users/service/user-service');
 const logger = require('../../../libraries/logger/logger');
 const {
     UserLikeAlreadyExistsError,
@@ -38,8 +39,11 @@ async function findLike(userId, polishId) {
     return like;
 }
 
-async function likePolish(userId, polishId) {
+async function likePolish(email, polishId) {
     try {
+        // get the user id
+        const user = await userService.getUserByEmail(email);
+        const userId = user.user_id;
         // check if the user already likes this polish
         const likeExists = await findLike(userId, polishId);
         if (likeExists) {
@@ -56,9 +60,12 @@ async function likePolish(userId, polishId) {
     }
 }
 
-async function unlikePolish(userId, polishId) {
+async function unlikePolish(email, polishId) {
     try {
         // see if the polish is in the user likes
+        // get the user id
+        const user = await userService.getUserByEmail(email);
+        const userId = user.user_id;
         const likeExists = await findLike(userId, polishId);
         if (!likeExists) {
             logger.error('User has not liked this polish');
@@ -73,8 +80,22 @@ async function unlikePolish(userId, polishId) {
     }
 }
 
+async function getUserLikes(email) {
+    try {
+        // get the user id
+        const user = await userService.getUserByEmail(email);
+        const userId = user.user_id;
+        // get the likes for this user
+        const likes = await findLikesByUserId(userId);
+        return likes;
+    } catch (error) {
+        logger.error('Error while getting user likes');
+        throw error;
+    }
+}
+
 module.exports = {
     likePolish,
     unlikePolish,
-    findLikesByUserId,
+    getUserLikes,
 };

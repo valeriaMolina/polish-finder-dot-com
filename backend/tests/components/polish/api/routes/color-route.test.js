@@ -37,6 +37,7 @@ app.use('/', colorRoute);
 describe('Color route test', () => {
     afterAll(() => {
         jest.resetAllMocks();
+        jest.restoreAllMocks();
     });
     it('Responds with 201', async () => {
         colorService.newColorInsert.mockResolvedValue({ color_id: 4 });

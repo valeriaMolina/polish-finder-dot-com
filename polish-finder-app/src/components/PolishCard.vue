@@ -34,14 +34,28 @@
 <script setup>
 import config from '@/config'
 import { ref } from 'vue'
-const props = defineProps(['id', 'polishName', 'brandName', 'pictureUrl'])
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { likePolish } from '@/apis/likesAPI'
 
+const authStore = useAuthStore()
+const props = defineProps(['id', 'polishName', 'brandName', 'pictureUrl'])
+const router = useRouter()
 const iconClass = ref('bi bi-heart')
 
-const handleLike = () => {
-  // if logged in, add to user's liked polishes array
-  // else, prompt user to log in to like a polish
-  iconClass.value = iconClass.value === 'bi bi-heart' ? 'bi bi-heart-fill' : 'bi bi-heart'
+const handleLike = async () => {
+  // check if user is logged in
+  // if not, display a login modal or redirect to login page
+  // if user is logged in, toggle the like icon and update the polish's like count
+  // update the icon color based on the current state
+  if (authStore.getIsLoggedIn) {
+    // send like request to server
+    const res = await likePolish()
+    //iconClass.value = iconClass.value === 'bi bi-heart' ? 'bi bi-heart-fill' : 'bi bi-heart'
+  } else {
+    // redirect to login page
+    router.push('/login')
+  }
 }
 </script>
 

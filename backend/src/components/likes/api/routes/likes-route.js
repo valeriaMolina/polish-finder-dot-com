@@ -13,9 +13,9 @@ const {
 router.post('/like', validateLikeRequest, async (req, res) => {
     logger.info('Received like request');
     try {
-        const userId = req.body.userId;
+        const email = req.body.email;
         const polishId = req.body.polishId;
-        const like = await likesService.likePolish(userId, polishId);
+        const like = await likesService.likePolish(email, polishId);
         return res.json({ like });
     } catch (error) {
         if (error.statusCode) {
@@ -31,21 +31,26 @@ router.post('/like', validateLikeRequest, async (req, res) => {
 router.post('/unlike', validateLikeRequest, async (req, res) => {
     logger.info('Received unlike request');
     try {
-        const userId = req.body.userId;
+        const email = req.body.email;
         const polishId = req.body.polishId;
-        await likesService.unlikePolish(userId, polishId);
+        await likesService.unlikePolish(email, polishId);
         return res.end();
     } catch (error) {
-        logger.error(`Error while unliking polish: ${error.message}`);
-        return res.status(500).send({ error: 'Internal server error' });
+        if (error.statusCode) {
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error not anticipated
+            logger.error(`Error unliking polish: ${error.message}`);
+            return res.status(500).send({ error: 'Internal server error' });
+        }
     }
 });
 
-router.get('/:userId/likes', validateGetLikesRequest, async (req, res) => {
+router.get('/:email/likes', validateGetLikesRequest, async (req, res) => {
     logger.info('Received request to get likes for a user');
     try {
-        const userId = req.params.userId;
-        const likes = await likesService.findLikesByUserId(userId);
+        const email = req.params.email;
+        const likes = await likesService.getUserLikes(email);
         return res.json(likes);
     } catch (error) {
         logger.error(`Error while getting likes for user: ${error.message}`);

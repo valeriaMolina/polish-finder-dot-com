@@ -6,7 +6,7 @@ const { check, validationResult, param } = require('express-validator');
 const logger = require('../../../../libraries/logger/logger');
 
 exports.validateLikeRequest = [
-    check('userId', 'User id is required').not().isEmpty().isNumeric(),
+    check('email', 'Email is required').not().isEmpty().isString().isEmail(),
     check('polishId', 'Polish id is required').not().isEmpty().isNumeric(),
     (req, res, next) => {
         logger.info('Validating like request');
@@ -20,7 +20,7 @@ exports.validateLikeRequest = [
 ];
 
 exports.validateGetLikesRequest = [
-    param('userId', 'user id is required').isNumeric().not().isEmpty(),
+    param('email', 'email is required').isString().not().isEmpty().isEmail(),
     (req, res, next) => {
         logger.info('Validating get likes request');
         const errors = validationResult(req);

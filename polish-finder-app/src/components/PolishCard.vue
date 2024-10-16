@@ -33,15 +33,16 @@
 
 <script setup>
 import config from '@/config'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { likePolish } from '@/apis/likesAPI'
+import { likePolish, removeLike } from '@/apis/likesAPI'
 
 const authStore = useAuthStore()
-const props = defineProps(['id', 'polishName', 'brandName', 'pictureUrl'])
+const props = defineProps(['id', 'polishName', 'brandName', 'pictureUrl', 'isLiked'])
+const emit = defineEmits(['update:isLiked'])
 const router = useRouter()
-const iconClass = ref('bi bi-heart')
+const iconClass = ref(props.isLiked ? 'bi bi-heart-fill' : 'bi bi-heart')
 
 const handleLike = async () => {
   // check if user is logged in
@@ -50,13 +51,29 @@ const handleLike = async () => {
   // update the icon color based on the current state
   if (authStore.getIsLoggedIn) {
     // send like request to server
-    const res = await likePolish()
-    //iconClass.value = iconClass.value === 'bi bi-heart' ? 'bi bi-heart-fill' : 'bi bi-heart'
+    const email = authStore.getEmail
+    if (props.isLiked) {
+      // undo the like if the user previously liked the polish
+      await removeLike(email, props.id)
+    } else {
+      // like the polish if the user has not previously liked it
+      await likePolish(email, props.id)
+    }
+    // emit update to parent component
+    emit('update:isLiked')
   } else {
     // redirect to login page
     router.push('/login')
   }
 }
+
+// watch for changes in the isLiked prop to update the icon class
+watch(
+  () => props.isLiked,
+  (newVal) => {
+    iconClass.value = newVal ? 'bi bi-heart-fill' : 'bi bi-heart'
+  }
+)
 </script>
 
 <style scoped>

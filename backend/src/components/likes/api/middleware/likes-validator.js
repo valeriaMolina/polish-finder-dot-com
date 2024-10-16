@@ -12,7 +12,9 @@ exports.validateLikeRequest = [
         logger.info('Validating like request');
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            logger.error(`Error validating like request: ${errors.array()}`);
+            logger.error(
+                `Error validating like request: ${JSON.stringify(errors.array())}`
+            );
             return res.status(400).json({ errors: errors.array() });
         }
         next();

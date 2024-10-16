@@ -282,6 +282,22 @@ class JsonWebTokenVerifyError extends Error {
     }
 }
 
+class UserLikeAlreadyExistsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserLikeAlreadyExistsError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class UserLikeDoesNotExistError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UserLikeDoesNotExistError';
+        this.statusCode = 404; // not found
+    }
+}
+
 module.exports = {
     UserAlreadyVerifiedError,
     InvalidTokenError,
@@ -318,4 +334,6 @@ module.exports = {
     UserNameAlreadyInUseError,
     UserNotVerifiedError,
     JsonWebTokenVerifyError,
+    UserLikeAlreadyExistsError,
+    UserLikeDoesNotExistError,
 };

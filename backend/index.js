@@ -25,22 +25,4 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-process.on('SIGINT', () => {
-    console.log('Closing server...');
-    app.close(() => {
-        emailService.close();
-        console.log('Server closed');
-        process.exit(0);
-    });
-});
-
-process.on('SIGTERM', () => {
-    console.log('Closing server...');
-    app.close(() => {
-        emailService.close();
-        console.log('Server closed');
-        process.exit(0);
-    });
-});
-
 module.exports = app;

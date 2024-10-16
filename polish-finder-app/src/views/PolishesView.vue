@@ -67,6 +67,8 @@
               :picture-url="polish.image_url"
               :polish-name="polish.name"
               :id="polish.polish_id"
+              :is-liked="likedPolishes.includes(polish.polish_id)"
+              @update:is-liked="updateLikeStatus()"
             ></PolishCard>
           </div>
           <div class="container mt-4 text-center">
@@ -83,7 +85,9 @@
 <script setup>
 import PolishCard from '@/components/PolishCard.vue'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import { fetchPolish } from '@/apis/polishAPI'
+import { getUserLikes } from '@/apis/likesAPI'
 
 let page = 1
 let timeout = 1000
@@ -91,6 +95,9 @@ const polishes = ref([])
 const isLoading = ref(false)
 const brandSearch = ref('')
 const colorSearch = ref('')
+const likedPolishes = ref([])
+
+const authStore = useAuthStore()
 
 const filteredList = computed(() => {
   if (brandSearch.value === '' && colorSearch.value === '') {
@@ -132,6 +139,10 @@ const handleScroll = async (e) => {
 const debounceHandleScroll = debounce(handleScroll, timeout)
 
 onMounted(async () => {
+  if (authStore.getIsLoggedIn) {
+    const likes = await getUserLikes(authStore.getEmail)
+    likedPolishes.value = likes.map((like) => like.polish_id)
+  }
   window.addEventListener('scroll', debounceHandleScroll)
   const polishesFetched = await fetchPolish(page, 60)
   polishes.value = polishesFetched.polishes
@@ -141,6 +152,11 @@ onUnmounted(() => {
   window.removeEventListener('scroll', debounceHandleScroll)
   polishes.value = [] // Clear polishes on unmount to prevent memory leakage.
 })
+
+const updateLikeStatus = async () => {
+  const likes = await getUserLikes(authStore.getEmail)
+  likedPolishes.value = likes.map((like) => like.polish_id)
+}
 </script>
 
 <style scoped>

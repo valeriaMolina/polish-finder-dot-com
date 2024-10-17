@@ -16,7 +16,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('../views/navbar/AboutView.vue')
     },
     {
       path: '/explore',
@@ -42,11 +42,6 @@ const router = createRouter({
       path: '/polishes/:polishId',
       name: 'polish',
       component: () => import('../views/PolishView.vue')
-    },
-    {
-      path: '/help',
-      name: 'help',
-      component: () => import('../views/HelpView.vue')
     },
     {
       path: '/login',
@@ -139,11 +134,6 @@ const router = createRouter({
       path: '/search/dupes',
       name: 'find-dupe',
       component: () => import('../views/FindDupeView.vue')
-    },
-    {
-      path: '/search/advanced',
-      name: 'advanced-search',
-      component: () => import('../views/AdvancedSearchView.vue')
     },
     {
       path: '/verify/',

@@ -20,11 +20,6 @@
               >About
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link active apply-font" aria-current="page" to="/help"
-              >Help</router-link
-            >
-          </li>
           <li class="nav-item dropdown">
             <button
               class="nav-link dropdown-toggle apply-font"
@@ -39,6 +34,9 @@
               </li>
               <li>
                 <router-link class="dropdown-item" to="/polishes">Polishes</router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/search/dupes">Dupes</router-link>
               </li>
             </ul>
           </li>
@@ -63,28 +61,6 @@
               </li>
               <li>
                 <router-link class="dropdown-item" to="/">Submit feedback</router-link>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <button
-              class="nav-link dropdown-toggle apply-font"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Search
-            </button>
-            <ul class="dropdown-menu">
-              <li>
-                <router-link class="dropdown-item" to="/search/dupes">Find a Dupe</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/">Find a Polish</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/search/advanced"
-                  >Advanced Search</router-link
-                >
               </li>
             </ul>
           </li>

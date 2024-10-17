@@ -6,16 +6,11 @@
         Browse all our available brands. Did we miss something?
         <router-link to="/contribute/new/brand">Add it here!</router-link>
       </p>
-      <div class="w-100">
-        <div class="w-50 nice-form-group mx-auto">
-          <input class="" type="search" placeholder="Search for a brand" />
-        </div>
-      </div>
     </div>
     <div
       class="white-bg container border shadow rounded row row-cols-1 row-cols-md-5 g-2 px-3 py-3"
     >
-      <div v-for="brand in brands.getBrands" :key="brand.brand_id">
+      <div v-for="brand in brands" :key="brand.brand_id">
         <brandcard
           :brandId="brand.brand_id"
           :brandName="brand.name"
@@ -29,12 +24,17 @@
 </template>
 
 <script setup>
-import { useBrandStore } from '../stores/brands'
-const brands = useBrandStore()
+const brands = ref([])
 // call the action
-brands.fetchAllBrands()
 
 import brandcard from '../components/BrandCard.vue'
+import { onMounted, ref } from 'vue'
+import { fetchBrands } from '@/apis/brandAPI'
+
+onMounted(async () => {
+  const allBrands = await fetchBrands()
+  brands.value = allBrands.sort((a, b) => a.name.localeCompare(b.name))
+})
 </script>
 
 <style scoped>

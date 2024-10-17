@@ -1,13 +1,10 @@
-<script setup>
-import search from '../components/MainSearchBar.vue'
-</script>
+<script setup></script>
 
 <template>
   <div id="rainbow" class="d-flex flex-column align-items-center justify-content-center px-3 py-5">
     <div class="d-flex flex-column align-items-center">
       <div class="my-auto text-center align-items-center align-middle">
         <h1>Find your perfect nail polish &#128133;</h1>
-        <search></search>
       </div>
     </div>
   </div>

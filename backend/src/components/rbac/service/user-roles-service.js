@@ -4,10 +4,17 @@
 
 const logger = require('../../../libraries/logger/logger');
 const userRolesModel = require('../db/user-roles');
+const users = require('../../users/db/users');
+const roles = require('../db/roles');
 const {
     SequelizeValidationError,
 } = require('../../../libraries/utils/error-handler');
 
+/**
+ * Finds users in user role table by user id
+ * @param {Number} userId the user id
+ * @returns
+ */
 async function findUserRolesByUserId(userId) {
     // finds the user role based on the user id
     const userRoles = await userRolesModel.findAll({
@@ -16,6 +23,12 @@ async function findUserRolesByUserId(userId) {
     return userRoles;
 }
 
+/**
+ * Assign a role to a user
+ * @param {Number} userId the user id
+ * @param {Number} roleId the role id to assign
+ * @returns Promise<>
+ */
 async function assignRoleToUser(userId, roleId) {
     // This method will find a user role matching the userId and roleId.
     // If it does not exist, it will create a new one with the provided userId and roleId.
@@ -54,6 +67,11 @@ async function assignRoleToUser(userId, roleId) {
     }
 }
 
+/**
+ * Revokes a role from a user
+ * @param {Number} userId
+ * @param {Number} roleId
+ */
 async function revokeRoleFromUser(userId, roleId) {
     // assuming user and role exists
     // sanity check: does the user have the role?
@@ -73,8 +91,30 @@ async function revokeRoleFromUser(userId, roleId) {
     }
 }
 
+/**
+ *
+ * @returns
+ */
+async function getAllUserRoles() {
+    // retrieves all user roles
+    const userRoles = await userRolesModel.findAll({
+        include: [
+            {
+                model: users,
+                attributes: ['username', 'email'],
+            },
+            {
+                model: roles,
+                attributes: ['name'],
+            },
+        ],
+    });
+    return userRoles;
+}
+
 module.exports = {
     findUserRolesByUserId,
     assignRoleToUser,
     revokeRoleFromUser,
+    getAllUserRoles,
 };

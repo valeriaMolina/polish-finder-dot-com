@@ -40,9 +40,9 @@ onMounted(async () => {
         brandSubmissions.value = submissions;
         isLoading.value = false;
     } catch (error) {
-        if (error.message === 'MissingTokenError') {
+        if (error.message === 'InvalidTokenError') {
             // redirect to login page
-            authStore.clearSession();
+            authStore.clearSessionData();
             router.push({ name: 'Home' });
         }
     }

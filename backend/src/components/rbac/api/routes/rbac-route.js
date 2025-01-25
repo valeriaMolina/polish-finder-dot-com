@@ -8,6 +8,7 @@ const router = express.Router();
 const logger = require('../../../../libraries/logger/logger');
 const permissions = require('../../../../libraries/constants/permissions');
 const roleService = require('../../service/roles-service');
+const userRolesService = require('../../service/user-roles-service');
 const {
     authenticateToken,
     authorize,
@@ -82,5 +83,36 @@ router.post(
         }
     }
 );
+
+/**
+ * Endpoint to get all roles.
+ */
+router.get(
+    '/all',
+    authenticateToken,
+    authorize(permissions.VIEW_ROLES),
+    async (_, res) => {
+        try {
+            const roles = await roleService.getAllRoles();
+            res.json(roles);
+        } catch (err) {
+            logger.error(`Error not anticipated: ${err.message}`);
+            res.status(500).send({ error: err.message });
+        }
+    }
+);
+
+/**
+ * Endpoint to get all user roles.
+ */
+router.get('/user-roles', async (_, res) => {
+    try {
+        const userRoles = await userRolesService.getAllUserRoles();
+        res.json(userRoles);
+    } catch (error) {
+        logger.error(`Error not anticipated: ${error.message}`);
+        res.status(500).send({ error: error.message });
+    }
+});
 
 module.exports = router;

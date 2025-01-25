@@ -12,7 +12,7 @@
             </li>
             <li class="nav-item">
                 <router-link id="roles" class="nav-link" to="/admin/roles"
-                    >Role Assignments</router-link
+                    >Users & Roles</router-link
                 >
             </li>
             <li class="nav-item dropdown">

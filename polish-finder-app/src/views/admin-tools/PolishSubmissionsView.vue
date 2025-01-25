@@ -39,7 +39,7 @@ onMounted(async () => {
     } catch (error) {
         if (error.message === 'MissingTokenError') {
             // redirect to login page
-            authStore.clearSession();
+            authStore.clearSessionData();
             router.push({ name: 'Home' });
         }
     }

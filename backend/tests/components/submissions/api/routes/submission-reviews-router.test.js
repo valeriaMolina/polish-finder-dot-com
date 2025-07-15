@@ -1,6 +1,7 @@
 const request = require('supertest');
 const express = require('express');
 const manageSubmissions = require('../../../../../src/components/submissions/service/manage-submission-service');
+const emailService = require('../../../../../src//components/users/service/email-service');
 const submissionReviewsRouter = require('../../../../../src/components/submissions/api/routes/submission-reviews-router');
 jest.mock(
     '../../../../../src/components/rbac/api/middleware/rbac-middeware',
@@ -20,6 +21,7 @@ jest.mock(
 jest.mock(
     '../../../../../src/components/submissions/service/manage-submission-service'
 );
+jest.mock('../../../../../src//components/users/service/email-service');
 
 const app = express();
 app.use('/', submissionReviewsRouter);

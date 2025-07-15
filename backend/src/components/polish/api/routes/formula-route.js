@@ -36,4 +36,22 @@ router.post(
     }
 );
 
+/**
+ * Get all available formulas from the database
+ */
+router.get('/all', async (_, res) => {
+    try {
+        logger.info(`GET formula/all`);
+        const allFormulas = await formulaService.getAllFormulas();
+        return res.status(200).json(allFormulas);
+    } catch (error) {
+        logger.error(`Error getting all formulas: ${error.message}`);
+        if (error.statusCode) {
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+});
+
 module.exports = router;

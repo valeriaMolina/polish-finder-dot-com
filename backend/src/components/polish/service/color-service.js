@@ -116,7 +116,9 @@ async function newColorInsert(data) {
         name: name,
     };
     const newColor = await insertColor(color);
-    logger.info(`Successfully added new color ${color}`);
+    logger.info(
+        `Successfully added new color ${color.name}, id=${newColor.color_id}`
+    );
     return newColor;
 }
 

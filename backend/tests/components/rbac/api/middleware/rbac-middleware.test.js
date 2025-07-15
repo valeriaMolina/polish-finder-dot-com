@@ -120,7 +120,7 @@ describe('Authenticate token test', () => {
         userRolesService.findUserRolesByUserId.mockResolvedValue([
             { role_id: 1 },
         ]);
-        rolesPermissionsService.findRolesByRoleId.mockResolvedValue([]);
+        rolesPermissionsService.findPermissionsByRoleId.mockResolvedValue([]);
         await authorize('test')(req, res, next);
         expect(res.status).toHaveBeenCalledWith(403);
     });
@@ -138,7 +138,7 @@ describe('Authenticate token test', () => {
         userRolesService.findUserRolesByUserId.mockResolvedValue([
             { role_id: 1 },
         ]);
-        rolesPermissionsService.findRolesByRoleId.mockResolvedValue([
+        rolesPermissionsService.findPermissionsByRoleId.mockResolvedValue([
             { role_id: 1, permission_name: 'test' },
         ]);
         await authorize('test')(req, res, next);

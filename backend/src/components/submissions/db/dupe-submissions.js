@@ -22,6 +22,10 @@ const dupeSubmissions = db.define(
             allowNull: false,
             defaultValue: 'pending',
         },
+        created_at: {
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW,
+        },
     },
     {
         timestamps: false,
@@ -30,7 +34,10 @@ const dupeSubmissions = db.define(
 
 // create associations with foreign keys
 dupeSubmissions.belongsTo(user, { foreignKey: 'user_id' });
-dupeSubmissions.belongsTo(polish, { foreignKey: 'polish_id' });
-dupeSubmissions.belongsTo(polish, { foreignKey: 'similar_to_polish_id' });
+dupeSubmissions.belongsTo(polish, { as: 'polish', foreignKey: 'polish_id' });
+dupeSubmissions.belongsTo(polish, {
+    as: 'dupe',
+    foreignKey: 'similar_to_polish_id',
+});
 
 module.exports = dupeSubmissions;

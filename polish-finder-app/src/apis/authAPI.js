@@ -1,11 +1,11 @@
 /**
  * @author Valeria Molina Recinos
  */
-import config from '@/config'
-import axiosInstance from '@/utils/axios'
-import base64 from 'base-64'
+import config from '@/config';
+import axiosInstance from '@/utils/axios';
+import base64 from 'base-64';
 
-const SERVER = config.SERVER
+const SERVER = config.SERVER;
 
 /**
  * Sends a login request to the server with the provided username and password.
@@ -21,23 +21,23 @@ const SERVER = config.SERVER
  * The error will contain the HTTP status code.
  */
 export async function sendLogin(username, password) {
-  try {
-    const instance = axiosInstance.create({
-      baseURL: SERVER,
-      headers: { Authorization: `Basic ${base64.encode(`${username}:${password}`)}` },
-      method: 'post',
-      data: {
-        username
-      }
-    })
-    const res = await instance.post('/login')
-    return res.data
-  } catch (err) {
-    if (err.response.data.errorName === 'UserNotVerifiedError') {
-      throw new Error('UserNotVerifiedError')
+    try {
+        const instance = axiosInstance.create({
+            baseURL: SERVER,
+            headers: { Authorization: `Basic ${base64.encode(`${username}:${password}`)}` },
+            method: 'post',
+            data: {
+                username,
+            },
+        });
+        const res = await instance.post('/login');
+        return res.data;
+    } catch (err) {
+        if (err.response.data.errorName === 'UserNotVerifiedError') {
+            throw new Error('UserNotVerifiedError');
+        }
+        throw new Error(err.response.status);
     }
-    throw new Error(err.response.status)
-  }
 }
 
 /**
@@ -51,17 +51,17 @@ export async function sendLogin(username, password) {
  * The error will contain the HTTP status code.
  */
 export async function sendLogout() {
-  try {
-    const instance = axiosInstance.create({
-      baseURL: SERVER,
-      method: 'post',
-      withCredentials: true
-    })
-    const res = await instance.post('/logout')
-    return res
-  } catch (error) {
-    throw new Error(error.response.status)
-  }
+    try {
+        const instance = axiosInstance.create({
+            baseURL: SERVER,
+            method: 'post',
+            withCredentials: true,
+        });
+        const res = await instance.post('/logout');
+        return res;
+    } catch (error) {
+        throw new Error(error.response.status);
+    }
 }
 
 /**
@@ -79,20 +79,20 @@ export async function sendLogout() {
  * The error will contain the HTTP status code.
  */
 export async function sendRegister(username, password, email) {
-  try {
-    const instance = axiosInstance.create({
-      baseURL: SERVER,
-      method: 'post',
-      data: {
-        username,
-        password,
-        email
-      }
-    })
-    const res = await instance.post('/signup')
-  } catch (error) {
-    throw new Error(error)
-  }
+    try {
+        const instance = axiosInstance.create({
+            baseURL: SERVER,
+            method: 'post',
+            data: {
+                username,
+                password,
+                email,
+            },
+        });
+        const res = await instance.post('/signup');
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 /**
@@ -108,19 +108,19 @@ export async function sendRegister(username, password, email) {
  * The error will contain the HTTP status code.
  */
 export async function verifyUser(token) {
-  try {
-    const verifyRequest = axiosInstance.create({
-      baseURL: SERVER,
-      method: 'post',
-      data: {
-        mes: 'null'
-      }
-    })
-    const res = await verifyRequest.post(`/verify?token=${token}`)
-    return res
-  } catch (error) {
-    throw new Error(error)
-  }
+    try {
+        const verifyRequest = axiosInstance.create({
+            baseURL: SERVER,
+            method: 'post',
+            data: {
+                mes: 'null',
+            },
+        });
+        const res = await verifyRequest.post(`/verify?token=${token}`);
+        return res;
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 /**
@@ -136,11 +136,11 @@ export async function verifyUser(token) {
  * The error will contain the HTTP status code.
  */
 export async function resendVerification(email) {
-  const resendRequest = axiosInstance.create({
-    baseURL: SERVER,
-    method: 'post'
-  })
-  await resendRequest.post('/verify/resend', { email })
+    const resendRequest = axiosInstance.create({
+        baseURL: SERVER,
+        method: 'post',
+    });
+    await resendRequest.post('/verify/resend', { email });
 }
 
 /**
@@ -156,17 +156,21 @@ export async function resendVerification(email) {
  * The error will contain the HTTP status code.
  */
 export async function forgotPassword(identifier) {
-  const forgotPasswordRequest = axiosInstance.create({
-    baseURL: SERVER,
-    method: 'post'
-  })
-  await forgotPasswordRequest.post('/send-password-reset-email', { identifier })
+    const forgotPasswordRequest = axiosInstance.create({
+        baseURL: SERVER,
+        method: 'post',
+    });
+    await forgotPasswordRequest.post('/send-password-reset-email', { identifier });
 }
 
+/**
+ * Verifies the password reset email
+ * @param {*} token
+ */
 export async function verifyPasswordResetToken(token) {
-  const verifyTokenRequest = axiosInstance.create({
-    baseURL: SERVER,
-    method: 'get'
-  })
-  await verifyTokenRequest.get(`/verify-reset-password-token?token=${token}`)
+    const verifyTokenRequest = axiosInstance.create({
+        baseURL: SERVER,
+        method: 'get',
+    });
+    await verifyTokenRequest.get(`/verify-reset-password-token?token=${token}`);
 }

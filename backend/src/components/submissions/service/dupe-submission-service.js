@@ -3,6 +3,8 @@
  * for mods and admins to approve or reject user submissions
  */
 
+const polish = require('../../polish/db/polishes');
+const user = require('../../users/db/users');
 const dupeSubmissions = require('../db/dupe-submissions');
 const Sequelize = require('sequelize');
 
@@ -39,7 +41,7 @@ async function checkIfSubmissionExists(polishId, similarToPolishId) {
             ],
         },
     });
-    return dupeExists ? dupeExists : null;
+    return dupeExists || null;
 }
 
 /**
@@ -98,7 +100,34 @@ async function updateDupeSubmissionStatus(dupeSubmission, status) {
     return dupeSubmission;
 }
 
+/**
+ * Gets all the brand submissions in the db
+ * @returns {Promise<Object[]>} A promise that resolves to an array of all dupe submissions.
+ */
+async function getAllDupeSubmissions() {
+    const allDupeSubmissions = await dupeSubmissions.findAll({
+        include: [
+            {
+                model: polish,
+                as: 'polish',
+                attributes: ['name'],
+            },
+            {
+                model: polish,
+                as: 'dupe',
+                attributes: ['name'],
+            },
+            {
+                model: user,
+                attributes: ['username'],
+            },
+        ],
+    });
+    return allDupeSubmissions;
+}
+
 module.exports = {
+    getAllDupeSubmissions,
     insertNewDupeSubmission,
     checkIfSubmissionExists,
     findUserSubmissionById,

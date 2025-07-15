@@ -197,6 +197,7 @@ async function sendPasswordChangedEmail(userId) {
         );
 
         const user = await userService.getUserByUserId(userId);
+        const username = user.username;
 
         const emailContent = await ejs.render(template, {
             username,
@@ -208,7 +209,7 @@ async function sendPasswordChangedEmail(userId) {
         const mailOptions = {
             from: `Polish Finder <${config.noReplyMail}>`,
             to: user.email,
-            subject: 'Verify your Polish Finder',
+            subject: 'Your password has been changed',
             html: emailContent,
         };
 
@@ -232,10 +233,74 @@ async function sendPasswordChangedEmail(userId) {
     }
 }
 
+/**
+ * Sends an email to the user to notify them about the status of their submission.
+ *
+ * @param {*} userId - The ID of the user to whom the email will be sent.
+ * @param {*} type - The type of submission.
+ * @param {*} status - The status of the submission.
+ * @param {*} details - Additional details about the submission.
+ * @returns {Promise<void>} A promise that resolves when the email has been sent.
+ * @throws {Error} Throws an error if there is an issue fetching the user or sending the email.
+ */
+async function sendSubmissionStatusEmail(userId, type, status, details) {
+    try {
+        const template = fs.readFileSync(
+            path.join(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'libraries',
+                'templates',
+                'submission-update.ejs'
+            ),
+            'utf8'
+        );
+
+        const user = await userService.getUserByUserId(userId);
+        const username = user.username;
+        const email = user.email;
+
+        const emailContent = await ejs.render(template, {
+            homePage: config.homePage,
+            username: username,
+            type: type,
+            details: details,
+            status: status,
+        });
+
+        const mailOptions = {
+            from: `Polish Finder <${config.noReplyMail}>`,
+            to: email,
+            subject: 'Your submission has been reviewed!',
+            html: emailContent,
+        };
+        await transporter
+            .sendMail(mailOptions)
+            .then((info) => {
+                logger.info('Submission status email sent');
+                return info;
+            })
+            .catch((error) => {
+                logger.error(
+                    `Error sending submission status email: ${error.message}`
+                );
+                throw new Error(`Error sending submission status email`);
+            });
+    } catch (error) {
+        logger.error(
+            `Error fetching user for submission status email: ${error.message}`
+        );
+        throw error;
+    }
+}
+
 module.exports = {
     sendAccountVerificationEmail,
     close,
     verifyEmailClient,
     sendPasswordResetEmail,
     sendPasswordChangedEmail,
+    sendSubmissionStatusEmail,
 };

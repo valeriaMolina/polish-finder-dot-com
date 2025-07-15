@@ -2,8 +2,13 @@
  * @author Valeria Molina Recinos
  */
 
+const { Op } = require('sequelize');
 const polishService = require('../../polish/service/polish-service');
 const logger = require('../../../libraries/logger/logger');
+const brandService = require('../../brands/service/brand-service');
+const colorService = require('../../polish/service/color-service');
+const typeService = require('../../polish/service/type-service');
+const formulaService = require('../../polish/service/formula-service');
 const {
     NoMatchesFoundError,
     PolishNotFoundError,
@@ -80,7 +85,76 @@ async function searchForDupe(data) {
     }
 }
 
+/**
+ * Ensure that the filters provided are valid for searching
+ * for a polish
+ * @param {JSON} data
+ */
+async function validateFilters(data) {
+    try {
+        const searchFilters = {};
+        if (data.brandName) {
+            const brand = await brandService.findBrandNameInTable(
+                data.brandName
+            );
+            searchFilters.brand = brand.brand_id;
+        }
+
+        if (data.type) {
+            const type = await typeService.findTypeByName(data.type);
+            searchFilters.type_id = type.type_id;
+        }
+
+        if (data.primaryColor) {
+            const primaryColor = await colorService.findColorByName(
+                data.primaryColor
+            );
+            searchFilters.primary_color = primaryColor.color_id;
+        }
+
+        if (data.effectColors) {
+            const effectColorIds = await Promise.all(
+                data.effectColors.map(async (color) =>
+                    colorService.findColorByName(color).then((colorObj) => {
+                        if (colorObj) {
+                            return colorObj.color_id;
+                        } else {
+                            return null;
+                        }
+                    })
+                )
+            );
+
+            searchFilters.effect_colors = effectColorIds;
+        }
+
+        if (data.formulas) {
+            const formulaIds = await Promise.all(
+                data.formulas.map(async (formula) =>
+                    formulaService
+                        .findFormulaByName(formula)
+                        .then((formula) => {
+                            if (formula) {
+                                return formula.formula_id;
+                            } else {
+                                return null;
+                            }
+                        })
+                )
+            );
+            searchFilters.formula_ids = formulaIds;
+            searchFilters.name = data.name;
+        }
+
+        return searchFilters;
+    } catch (error) {
+        logger.error(`Error while validating filters: ${error.message}`);
+        throw error;
+    }
+}
+
 module.exports = {
     searchForDupe,
     search,
+    validateFilters,
 };

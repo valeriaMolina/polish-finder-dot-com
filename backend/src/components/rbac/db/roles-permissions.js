@@ -35,5 +35,5 @@ const rolesPermissions = db.define(
         timestamps: false,
     }
 );
-
+rolesPermissions.belongsTo(permission, { foreignKey: 'permission_id' });
 module.exports = rolesPermissions;

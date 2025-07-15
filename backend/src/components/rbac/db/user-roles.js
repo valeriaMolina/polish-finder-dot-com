@@ -36,4 +36,7 @@ const userRoles = db.define(
     }
 );
 
+// create associations with foreign keys
+userRoles.belongsTo(user, { foreignKey: 'user_id' });
+userRoles.belongsTo(role, { foreignKey: 'role_id' });
 module.exports = userRoles;

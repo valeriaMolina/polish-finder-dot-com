@@ -38,5 +38,22 @@ router.post(
         }
     }
 );
+/**
+ * Get all available colors from the database
+ */
+router.get('/all', async (_, res) => {
+    try {
+        logger.info('GET colors/all');
+        const colors = await colorService.getAllColors();
+        return res.json(colors);
+    } catch (error) {
+        logger.error(`Error getting all colors: ${error.message}`);
+        if (error.statusCode) {
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+});
 
 module.exports = router;

@@ -16,7 +16,10 @@ const {
 } = require('../../../rbac/api/middleware/rbac-middeware');
 
 /**
- * Handles the POST request to upload a new polish.
+ * A POST route responsible for inserting a new polish into the database.
+ *
+ * This route is protected by the `authorize` middleware, which checks if the user has the permissions to perform the action
+ * and returns the status of the upload
  *
  * @param {Request} req - The Express request object.
  * @param {Response} res - The Express response object.
@@ -43,9 +46,5 @@ router.post(
         }
     }
 );
-
-// TODO: add route to modify/update an existing polish
-
-// TODO: add route to link a dupe
 
 module.exports = router;

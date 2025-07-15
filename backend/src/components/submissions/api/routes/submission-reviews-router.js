@@ -1,6 +1,6 @@
 /**
  * @author  Valeria Molina Recinos
- * for mods to approve or reject user submissions
+ * This file contains the routes for updating submission statuses after human review.
  */
 
 const express = require('express');
@@ -13,6 +13,7 @@ const {
 } = require('../../../rbac/api/middleware/rbac-middeware');
 const manageSubmissions = require('../../service/manage-submission-service');
 const { validateUpdateQuery } = require('../middleware/submissions-validator');
+const emailService = require('../../../users/service/email-service');
 
 /**
  * Updates a polish submission status after human review.
@@ -68,6 +69,14 @@ router.put(
             );
             const updatedSubmission =
                 await manageSubmissions.updateBrandSubmission(id, status);
+            // send an email notification to the user
+            const userId = req.body.user.user.id;
+            await emailService.sendSubmissionStatusEmail(
+                userId,
+                'brand',
+                status,
+                'Brand reviewed'
+            );
             res.status(200).json(updatedSubmission);
         } catch (err) {
             if (err.statusCode) {
@@ -101,6 +110,14 @@ router.put(
             );
             const updatedSubmission =
                 await manageSubmissions.updateDupeSubmission(id, status);
+            // send an email notification to the user
+            const userId = req.body.user.user.id;
+            await emailService.sendSubmissionStatusEmail(
+                userId,
+                'dupe',
+                status,
+                `Submission ID: ${id}`
+            );
             res.status(200).json(updatedSubmission);
         } catch (err) {
             if (err.statusCode) {

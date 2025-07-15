@@ -10,7 +10,10 @@ const {
     param,
     body,
 } = require('express-validator');
+const jwt = require('jsonwebtoken');
 const base64 = require('base-64');
+const config = require('../../../../libraries/config/config');
+const logger = require('../../../../libraries/logger/logger');
 
 exports.validateSignUp = [
     check('username', 'Username is required').not().isEmpty(),
@@ -50,7 +53,34 @@ exports.validateRefresh = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        next();
+        try {
+            const refreshToken = req.cookies.refreshToken;
+            logger.info(`Verifying refresh token`);
+            // verify the refresh token
+            jwt.verify(refreshToken, config.refreshTokenSecret);
+            logger.info('Refresh token verified');
+            req.cookies.oldRefreshToken = refreshToken;
+            next();
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                logger.error(`Refresh token expired: ${error.message}`);
+                return res.status(401).json({
+                    error: 'Refresh token expired',
+                    name: 'TokenExpiredError',
+                });
+            } else if (error.name === 'JsonWebTokenError') {
+                logger.error(`Invalid refresh token: ${error.message}`);
+                return res.status(403).json({
+                    error: 'Forbidden: invalid refresh token',
+                    name: 'JsonWebTokenError',
+                });
+            } else {
+                logger.error(`Error verifying refresh token: ${error.message}`);
+                return res
+                    .status(403)
+                    .json({ error: 'Forbidden', name: 'Forbidden' });
+            }
+        }
     },
 ];
 
@@ -85,7 +115,7 @@ exports.validateResetPassword = [
  */
 exports.decodeBasicAuth = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    if (!authHeader || !authHeader.startsWith('Basic ')) {
+    if (!authHeader?.startsWith('Basic ')) {
         return res
             .status(401)
             .json({ message: 'Missing or invalid Authorization header' });

@@ -18,6 +18,11 @@ async function findRolesByName(name) {
     return role;
 }
 
+async function getAllRoles() {
+    const roles = await rolesModel.findAll();
+    return roles;
+}
+
 /**
  * Assigns a role to a user.
  *
@@ -96,4 +101,5 @@ module.exports = {
     findRolesByName,
     assignRole,
     revokeRole,
+    getAllRoles,
 };

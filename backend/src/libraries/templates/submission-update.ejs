@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>We have reviewed your submission</title>
+    </head>
+    <body
+        style="
+            background-color: #ececec;
+            font-family:
+                Open Sans,
+                sans-serif;
+        "
+    >
+        <table
+            style="
+                width: 550px;
+                background-color: white;
+                margin: 0 auto;
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+                border-radius: 2%;
+            "
+        >
+            <thead></thead>
+            <th></th>
+            <tbody>
+                <tr>
+                    <td style="text-align: center">
+                        <h1
+                            style="
+                                margin-inline-end: 8px;
+                                text-transform: uppercase;
+                                border: 3px solid black;
+                                letter-spacing: 2px;
+                                box-shadow:
+                                    1px 1px 0px 0px,
+                                    2px 2px 0px 0px,
+                                    3px 3px 0px 0px,
+                                    4px 4px 0px 0px,
+                                    5px 5px 0px 0px;
+                                position: inherit;
+                                background-color: #bdcbfb;
+                            "
+                        >
+                            <a
+                                style="text-decoration: none; color: black"
+                                href="<%= homePage  %>"
+                                >Polish Finder</a
+                            >
+                        </h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h2 style="text-align: center">
+                            We have reviewed your submission
+                        </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="padding: 0.5rem">
+                            <p>Hi, <%= username %></p>
+                            <p>
+                                We wanted to let you know that our team has
+                                reviewed your recent submission:
+                            </p>
+                            <b>Submission Details:</b>
+                            <ul>
+                                <li>Type: <%= type %></li>
+                                <li>Details: <%= details %></li>
+                                <li>
+                                    Status:
+                                    <span
+                                        style="
+                                            text-transform: uppercase;
+                                            font-weight: bold;
+                                        "
+                                        ><%= status %></span
+                                    >
+                                </li>
+                            </ul>
+                            <p>Here's what happens next:</p>
+                            <p>
+                                &#x2705; If approved: Your submission is now
+                                live in our database! Thank you for helping us
+                                grow the community.
+                            </p>
+                            <p>
+                                &#10060; If declined: Unfortunately, we couldn't
+                                approve this submission. This may be because
+                                it's already in the database or didn't meet our
+                                submission criteria.
+                            </p>
+                            <p>
+                                Your contributions make Polish Finder even
+                                better, and we're so grateful for your help!
+                            </p>
+                            <p>
+                                Thank you for being an essential part of the
+                                Polish Finder community!
+                            </p>
+                            <p>Warm regards,</p>
+                            <p>The Polish Finder Team</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

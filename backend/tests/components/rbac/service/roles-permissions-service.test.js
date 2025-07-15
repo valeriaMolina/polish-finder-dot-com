@@ -7,12 +7,13 @@ describe('rolesPermissionsService', () => {
         sinon.restore();
     });
 
-    it('Should find roles by role id', async () => {
+    it('Should find permissions by role id', async () => {
         const roleId = 1;
         sinon
             .stub(rolesPermissionsModel, 'findAll')
             .returns(Promise.resolve([]));
-        const roles = await rolesPermissionService.findRolesByRoleId(roleId);
+        const roles =
+            await rolesPermissionService.findPermissionsByRoleId(roleId);
         expect(roles).toEqual([]);
     });
 });

@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <p>Find what you're looking for</p>
-  </div>
+    <div>
+        <p>Find what you're looking for</p>
+    </div>
 </template>

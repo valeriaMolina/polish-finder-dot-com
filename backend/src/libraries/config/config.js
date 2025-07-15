@@ -20,4 +20,5 @@ module.exports = {
     emailCode: process.env.EMAIL_PASSWORD,
     noReplyMail: process.env.NO_REPLY_EMAIL,
     homePage: process.env.HOME_PAGE,
+    cloudinaryKey: process.env.CLOUDINARY_URL,
 };

@@ -1,7 +1,11 @@
 /**
  * Custom error handling for different scenarios
+ * The error handler is used to handle different types of errors that can occur in the application.
+ * The frontend is responsible for handling the error based on these predefined error handlers.
+ * The frontend also consults this file for handling errors in the client side
  * @author Valeria Molina Recinos
  */
+
 class BrandNotFoundError extends Error {
     constructor(message) {
         super(message);
@@ -41,7 +45,6 @@ class RoleNotFoundError extends Error {
         this.statusCode = 404; // not found
     }
 }
-
 class UserRoleDoesNotExist extends Error {
     constructor(message) {
         super(message);
@@ -298,12 +301,58 @@ class UserLikeDoesNotExistError extends Error {
     }
 }
 
+class NoFiltersError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'NoFiltersError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class InvalidFilterBrandNameError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidFilterBrandNameError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class InvalidFilterTypeError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidFilterTypeError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class InvalidFilterColorError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidFilterColorError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class FileNotSupportedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'FileNotSupportedError';
+        this.statusCode = 400; // bad request
+    }
+}
+
+class UnableToUpdateSubmissionError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UnableToUpdateSubmissionError';
+        this.statusCode = 500; // bad request
+    }
+}
+
 module.exports = {
-    UserAlreadyVerifiedError,
-    InvalidTokenError,
     BrandNotFoundError,
-    PolishAlreadyExistsError,
     BrandAlreadyExistsError,
+    PolishAlreadyExistsError,
     UserNotFoundError,
     RoleNotFoundError,
     UserRoleDoesNotExist,
@@ -312,16 +361,16 @@ module.exports = {
     NoMatchesFoundError,
     UserAlreadySubmittedDupeError,
     DupeAlreadySubmitterError,
-    DupeSubmissionError,
     UserAlreadySubmittedPolishError,
     PolishAlreadySubmittedError,
+    PolishSubmissionError,
+    DupeSubmissionError,
     UserAlreadySubmittedBrandError,
     BrandAlreadySubmittedError,
     BrandSubmissionError,
-    PolishSubmissionError,
+    BrandSubmissionNotFoundError,
     PolishSubmissionNotFoundError,
     PolishSubmissionUpdateStatusError,
-    BrandSubmissionNotFoundError,
     BrandSubmissionUpdateStatusError,
     DupeSubmissionNotFoundError,
     DupeSubmissionUpdateStatusError,
@@ -330,10 +379,18 @@ module.exports = {
     FormulaAlreadyExistsError,
     ColorAlreadyExistsError,
     InvalidCredentialsError,
-    EmailAlreadyInUseError,
     UserNameAlreadyInUseError,
+    EmailAlreadyInUseError,
+    InvalidTokenError,
+    UserAlreadyVerifiedError,
     UserNotVerifiedError,
     JsonWebTokenVerifyError,
     UserLikeAlreadyExistsError,
     UserLikeDoesNotExistError,
+    NoFiltersError,
+    InvalidFilterBrandNameError,
+    InvalidFilterTypeError,
+    InvalidFilterColorError,
+    FileNotSupportedError,
+    UnableToUpdateSubmissionError,
 };

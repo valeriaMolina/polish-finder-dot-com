@@ -3,7 +3,9 @@
  */
 
 const typeModel = require('../db/types');
-
+/**
+ * @param {string} name
+ */
 async function findTypeByName(name) {
     // get the id of the type
     const type = await typeModel.findOne({ where: { name: name } });

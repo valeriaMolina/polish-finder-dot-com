@@ -9,6 +9,9 @@ const {
     validateLikeRequest,
     validateGetLikesRequest,
 } = require('../middleware/likes-validator');
+const {
+    authenticateToken,
+} = require('../../../rbac/api/middleware/rbac-middeware');
 
 router.post('/like', validateLikeRequest, async (req, res) => {
     logger.info('Received like request');
@@ -46,16 +49,23 @@ router.post('/unlike', validateLikeRequest, async (req, res) => {
     }
 });
 
-router.get('/:email/likes', validateGetLikesRequest, async (req, res) => {
-    logger.info('Received request to get likes for a user');
-    try {
-        const email = req.params.email;
-        const likes = await likesService.getUserLikes(email);
-        return res.json(likes);
-    } catch (error) {
-        logger.error(`Error while getting likes for user: ${error.message}`);
-        return res.status(500).send({ error: 'Internal server error' });
+router.get(
+    '/:email/likes',
+    authenticateToken,
+    validateGetLikesRequest,
+    async (req, res) => {
+        logger.info('Received request to get likes for a user');
+        try {
+            const email = req.params.email;
+            const likes = await likesService.getUserLikes(email);
+            return res.json(likes);
+        } catch (error) {
+            logger.error(
+                `Error while getting likes for user: ${error.message}`
+            );
+            return res.status(500).send({ error: 'Internal server error' });
+        }
     }
-});
+);
 
 module.exports = router;

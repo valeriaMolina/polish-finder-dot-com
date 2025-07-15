@@ -20,6 +20,9 @@ const userService = require('../../service/user-service');
 const authService = require('../../service/auth-service');
 const config = require('../../../../libraries/config/config');
 const emailService = require('../../service/email-service');
+const {
+    authenticateToken,
+} = require('../../../rbac/api/middleware/rbac-middeware');
 
 /**
  * This function authenticates a user.
@@ -148,21 +151,57 @@ router.post('/signup', validateSignUp, async (req, res) => {
  * }
  */
 router.post('/refresh', validateRefresh, async (req, res) => {
-    const { refreshToken } = req.body;
-    logger.info(`Received request to refresh token ${refreshToken}`);
-    // find user by refresh token
-    const user = await userService.getUserByRefreshToken(refreshToken);
-
-    if (!user) {
-        logger.error('Invalid refresh token');
-        return res.status(400).json({ msg: 'Invalid refresh token' });
+    const { oldRefreshToken } = req.cookies;
+    try {
+        logger.info(`Received request to refresh token`);
+        // find user by refresh token
+        const { accessToken, refreshToken } =
+            await authService.refreshTokens(oldRefreshToken);
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: config.refreshTokenExpiration,
+        });
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: config.accessTokenExpiration,
+        });
+        res.end();
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(`Error refreshing token: ${error.message}`);
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
     }
-
-    const payload = { user: { id: user.user_id } };
-    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
-    res.json({ token });
 });
 
+router.get('/is-logged-in', authenticateToken, (_, res) => {
+    try {
+        res.status(200).send();
+    } catch (error) {
+        if (error.statusCode) {
+            logger.error(
+                `Error checking if user is logged in: ${error.message}`
+            );
+            return res.status(error.statusCode).send({ error: error.message });
+        } else {
+            // error was not anticipated
+            logger.error(`Error not anticipated: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
+    }
+});
+
+/**
+ * Email verification endpoint
+ */
 router.post('/verify', validateVerifyEmail, async (req, res) => {
     const { token } = req.query;
     try {

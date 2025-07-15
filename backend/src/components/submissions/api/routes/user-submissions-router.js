@@ -6,6 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
+const fileUpload = require('../../../../libraries/config/file-upload');
 const logger = require('../../../../libraries/logger/logger');
 const permissions = require('../../../../libraries/constants/permissions');
 const {
@@ -18,11 +19,13 @@ const {
     validateBrandSubmission,
     validateDupeSubmission,
     formatPolishSubmission,
+    validateFileUpload,
 } = require('../middleware/submissions-validator');
 const {
     submitDupe,
     submitPolish,
     submitBrand,
+    addImageUrlToPolishSubmissions,
 } = require('../../service/submission-service');
 
 /**
@@ -63,7 +66,6 @@ router.post(
 
 /**
  * Handles requests from users to add polishes to db.
- * TODO: rework this route
  */
 router.post(
     '/polish',
@@ -112,6 +114,41 @@ router.post(
                 // error was not anticipated
                 logger.error(`Error not anticipated: ${err.message}`);
                 return res.status(500).send({ error: err.message });
+            }
+        }
+    }
+);
+
+/**
+ * Handles the request for uploading an image to the
+ * polish submission
+ */
+router.put(
+    '/polish-image',
+    authenticateToken,
+    authorize(permissions.UPLOAD_POLISH),
+    validateFileUpload,
+    async (req, res) => {
+        try {
+            const asset = await fileUpload.uploadToCloud(req.file.buffer);
+            const url = await fileUpload.getAssetUrl(asset.public_id);
+            // add the url to the submission in the db
+            const submission = await addImageUrlToPolishSubmissions(
+                req.body.submissionId,
+                url
+            );
+            res.status(200).send({ submission });
+        } catch (error) {
+            if (error.statusCode) {
+                res.status(error.statusCode).send({
+                    message: error.message,
+                    name: error.name,
+                });
+            } else {
+                res.status(500).send({
+                    message: error.message,
+                    name: 'Error not anticipated',
+                });
             }
         }
     }

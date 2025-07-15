@@ -2,6 +2,7 @@
  * @author Valeria Molina Recinos
  */
 
+const polishService = require('../../polish/service/polish-service');
 const polishSubmissionService = require('./polish-submission-service');
 const brandSubmissionService = require('./brand-submission-service');
 const dupeSubmissionService = require('./dupe-submission-service');
@@ -41,6 +42,17 @@ async function updateDupeSubmission(submissionId, status) {
             sub,
             status
         );
+        // if the status is approved, then create the dupe link in db
+        if (status === 'approved') {
+            await polishService.addDupePolishId(
+                sub.polish_id,
+                sub.similar_to_polish_id
+            );
+            await polishService.addDupePolishId(
+                sub.similar_to_polish_id,
+                sub.polish_id
+            );
+        }
         return update;
     } catch (error) {
         logger.error(

@@ -1,42 +1,42 @@
 [
-  {
-    "name": "white"
-  },
-  {
-    "name": "black"
-  },
-  {
-    "name": "grey"
-  },
-  {
-    "name": "red"
-  },
-  {
-    "name": "orange"
-  },
-  {
-    "name": "yellow"
-  },
-  {
-    "name": "green"
-  },
-  {
-    "name": "blue"
-  },
-  { "name": "indigo" },
-  {
-    "name": "purple"
-  },
-  {
-    "name": "pink"
-  },
-  {
-    "name": "brown"
-  },
-  {
-    "name": "gold"
-  },
-  {
-    "name": "silver"
-  }
+    {
+        "name": "white"
+    },
+    {
+        "name": "black"
+    },
+    {
+        "name": "grey"
+    },
+    {
+        "name": "red"
+    },
+    {
+        "name": "orange"
+    },
+    {
+        "name": "yellow"
+    },
+    {
+        "name": "green"
+    },
+    {
+        "name": "blue"
+    },
+    { "name": "indigo" },
+    {
+        "name": "purple"
+    },
+    {
+        "name": "pink"
+    },
+    {
+        "name": "brown"
+    },
+    {
+        "name": "gold"
+    },
+    {
+        "name": "silver"
+    }
 ]

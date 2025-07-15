@@ -14,14 +14,15 @@ const {
     UserAlreadySubmittedPolishError,
     PolishAlreadySubmittedError,
     BrandAlreadyExistsError,
-    UserAlreadySubmittedBrandError,
     BrandAlreadySubmittedError,
     BrandSubmissionError,
     PolishSubmissionError,
+    UnableToUpdateSubmissionError,
 } = require('../../../libraries/utils/error-handler');
 const logger = require('../../../libraries/logger/logger');
 const polishService = require('../../polish/service/polish-service');
 const brandService = require('../../brands/service/brand-service');
+const uploadService = require('../../../libraries/config/file-upload');
 const { submissionExists } = require('../service/polish-submission-service');
 
 /**
@@ -156,10 +157,33 @@ async function submitPolish(data) {
         // create new submission
         const newSubmission =
             await polishSubmissionService.insertNewPolishSubmission(submission);
+
         return newSubmission;
     } catch (err) {
         logger.error(`Error while submitting polish: ${err.message}`);
         throw new PolishSubmissionError(err.message);
+    }
+}
+
+/**
+ * Updates a polish submission of the specified submission id with a url to an image
+ * @param {*} submissionId
+ * @param {*} imageUrl
+ * @returns the updated submission
+ */
+async function addImageUrlToPolishSubmissions(submissionId, imageUrl) {
+    try {
+        const updatedSub =
+            await polishSubmissionService.addImageUrlToPolishSubmissions(
+                submissionId,
+                imageUrl
+            );
+        logger.info(
+            `Image URL '${imageUrl}' added to submission '${submissionId}'`
+        );
+        return updatedSub;
+    } catch (err) {
+        throw new UnableToUpdateSubmissionError(err.message);
     }
 }
 
@@ -179,43 +203,28 @@ async function submitPolish(data) {
  * @returns {Promise<Object>} A promise that resolves to the newly created brand submission object.
  */
 async function submitBrand(data) {
-    const { name } = data;
+    const { brandName, brandUrl } = data;
     const user = data.user;
     const id = user.user.id;
     // check if the brand already exists
     try {
-        const brandExists = await brandService.findBrandNameInTable(name);
+        const brandExists = await brandService.findBrandNameInTable(brandName);
         if (brandExists) {
-            logger.error(`Brand ${name} already exists in our records`);
-            throw new BrandAlreadyExistsError(
-                `Brand ${name} already exists in our records`
-            );
+            logger.error(`Brand ${brandName} already exists in our records`);
+            throw new BrandAlreadyExistsError('SubmissionAlreadyExists');
         }
         // check if there is already a submission for this brand
         const submissionExistsAlready =
-            await brandSubmissionService.brandSubmissionExists(name);
+            await brandSubmissionService.brandSubmissionExists(brandName);
         if (submissionExistsAlready) {
-            logger.error(`There is already a submission for this brand`);
-            if (submissionExistsAlready.user_id === id) {
-                logger.error(
-                    `User has already submitted this brand. Current Status: ${submissionExistsAlready.status}`
-                );
-                throw new UserAlreadySubmittedBrandError(
-                    `User has already submitted this brand. Current Status: ${submissionExistsAlready.status}`
-                );
-            } else {
-                logger.error(
-                    `Someone else already submitted this brand. Status: ${brandExists.status}`
-                );
-                throw new BrandAlreadySubmittedError(
-                    `Someone else already submitted this brand. Status: ${brandExists.status}`
-                );
-            }
+            logger.error(`Submission already exists for brand ${brandName}`);
+            throw new BrandAlreadySubmittedError('SubmissionDuplicate');
         }
         // create new submission
         const submission = await brandSubmissionService.insertBrandSubmission({
             user_id: id,
-            brand_name: name,
+            brand_name: brandName,
+            website: brandUrl,
         });
         return submission;
     } catch (err) {
@@ -228,4 +237,5 @@ module.exports = {
     submitDupe,
     submitPolish,
     submitBrand,
+    addImageUrlToPolishSubmissions,
 };

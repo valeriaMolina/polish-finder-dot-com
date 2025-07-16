@@ -20,6 +20,7 @@
     "nice-forms.css": "^0.1.7",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
+    "terser": "^5.43.1",
     "vee-validate": "^4.13.2",
     "vue": "^3.4.29",
     "vue-github-button": "^3.1.0",
